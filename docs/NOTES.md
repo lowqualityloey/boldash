@@ -57,6 +57,15 @@ Source: `ARCHITECTURE.md` §2 (P1–P10) + Appendix B.
 
 ## 4. Open Items
 
+### Governance rulings (adopted — canonical copy; the 9 Task Records link here)
+
+- [x] **Push-boundary conflict — resolved 2026-09-14 15:00 UTC, tracked as #11.** All 9 Task Records claimed `Human-only: … pushes …`, while `AGENTS.md` forbids only force-pushes and every completed milestone had in fact been pushed by the agent. The literal rule and the established pattern contradicted each other, so which file an agent happened to read first decided whether it asked or just pushed. Adopted:
+  - **Human-only**: any merge into `main` from a branch or PR, force-pushes, releases, tags.
+  - **Agent**: may commit to `main` after per-milestone maintainer sign-off; may **push** to `main` only under **explicit per-instance** authorization for that specific push.
+  - **No standing rights.** Earlier pushes never imply the next one, and **silence is not authorization**. A push not named in the approval is a violation even when it is docs-only and even when its neighbour was approved — this session crossed that line once (`b58d86a`) and disclosed it; the wording now exists so the next session does not have to rediscover it.
+
+### Still open
+
 - [ ] `SECURITY.md`: replace `security@example.com` placeholder with a real contact (or delete the fallback line; GitHub Security Advisories is the preferred channel).
 - [ ] `PROJECT OVERVIEW.md`: filename contains a space — consider `PROJECT-OVERVIEW.md` for link/CLI ergonomics.
 - [ ] Resolve `ARCHITECTURE.md` §18 Open Questions that touch Phase 1 (during the v0.1.0 spec).

@@ -10,7 +10,7 @@
 - **External Reference (Optional)**: https://github.com/lowqualityloey/boldash/issues/7
 - **Owner / Actor**: Lead Engineer @lowqualityloey (approver) · executing agent: DSH session (proposal/implementation)
 - **Execution Scope**: boldash repository (`main`); paths per In Scope
-- **Approval Boundary**: Human-only: merges to main, pushes, force-pushes, releases, tag creation. Agent may commit only after per-milestone human sign-off.
+- **Approval Boundary**: Human-only: any merge into `main` from a branch or PR, force-pushes, releases, tag creation. Agent may commit to `main` after per-milestone maintainer sign-off, and may push to `main` only under explicit **per-instance** authorization for that specific push. Prior pushes are not standing rights; silence is not authorization. Canonical rule: `docs/NOTES.md` §4 (ref #11).
 - **Created**: `2026-09-15 00:40 UTC`
 
 ## 2. Objective and Boundaries
