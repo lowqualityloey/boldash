@@ -2,7 +2,7 @@
 
 - **Task**: `TASK-2026-09-15-v010-ms5-verification` · **Spec**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` §2.2/§3.4/§4/§5 MS-5
 - **Contract**: `docs/verification-guide.md` · **Errors**: `docs/errors.md` · **Layouts**: `ARCHITECTURE.md` §7.1, §8.2
-- **Date**: 2026-09-14 (date -u) · **Status**: DECISIONS PENDING — no `src/core/verification/` code until the maintainer answers §3
+- **Date**: 2026-09-14 (date -u) · **Status**: ADOPTED — D1–D3 answered 2026-09-14 ({{task_id}} resolution; minimal grammar + #13; narrow redactor); engine shipped in slices 1–3 (`539444c`/`6f1e981`/`5e5c3e6`)
 - **Mode**: TDD disabled; **PASS and BLOCK tests mandatory for every check type** (AGENTS.md — this milestone is where that rule earns its keep)
 
 ## 1. Interfaces (deep modules, deletion-tested in RFC §2.2)
