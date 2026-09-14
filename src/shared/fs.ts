@@ -13,7 +13,15 @@
  * A crash at any point leaves either the old or the new file, never a torn one,
  * and never a stray temp file after a *handled* failure.
  */
-import { closeSync, fsyncSync, openSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  closeSync,
+  fsyncSync,
+  openSync,
+  readdirSync,
+  renameSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 
 function fsyncPath(path: string): void {
@@ -31,13 +39,20 @@ export interface WriteAtomicOptions {
 }
 
 /** Serialize and atomically replace `path` with pretty-printed JSON. */
-export function writeJsonAtomic(path: string, value: unknown, opts: WriteAtomicOptions = {}): void {
+export function writeJsonAtomic(
+  path: string,
+  value: unknown,
+  opts: WriteAtomicOptions = {},
+): void {
   // Step 1 — serialize before any filesystem mutation. A circular/unserializable
   // value must leave the existing file untouched.
   const payload = `${JSON.stringify(value, null, 2)}\n`;
 
   const dir = dirname(path);
-  const tmp = join(dir, `.${basename(path)}.${process.pid}.${Math.random().toString(36).slice(2)}${opts.tempSuffix ?? ''}.tmp`);
+  const tmp = join(
+    dir,
+    `.${basename(path)}.${process.pid}.${Math.random().toString(36).slice(2)}${opts.tempSuffix ?? ''}.tmp`,
+  );
 
   let fd: number | undefined;
   try {

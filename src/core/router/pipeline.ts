@@ -19,7 +19,12 @@ import type { ErrorInfo } from '../../shared/result.js';
 import { getValidator, firstError } from '../../shared/schema.js';
 import { exitCodeFor } from '../../shared/errors.js';
 import { missingCapabilities } from './capabilities.js';
-import { applyOverrides, isLevelSufficient, requiredLevelFor, requirementsFor } from './levels.js';
+import {
+  applyOverrides,
+  isLevelSufficient,
+  requiredLevelFor,
+  requirementsFor,
+} from './levels.js';
 import { createRegistry, type WorkflowRegistry } from './registry.js';
 import { checkScope } from './scope.js';
 import type { CapabilityContext, ResolvedRoute, RouteProposal } from './types.js';
@@ -129,12 +134,15 @@ export function routeValidated(
       message: `Workflow '${pack.name}' requires '${missing.join("', '")}', which this host does not provide.`,
       field: 'route.workflow',
       context: { missing, host: deps.context.host },
-      suggestion: 'Use a workflow the host supports, or switch to a host providing the capability.',
+      suggestion:
+        'Use a workflow the host supports, or switch to a host providing the capability.',
     });
   }
 
   // Step 6 — advisory scope warnings; never a failure (exit stays 0 on success).
-  const warnings = checkScope(task.scope.files, { ...(deps.cwd ? { cwd: deps.cwd } : {}) });
+  const warnings = checkScope(task.scope.files, {
+    ...(deps.cwd ? { cwd: deps.cwd } : {}),
+  });
 
   // Step 7 — the minimum the agent needs to proceed.
   const resolved: ResolvedRoute = {
@@ -147,8 +155,12 @@ export function routeValidated(
 }
 
 /** Full pipeline for either raw text or an already-parsed value. */
-export function route(input: string | unknown, deps: RouteDependencies): Result<ResolvedRoute> {
-  const parsed = typeof input === 'string' ? parseProposal(input) : validateProposal(input);
+export function route(
+  input: string | unknown,
+  deps: RouteDependencies,
+): Result<ResolvedRoute> {
+  const parsed =
+    typeof input === 'string' ? parseProposal(input) : validateProposal(input);
   if (!parsed.ok) return parsed;
   return routeValidated(parsed.data, deps);
 }

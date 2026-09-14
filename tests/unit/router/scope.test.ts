@@ -35,7 +35,9 @@ describe('checkScope (T-10: PASS silent, BLOCK warning-only)', () => {
   it('skips glob declarations instead of false-warning on greenfield targets', () => {
     // Brownfield root (one real file) so the greenfield guard cannot mask the glob rule:
     writeFileSync(join(dir, 'package.json'), '{}');
-    const warnings = checkScope(['src/new-module/*', 'src/auth/**/*.ts', 'a?b.ts'], { cwd: dir });
+    const warnings = checkScope(['src/new-module/*', 'src/auth/**/*.ts', 'a?b.ts'], {
+      cwd: dir,
+    });
     expect(warnings).toEqual([]);
   });
 

@@ -1,24 +1,37 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { ERROR_CATALOG, ERROR_CODES, exitCodeFor, type ExitCode } from '../../src/shared/errors.js';
+import {
+  ERROR_CATALOG,
+  ERROR_CODES,
+  exitCodeFor,
+  type ExitCode,
+} from '../../src/shared/errors.js';
 
 /**
  * AC-2 (MS-2): docs/errors.md is the oracle. The catalog in code must contain
  * exactly the codes the document defines, mapped to exactly the exits it states.
  * This test is what keeps `code` stable-forever honest.
  */
-const doc = readFileSync(fileURLToPath(new URL('../../docs/errors.md', import.meta.url)), 'utf8');
+const doc = readFileSync(
+  fileURLToPath(new URL('../../docs/errors.md', import.meta.url)),
+  'utf8',
+);
 
 function docCodes(): Map<string, ExitCode> {
   const found = new Map<string, ExitCode>();
-  const sections = [...doc.matchAll(/^### `([A-Z_]+)`\s*\n([\s\S]*?)(?=\n---\n|\n## )/gm)];
+  const sections = [
+    ...doc.matchAll(/^### `([A-Z_]+)`\s*\n([\s\S]*?)(?=\n---\n|\n## )/gm),
+  ];
   for (const match of sections) {
     const code = match[1];
     const body = match[2];
     if (!code || !body) continue;
     const m = body.match(/\*\*Exit code:\*\*\s*(\d+)/);
-    if (!m) throw new Error(`docs/errors.md: ${code} has no "**Exit code:** N" — the doc must state one`);
+    if (!m)
+      throw new Error(
+        `docs/errors.md: ${code} has no "**Exit code:** N" — the doc must state one`,
+      );
     found.set(code, Number(m[1]) as ExitCode);
   }
   return found;

@@ -47,13 +47,7 @@
     },
     "risk": {
       "type": "string",
-      "enum": [
-        "trivial",
-        "low",
-        "medium",
-        "high",
-        "critical"
-      ]
+      "enum": ["trivial", "low", "medium", "high", "critical"]
     },
     "level": {
       "type": "integer",
@@ -73,10 +67,7 @@
       ]
     },
     "owner": {
-      "type": [
-        "string",
-        "null"
-      ],
+      "type": ["string", "null"],
       "description": "Current claimant under lease; null when unowned."
     },
     "summary": {
@@ -89,10 +80,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "id",
-          "text"
-        ],
+        "required": ["id", "text"],
         "properties": {
           "id": {
             "type": "string",
@@ -119,10 +107,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "id",
-          "text"
-        ],
+        "required": ["id", "text"],
         "properties": {
           "id": {
             "type": "string",
@@ -167,10 +152,7 @@
       "description": "Optimistic concurrency token. Every write must send the version it read; mismatch \u21d2 CONCURRENT_MODIFICATION (exit 4)."
     },
     "blocked_reason": {
-      "type": [
-        "string",
-        "null"
-      ]
+      "type": ["string", "null"]
     },
     "created_at": {
       "type": "string",
@@ -181,10 +163,7 @@
       "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$"
     },
     "completed_at": {
-      "type": [
-        "string",
-        "null"
-      ],
+      "type": ["string", "null"],
       "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})?$"
     }
   },
@@ -196,14 +175,10 @@
             "const": "complete"
           }
         },
-        "required": [
-          "status"
-        ]
+        "required": ["status"]
       },
       "then": {
-        "required": [
-          "completed_at"
-        ],
+        "required": ["completed_at"],
         "properties": {
           "completed_at": {
             "type": "string"
@@ -218,14 +193,10 @@
             "const": "blocked"
           }
         },
-        "required": [
-          "status"
-        ]
+        "required": ["status"]
       },
       "then": {
-        "required": [
-          "blocked_reason"
-        ],
+        "required": ["blocked_reason"],
         "properties": {
           "blocked_reason": {
             "type": "string",

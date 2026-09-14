@@ -5,10 +5,7 @@
   "description": "Contract each workflow pack declares as done.schema.json. Only commands written here may ever be executed (SECURITY.md \u00a71). Source: docs/verification-guide.md + RFC \u00a73.4 amendment (timeout_ms).",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "task_id",
-    "must_pass"
-  ],
+  "required": ["task_id", "must_pass"],
   "properties": {
     "task_id": {
       "type": "string",
@@ -32,10 +29,7 @@
   "definitions": {
     "common": {
       "type": "object",
-      "required": [
-        "type",
-        "name"
-      ],
+      "required": ["type", "name"],
       "additionalProperties": false,
       "properties": {
         "type": {
@@ -98,9 +92,7 @@
                   "const": "file_exists"
                 }
               },
-              "required": [
-                "path"
-              ],
+              "required": ["path"],
               "type": "object"
             },
             {
@@ -109,9 +101,7 @@
                   "const": "command"
                 }
               },
-              "required": [
-                "run"
-              ],
+              "required": ["run"],
               "type": "object"
             },
             {
@@ -120,10 +110,7 @@
                   "const": "regex_in_file"
                 }
               },
-              "required": [
-                "path",
-                "pattern"
-              ],
+              "required": ["path", "pattern"],
               "type": "object"
             },
             {
@@ -132,9 +119,7 @@
                   "const": "state_check"
                 }
               },
-              "required": [
-                "check"
-              ],
+              "required": ["check"],
               "type": "object"
             },
             {
@@ -143,9 +128,7 @@
                   "const": "evidence_exists"
                 }
               },
-              "required": [
-                "path"
-              ],
+              "required": ["path"],
               "description": "path is the evidence kind: review, test-run, secret-scan\u2026",
               "type": "object"
             }
@@ -161,10 +144,7 @@
         {
           "properties": {
             "type": {
-              "enum": [
-                "file_not_modified",
-                "command_fails"
-              ]
+              "enum": ["file_not_modified", "command_fails"]
             }
           },
           "type": "object"
@@ -177,9 +157,7 @@
                   "const": "file_not_modified"
                 }
               },
-              "required": [
-                "path"
-              ],
+              "required": ["path"],
               "type": "object"
             },
             {
@@ -188,9 +166,7 @@
                   "const": "command_fails"
                 }
               },
-              "required": [
-                "run"
-              ],
+              "required": ["run"],
               "type": "object"
             }
           ]

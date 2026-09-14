@@ -1,4 +1,11 @@
-import { mkdtempSync, readFileSync, rmSync, statSync, writeFileSync, mkdirSync } from 'node:fs';
+import {
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+  mkdirSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -46,7 +53,8 @@ describe('writeJsonAtomic (AC-3)', () => {
 
   it('is durable across concurrent writers: final content equals one complete write', () => {
     const target = join(dir, 'multi.json');
-    for (let i = 0; i < 10; i++) writeJsonAtomic(target, { writer: i, padded: 'y'.repeat(2000) });
+    for (let i = 0; i < 10; i++)
+      writeJsonAtomic(target, { writer: i, padded: 'y'.repeat(2000) });
     const final = JSON.parse(readFileSync(target, 'utf8')) as { writer: number };
     expect(final.writer).toBe(9);
     expect(findTempArtifacts(dir)).toEqual([]);

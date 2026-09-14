@@ -32,8 +32,20 @@ export type { OverrideResult, RequirementKey } from './levels.js';
 export { REQUIREMENT_KEYS } from './levels.js';
 export type { WorkflowPack, WorkflowRegistry } from './registry.js';
 export { WORKFLOW_PACKS, createRegistry } from './registry.js';
-export { GENERIC_BASELINE, genericContext, hasCapability, missingCapabilities, capabilitiesSatisfied } from './capabilities.js';
+export {
+  GENERIC_BASELINE,
+  genericContext,
+  hasCapability,
+  missingCapabilities,
+  capabilitiesSatisfied,
+} from './capabilities.js';
 export { checkScope } from './scope.js';
 export type { ScopeCheckOptions } from './scope.js';
-export { route, routeValidated, parseProposal, validateProposal, routeExit } from './pipeline.js';
+export {
+  route,
+  routeValidated,
+  parseProposal,
+  validateProposal,
+  routeExit,
+} from './pipeline.js';
 export type { RouteDependencies } from './pipeline.js';

@@ -1,7 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { route, parseProposal, validateProposal, routeExit } from '../../../src/core/router/pipeline.js';
+import {
+  route,
+  parseProposal,
+  validateProposal,
+  routeExit,
+} from '../../../src/core/router/pipeline.js';
 import { createRegistry, type WorkflowPack } from '../../../src/core/router/registry.js';
-import { genericContext, GENERIC_BASELINE } from '../../../src/core/router/capabilities.js';
+import {
+  genericContext,
+  GENERIC_BASELINE,
+} from '../../../src/core/router/capabilities.js';
 import type { CapabilityContext } from '../../../src/core/router/types.js';
 import type { ErrorInfo, Result } from '../../../src/shared/result.js';
 import { documentedSuccessPayload, documentedMigrationRequires } from './doc-oracle.js';
@@ -106,8 +114,17 @@ describe('T-4 example 4: missing capability (D-1 injected registry)', () => {
   it('fails CAPABILITY_MISSING with context.missing exactly ["subagents"] on a Cursor-like host', () => {
     // Mirrors docs/errors.md: host provides everything the migration pack needs
     // except subagents — exactly the documented example outcome.
-    const cursorLike = ctx(['filesystem.read', 'filesystem.write', 'shell.execute', 'git.read', 'git.commit', 'human_approval']);
-    const e = errOf(route(EXAMPLE_4, { context: cursorLike, registry: migrationRegistry }));
+    const cursorLike = ctx([
+      'filesystem.read',
+      'filesystem.write',
+      'shell.execute',
+      'git.read',
+      'git.commit',
+      'human_approval',
+    ]);
+    const e = errOf(
+      route(EXAMPLE_4, { context: cursorLike, registry: migrationRegistry }),
+    );
     expect(e.code).toBe('CAPABILITY_MISSING');
     expect(e.context?.missing).toEqual(['subagents']);
     expect(routeExit(e.code)).toBe(3);
@@ -137,7 +154,9 @@ describe('T-6/T-7 malformed and invalid input never throw', () => {
   });
 
   it('out-of-range level → SCHEMA_VALIDATION with dotted field route.level', () => {
-    const e = errOf(validateProposal({ ...EXAMPLE_1, route: { workflow: 'feature', level: 9 } }));
+    const e = errOf(
+      validateProposal({ ...EXAMPLE_1, route: { workflow: 'feature', level: 9 } }),
+    );
     expect(e.code).toBe('SCHEMA_VALIDATION');
     expect(e.field).toBe('route.level');
   });
@@ -154,33 +173,62 @@ describe('T-8 step-3 PASS/BLOCK pair', () => {
       const proposal = { ...EXAMPLE_2, route: { workflow: name, level: 0 } };
       expect(route(proposal, { context: generic }).ok).toBe(true);
     }
-    const miss = route({ ...EXAMPLE_2, route: { workflow: 'microservice', level: 0 } }, { context: generic });
+    const miss = route(
+      { ...EXAMPLE_2, route: { workflow: 'microservice', level: 0 } },
+      { context: generic },
+    );
     expect(errOf(miss).code).toBe('WORKFLOW_NOT_FOUND');
   });
 });
 
 describe('T-9 one-way rules, end to end', () => {
   it('higher-than-required level is accepted with the higher requirements', () => {
-    const r = route({ task: { type: 'chore', risk: 'trivial', scope: {} }, route: { workflow: 'chore', level: 3 } }, { context: generic });
+    const r = route(
+      {
+        task: { type: 'chore', risk: 'trivial', scope: {} },
+        route: { workflow: 'chore', level: 3 },
+      },
+      { context: generic },
+    );
     if (!r.ok) throw new Error(JSON.stringify(r.error));
     expect(r.data.requirements.review).toBe(true);
     expect(r.data.requirements.human_approval).toBe(false); // trivial risk does not force approval
   });
 
   it('critical risk forces human_approval at level 3', () => {
-    const r = route({ task: { type: 'security', risk: 'critical', scope: {} }, route: { workflow: 'feature', level: 3 } }, { context: generic });
+    const r = route(
+      {
+        task: { type: 'security', risk: 'critical', scope: {} },
+        route: { workflow: 'feature', level: 3 },
+      },
+      { context: generic },
+    );
     if (!r.ok) throw new Error(JSON.stringify(r.error));
     expect(r.data.requirements.human_approval).toBe(true);
   });
 
   it('overrides may add ceremony', () => {
-    const r = route({ ...EXAMPLE_1, route: { workflow: 'feature', level: 2, requirements: { review: true } } }, { context: generic });
+    const r = route(
+      {
+        ...EXAMPLE_1,
+        route: { workflow: 'feature', level: 2, requirements: { review: true } },
+      },
+      { context: generic },
+    );
     if (!r.ok) throw new Error(JSON.stringify(r.error));
     expect(r.data.requirements.review).toBe(true);
   });
 
   it('overrides may NOT remove ceremony', () => {
-    const e = errOf(route({ ...EXAMPLE_1, route: { workflow: 'feature', level: 2, requirements: { tests: false } } }, { context: generic }));
+    const e = errOf(
+      route(
+        {
+          ...EXAMPLE_1,
+          route: { workflow: 'feature', level: 2, requirements: { tests: false } },
+        },
+        { context: generic },
+      ),
+    );
     expect(e.code).toBe('SCHEMA_VALIDATION');
     expect(e.field).toBe('route.requirements');
     expect(e.message).toContain('tests');
@@ -190,10 +238,18 @@ describe('T-9 one-way rules, end to end', () => {
 describe('T-10/T-11 through the full pipeline', () => {
   it('missing literal scope file becomes a warning on an ok route, exit 0', () => {
     const r = route(
-      { task: { type: 'docs', risk: 'trivial', scope: { files: ['definitely-missing-9f2c.md'] } }, route: { workflow: 'docs', level: 0 } },
+      {
+        task: {
+          type: 'docs',
+          risk: 'trivial',
+          scope: { files: ['definitely-missing-9f2c.md'] },
+        },
+        route: { workflow: 'docs', level: 0 },
+      },
       { context: generic, cwd: process.cwd() },
     );
-    if (!r.ok) throw new Error(`warnings must never fail the route: ${JSON.stringify(r.error)}`);
+    if (!r.ok)
+      throw new Error(`warnings must never fail the route: ${JSON.stringify(r.error)}`);
     expect(r.data.warnings).toHaveLength(1);
     expect(r.data.warnings?.[0]?.code).toBe('SCOPE_FILE_NOT_FOUND');
     expect(routeExit('SCOPE_FILE_NOT_FOUND')).toBe(0);
@@ -215,7 +271,10 @@ describe('T-12 token budget (AC-2)', () => {
 
   it('generic built-ins never trigger CAPABILITY_MISSING (T-13)', () => {
     for (const name of ['feature', 'bugfix', 'docs', 'chore']) {
-      const r = route({ ...EXAMPLE_1, route: { workflow: name, level: 2 } }, { context: { host: 'generic', capabilities: GENERIC_BASELINE } });
+      const r = route(
+        { ...EXAMPLE_1, route: { workflow: name, level: 2 } },
+        { context: { host: 'generic', capabilities: GENERIC_BASELINE } },
+      );
       if (!r.ok) expect(r.error.code).not.toBe('CAPABILITY_MISSING');
     }
   });

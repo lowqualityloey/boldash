@@ -3,7 +3,12 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { TaskStore } from '../../src/core/state/task-store.js';
-import { TRANSITIONS, allowedFrom, canTransition, isTerminal } from '../../src/core/state/transitions.js';
+import {
+  TRANSITIONS,
+  allowedFrom,
+  canTransition,
+  isTerminal,
+} from '../../src/core/state/transitions.js';
 import { FixedClock } from '../../src/shared/clock.js';
 import type { Task, TaskStatus } from '../../src/core/state/types.js';
 /**
@@ -24,11 +29,16 @@ beforeEach(() => {
 });
 afterEach(() => rmSync(dir, { recursive: true, force: true }));
 
-function data<T>(r: { ok: true; data: T } | { ok: false; error: { message: string } }): T {
+function data<T>(
+  r: { ok: true; data: T } | { ok: false; error: { message: string } },
+): T {
   if (!r.ok) throw new Error(`expected ok, got: ${r.error.message}`);
   return r.data;
 }
-function fail(r: { ok: boolean; error?: { code: string; message: string; context?: Record<string, unknown> } }): {
+function fail(r: {
+  ok: boolean;
+  error?: { code: string; message: string; context?: Record<string, unknown> };
+}): {
   code: string;
   message: string;
   context?: Record<string, unknown>;
@@ -38,7 +48,10 @@ function fail(r: { ok: boolean; error?: { code: string; message: string; context
 }
 function makeTask(partial = {}): Task {
   return data(
-    store.create({ title: 'OAuth callback', type: 'feature', risk: 'medium', level: 2, ...partial }, 'agent-01'),
+    store.create(
+      { title: 'OAuth callback', type: 'feature', risk: 'medium', level: 2, ...partial },
+      'agent-01',
+    ),
   );
 }
 
@@ -69,13 +82,21 @@ describe('lifecycle transitions (AC-1)', () => {
     data(store.transition(t.id, 'planned', 1, 'a'));
     data(store.transition(t.id, 'implementing', 2, 'a'));
     data(store.transition(t.id, 'failed', 3, 'a'));
-    expect(fail(store.transition(t.id, 'planned', 4, 'a')).code).toBe('STATE_INVALID_TRANSITION');
+    expect(fail(store.transition(t.id, 'planned', 4, 'a')).code).toBe(
+      'STATE_INVALID_TRANSITION',
+    );
   });
 
   it('blocked requires a reason and records it; blocked can resume', () => {
     const t = makeTask();
-    expect(fail(store.transition(t.id, 'blocked', t.version, 'a')).code).toBe('SCHEMA_VALIDATION');
-    const b = data(store.transition(t.id, 'blocked', t.version, 'a', { blockedReason: 'waiting on creds' }));
+    expect(fail(store.transition(t.id, 'blocked', t.version, 'a')).code).toBe(
+      'SCHEMA_VALIDATION',
+    );
+    const b = data(
+      store.transition(t.id, 'blocked', t.version, 'a', {
+        blockedReason: 'waiting on creds',
+      }),
+    );
     expect(b.blocked_reason).toBe('waiting on creds');
     const back = data(store.transition(t.id, 'planned', b.version, 'a'));
     expect(back.status).toBe('planned');
@@ -115,17 +136,25 @@ describe('requirement guard (AC-5)', () => {
 
   it('addRequirement then transition succeeds and bumps version', () => {
     const t = makeTask();
-    const u = data(store.addRequirement(t.id, { id: 'R2', text: 'error path' }, t.version, 'a'));
+    const u = data(
+      store.addRequirement(t.id, { id: 'R2', text: 'error path' }, t.version, 'a'),
+    );
     expect(u.requirements).toHaveLength(1);
     expect(u.version).toBe(2);
     data(store.transition(t.id, 'planned', 2, 'a'));
-    expect(data(store.transition(t.id, 'implementing', 3, 'a')).status).toBe('implementing');
+    expect(data(store.transition(t.id, 'implementing', 3, 'a')).status).toBe(
+      'implementing',
+    );
   });
 
   it('duplicate requirement id is rejected', () => {
     const t = makeTask();
-    const u = data(store.addRequirement(t.id, { id: 'R1', text: 'first' }, t.version, 'a'));
-    expect(fail(store.addRequirement(t.id, { id: 'R1', text: 'dup' }, u.version, 'a')).code).toBe('SCHEMA_VALIDATION');
+    const u = data(
+      store.addRequirement(t.id, { id: 'R1', text: 'first' }, t.version, 'a'),
+    );
+    expect(
+      fail(store.addRequirement(t.id, { id: 'R1', text: 'dup' }, u.version, 'a')).code,
+    ).toBe('SCHEMA_VALIDATION');
   });
 });
 
@@ -170,7 +199,10 @@ describe('corrupt state fails safe (AC-3)', () => {
 
   it('schema-invalid task (missing required) → SCHEMA_VALIDATION', () => {
     mkdirSync(join(dir, '.boldash', 'state'), { recursive: true });
-    writeFileSync(stateFile(), JSON.stringify({ schema_version: 1, tasks: [{ id: 'TASK-001' }] }));
+    writeFileSync(
+      stateFile(),
+      JSON.stringify({ schema_version: 1, tasks: [{ id: 'TASK-001' }] }),
+    );
     expect(fail(store.list()).code).toBe('SCHEMA_VALIDATION');
   });
 
@@ -182,9 +214,20 @@ describe('corrupt state fails safe (AC-3)', () => {
 describe('transitions matrix', () => {
   it('is total over TaskStatus and terminal states have no exits', () => {
     const all = Object.keys(TRANSITIONS) as TaskStatus[];
-    expect(new Set(all)).toEqual(new Set(['proposed', 'planned', 'implementing', 'verifying', 'complete', 'blocked', 'failed']));
+    expect(new Set(all)).toEqual(
+      new Set([
+        'proposed',
+        'planned',
+        'implementing',
+        'verifying',
+        'complete',
+        'blocked',
+        'failed',
+      ]),
+    );
     expect(canTransition('complete', 'proposed')).toBe(false);
     expect(allowedFrom('failed')).toEqual([]);
-    for (const from of all) for (const to of allowedFrom(from)) expect(canTransition(from, to)).toBe(true);
+    for (const from of all)
+      for (const to of allowedFrom(from)) expect(canTransition(from, to)).toBe(true);
   });
 });
