@@ -24,16 +24,24 @@
 - **Verification Condition**: `npm run verify green; pipeline unit tests`
 
 ## 3. Acceptance Criteria
-- [ ] **AC-1**: `All 4 routing-contract examples pass as tests (valid, trivial, LEVEL_RISK_MISMATCH, CAPABILITY_MISSING).`
+- [x] **AC-1**: `All 4 routing-contract examples pass as tests (valid, trivial, LEVEL_RISK_MISMATCH, CAPABILITY_MISSING).`
+  - **Result**: PASS
+  - **Evidence**: pipeline.test.ts T-1…T-4 (+T-5): four §Examples payloads verbatim; T-1 deep-equals the success payload PARSED from routing-contract.md; T-3 message byte-matches; T-4 doc-shaped CAPABILITY_MISSING via injected migration pack (D-1); T-5 proves step-3-before-5
   - **Result**: Pending
   - **Evidence**: Pending
-- [ ] **AC-2**: `Success payload ≤ 80 tokens via bytes/4 heuristic test (P9/RFC §1.2).`
+- [x] **AC-2**: `Success payload ≤ 80 tokens via bytes/4 heuristic test (P9/RFC §1.2).`
+  - **Result**: PASS
+  - **Evidence**: T-12: JSON.stringify compact AND pretty ≤ 80 tokens (bytes/4), with headroom; also asserted on default-registry payloads
   - **Result**: Pending
   - **Evidence**: Pending
-- [ ] **AC-3**: `SCOPE_FILE_NOT_FOUND warning-only: exit 0, logged, non-blocking.`
+- [x] **AC-3**: `SCOPE_FILE_NOT_FOUND warning-only: exit 0, logged, non-blocking.`
+  - **Result**: PASS
+  - **Evidence**: scope.test.ts (8) + full-pipeline T-10 case: missing literal file ⇒ ok:true + warnings[1]; globs/greenfield/absent-cwd never warn; exit 0 from shared/errors.js; D-3 contract paragraph shipped in same commit (routing-contract.md §Scope)
   - **Result**: Pending
   - **Evidence**: Pending
-- [ ] **AC-4**: `Unknown workflow → WORKFLOW_NOT_FOUND with enabled list.`
+- [x] **AC-4**: `Unknown workflow → WORKFLOW_NOT_FOUND with enabled list.`
+  - **Result**: PASS
+  - **Evidence**: T-5 + T-8: WORKFLOW_NOT_FOUND carries context.enabled == exactly ['feature','bugfix','docs','chore']; all 4 built-ins resolve, a fifth name blocks
   - **Result**: Pending
   - **Evidence**: Pending
 
@@ -48,12 +56,12 @@
 - **Host Timer Capability**: `None observed in DSH harness — checkpoints enforced by convention only`
 
 ## 5. State and Active Ownership
-- **Execution State**: `in_progress`
-- **Mapped `pk:tasks` Status**: `In Progress`
-- **Active Task Pointer**: `TASK-2026-09-15-v010-ms4-router` (claimed by DSH agent session)
+- **Execution State**: `awaiting_review`
+- **Mapped `pk:tasks` Status**: `In Review`
+- **Active Task Pointer**: `None` (review-parked; held throughout slices 1–3)
 - **Start Time**: `2026-09-14 15:05 UTC`
 - **Current Actor**: `DSH agent (executing under maintainer GO-MS4 — first slice only)`
-- **Next Action**: `Implement types.ts + levels.ts + their tests; show diff for sign-off. Registry/capabilities/scope/pipeline NOT authorized yet.`
+- **Next Action**: `Maintainer review (#4); MS-5 unlocks on approval`
 
 ### Transition History
 | Previous State | New State | Timestamp | Actor | Reason | Supporting Evidence |
@@ -61,6 +69,7 @@
 | — | `planned` | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
 | `planned` | `ready` | 2026-09-14 15:05 UTC | Lead Engineer | MS-3 approved + #3 closed (dependency satisfied); design gaps D-1…D-3 ruled | issue #3 CLOSED; `…ms4-router.plan-001.md` §12 |
 | `ready` | `in_progress` | 2026-09-14 15:05 UTC | DSH agent | GO-MS4 given **scoped to the first slice**; pointer claimed backticked per the MS-3 retry lesson | maintainer selection "GO — first slice only" |
+| `in_progress` | `awaiting_review` | 2026-09-14 | DSH agent | Slices 2–3 GO'd by maintainer batch ("Commit slice 2, continue steps 4–5" + final "Commit + push"); AC-1…4 PASS; 117/117 | this record + verify log |
 
 > **Authorization boundary (partial GO)**: only `src/core/router/types.ts`, `levels.ts` and
 > their unit tests are authorized. `registry.ts`, `capabilities.ts`, `scope.ts`,
@@ -78,23 +87,23 @@
 - **Scope Change Records**: `None` (design rulings D-1…D-3 live in `…plan-001.md` §12)
 - **Checkpoint Records**: `None`
 - **Handoff Records**: `None`
-- **Verification Evidence**: `npm run verify` exit 0 — lint 0 · tsc 0 · **60/60** (was 42/42; +18) at 2026-09-14 15:13 UTC. Prettier clean. Architecture rule asserted: `src/core/router/` imports nothing outside `./types.js` and `src/shared/`.
+- **Verification Evidence**: slices 1–2 as previously recorded; slice 3: `npm run verify` VERIFY_EXIT=0 — lint 0 · tsc 0 · **117/117 (10 files)** 2026-09-14 06:29→06:33 run chain (date -u basis); exit read via $?, never piped (STATE.md hazard honored)
 - **Gate BLOCK proof (mutation run)**: each of four injected defects was caught, then reverted — `medium→1` (3 failures) · level-2 `tests` dropped (6) · `>=` inverted to `<=` (4) · override removal silently honoured (3). Restored file passes 18/18.
 - **Behavior IDs**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Intent Register**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Execution Evidence**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Exception Verification**: `N/A - Code Work`
-- **CI Evidence**: N/A before commit
-- **Review Evidence**: `N/A - first-slice diff presented for maintainer sign-off before staging`
-- **Commit Evidence**: N/A before commit
+- **CI Evidence**: headSha-matched runs recorded at push (slice-3 commit); prior slices green: 34854360256 pattern established
+- **Review Evidence**: slices signed off sequentially in-session (plan-001 §10 respected); final review pending on #4
+- **Commit Evidence**: `a20c9ed` (slice 1 levels) · `c158620` (slice 2 registry/capabilities/oracle) · slice-3 scope+pipeline+docs (this commit)
 - **Pull Request Evidence**: `N/A before PR`
 - **Release Evidence**: `N/A`
-- **Blocker and Resume Condition**: `None mechanical. Needs a further explicit GO for the registry/capabilities/scope/pipeline slice, and per-instance authorization to push.`
+- **Blocker and Resume Condition**: `None — slices 2–3 GO'd and push authorized per #11 ruling (2026-09-14 maintainer batch)`
 
 ### Completion Gate
-- **Completion State**: `in_progress`
-- **Acceptance Results**: `AC-1 Pending · AC-2 Pending · AC-3 Pending · AC-4 Pending — none is reachable without pipeline.ts; step 4 logic is landed and mutation-proven but the ACs name end-to-end outcomes.`
-- **Changed-File Summary**: 2 source + 1 test file, first slice only
+- **Completion State**: `awaiting_review`
+- **Acceptance Results**: `AC-1 PASS · AC-2 PASS · AC-3 PASS · AC-4 PASS`
+- **Changed-File Summary**: 6 router modules + index + doc-oracle harness + 66 router tests (117 total) + 1 contract paragraph; no CLI (MS-6), no state writes
 - **Completion Exception**: `None`
 - **Completion Decision and Timestamp**: `in_progress` by DSH agent 2026-09-14 15:13 UTC
 
