@@ -29,12 +29,13 @@
 - [x] `GO-MS2` — **GIVEN**; MS-2 executed & **maintainer-approved** → `completed`; #2 closed
 - [x] `GO-MS3` — **GIVEN**; MS-3 executed: TaskStore + transition matrix + optimistic locking + events; 42/42 tests; **schema minItems design correction** (structure permits, lifecycle enforces); CI 34854360256 green; **maintainer-approved 2026-09-14 14:31 UTC → `completed`; #3 closed**
 - [x] `GO-MS4` — GIVEN in slices; MS-4 executed and **maintainer-approved ("okay" batch 2026-09-14)** → `completed`; #4 closed on GitHub
-- [/] `GO-MS5` — **GIVEN** same batch; MS-5 `in_progress`: verification engine — PASS _and_ BLOCK per check type, declared-commands-only, timeouts, redaction
+- [x] `GO-MS5` — GIVEN; MS-5 executed in 3 slices (grammar / redactor+store / runner+gate), 187/187, CI ×3 headSha-green → `awaiting_review` on #5
+- [ ] `GO-MS6`: unlocks on MS-5 review (#5); inherits the file-baseline capture obligation (NOTES §4)
 
 ## 3. Active Working Set
 
 - **Active RFC / Spec**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`
-- **Active Task Pointer**: `TASK-2026-09-15-v010-ms5-verification` (in_progress)
+- **Active Task Pointer**: `None` (MS-5 review-parked)
 - **Key Source Files in Flight**: the v0.1.0 surface corpus (`docs/cli-reference.md`, `docs/routing-contract.md`, `docs/verification-guide.md`, `docs/errors.md`, `docs/getting-started.md`, `docs/faq.md`, `AGENTS.md`, `CONTRIBUTING.md`) — authority map in `docs/NOTES.md` §2
 - **Verification Commands (Scoped)**: `npm run verify` = THE gate (live since MS-1, 2026-09-15). CI: `verify` workflow, node 20/22/24 on push+PR.
 
@@ -65,9 +66,9 @@ P1–P10 + tie-breaker, verbatim in `docs/NOTES.md` §3. Pending additions on RF
 
 ## 7. Next Immediate Actions (single lane)
 
-1. **Maintainer**: review MS-4 on #4 (record `awaiting_review`; slices `a20c9ed`→`3c2641b`, CI headSha-verified 34881694555).
-2. **Then**: on approval, complete MS-4 record, close #4, issue `GO-MS5`; MS-5 builds the verification engine — every check type tested PASS _and_ BLOCK (AGENTS rule), declared-commands-only, 300 s default timeout, exit 0/1/2/12.
-3. Governance settled this session: #11 push ruling adopted (per-instance authorization; canonical in the 9 records + NOTES §4); #12 pack-set ruling adopted (4 built-ins v0.1.0, 8 §10.3 packs → MS-8 ADR, `cli-reference:125` line joins MS-9 docs audit).
+1. **Maintainer**: review MS-5 on #5 (record `awaiting_review`; slices `539444c`→`5e5c3e6`, CI ×3 green).
+2. **Then**: on approval, complete MS-5 record, close #5, issue `GO-MS6` — CLI surface per cli-reference.md, **including the file-baseline capture at implementing-entry** (MS-6 obligation, NOTES §4).
+3. Open ruling: #14 (verify gate stage count). Deferred debt tracked in NOTES §4 (drift test, SECURITY email, adr/adrs naming, docs/state-model.md #13).
 
 ## 8. Session Continuity Log
 

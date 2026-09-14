@@ -27,21 +27,21 @@
 
 ## 3. Acceptance Criteria
 
-- [ ] **AC-1**: `EVERY check type has one PASS and one BLOCK test (a gate that only passes is not a gate).`
-  - **Result**: Pending
-  - **Evidence**: Pending
-- [ ] **AC-2**: `Hang → killed at timeout, VERIFY_COMMAND_TIMEOUT exit 12.`
-  - **Result**: Pending
-  - **Evidence**: Pending
-- [ ] **AC-3**: `Secret-bearing fixture redacted or EVIDENCE_REDACTION_FAILED (exit 10); never raw.`
-  - **Result**: Pending
-  - **Evidence**: Pending
-- [ ] **AC-4**: `Undeclared execution structurally impossible: commands only from validated contract objects.`
-  - **Result**: Pending
-  - **Evidence**: Pending
-- [ ] **AC-5**: `must_not.command_fails inversion tested both directions.`
-  - **Result**: Pending
-  - **Evidence**: Pending
+- [x] **AC-1**: `EVERY check type has one PASS and one BLOCK test (a gate that only passes is not a gate).`
+  - **Result**: PASS
+  - **Evidence**: checks.test.ts: PASS+BLOCK for all seven types (file_exists hit/missing/escape, regex match/non-match/bad-regex/missing-file, state true/false/junk, evidence_exists attached/absent, command exit0/exit7/timeout, file_not_modified no-baseline/match/drift, command_fails non-zero/exit0-inverted); gate.test.ts aggregates 3-pass/1-fail naming ALL failures
+- [x] **AC-2**: `Hang → killed at timeout, VERIFY_COMMAND_TIMEOUT exit 12.`
+  - **Result**: PASS
+  - **Evidence**: checks.test timeout ('sleep 30', timeout_ms 1000): killed at ~1s, VERIFY_COMMAND_TIMEOUT error attached, evidence records timed_out:true; gate.test proves 12 wins over 1 across a contract
+- [x] **AC-3**: `Secret-bearing fixture redacted or EVIDENCE_REDACTION_FAILED (exit 10); never raw.`
+  - **Result**: PASS
+  - **Evidence**: evidence.test + checks.test: secret-in-command, secret-on-stderr-only (stdout survives), redaction_count recorded, orphan-never-raw; store's serialized pre-flight scan refuses writes (EVIDENCE_REDACTION_FAILED, exit-10 class) with zero bytes landed
+- [x] **AC-4**: `Undeclared execution structurally impossible: commands only from validated contract objects.`
+  - **Result**: PASS
+  - **Evidence**: contract.ts+loadContract: commands exist only after meta-schema validation (schemas.test rejects command-without-run); command.ts input type is the validated check object — no string-entry API to bypass; gate refuses unreadable history (IO_ERROR) before any check runs
+- [x] **AC-5**: `must_not.command_fails inversion tested both directions.`
+  - **Result**: PASS
+  - **Evidence**: checks.test 'must_not checks (inversion)': command_fails passes on exit 2, detail INVERTED on exit 0; timeout on an inverted check blocks, cannot be judged
 
 ## 4. Execution Policy
 
@@ -56,12 +56,12 @@
 
 ## 5. State and Active Ownership
 
-- **Execution State**: `in_progress`
-- **Mapped `pk:tasks` Status**: `In Progress`
-- **Active Task Pointer**: `TASK-2026-09-15-v010-ms5-verification`
+- **Execution State**: `awaiting_review`
+- **Mapped `pk:tasks` Status**: `In Review`
+- **Active Task Pointer**: `None` (review-parked)
 - **Start Time**: `N/A`
 - **Current Actor**: `DSH agent (executing under maintainer GO-MS5, 2026-09-14)`
-- **Next Action**: `Design note (plan-001): evidence layout, state_check grammar, timeout/redaction mechanics; then implement with PASS+BLOCK tests per check type`
+- **Next Action**: `Maintainer review (#5); MS-6 unlocks on approval. Hand-off obligation: file-baseline capture at implementing-entry (NOTES §4)`
 
 ### Transition History
 
@@ -70,30 +70,33 @@
 | —              | `planned`     | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
 | `planned`      | `ready`       | 2026-09-14           | Lead Engineer        | MS-4 completed → dependency satisfied; GO-MS5 in "okay" batch       | #4 closed                                         |
 | `ready`        | `in_progress` | 2026-09-14           | DSH agent            | Pointer claimed (backticked, MS-3 lesson applied)                   | this record                                       |
+| `in_progress`  | `awaiting_review` | 2026-09-14 | DSH agent | AC-1…5 PASS; 187/187; CI ×3 headSha-green | verify log + runs cited |
 
 ## 6. Evidence and Completion Gate
 
 - **Changed Files**:
-  - `[pending]`
+  - `src/core/verification/{types,grammar,redact,evidence,command,contract,checks,gate,index}.ts` — engine complete
+  - `tests/unit/verification/{grammar,redact,evidence,contract,checks,gate}.test.ts` — 6 files, 71 new tests (187 total)
+  - Design note: `…ms5-verification.plan-001.md` (rulings D1–D3 recorded)
 - **Scope Change Records**: `None`
 - **Checkpoint Records**: `None`
 - **Handoff Records**: `None`
-- **Verification Evidence**: Pending
+- **Verification Evidence**: `npm run verify` VERIFY_EXIT=0 (lint · tsc · 187/187) after each slice; CI 34891182721/34892753024/34895156478 all success headSha-matched; npm audit 0 vulns
 - **Behavior IDs**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Intent Register**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Execution Evidence**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Exception Verification**: `N/A - Code Work`
-- **CI Evidence**: N/A
-- **Review Evidence**: `N/A`
-- **Commit Evidence**: N/A before commit
+- **CI Evidence**: runs cited in Verification Evidence (three green, one per slice)
+- **Review Evidence**: pending maintainer review (#5)
+- **Commit Evidence**: `539444c` · `6f1e981` · `5e5c3e6`
 - **Pull Request Evidence**: `N/A before PR`
 - **Release Evidence**: `N/A`
-- **Blocker and Resume Condition**: Depends on MS-3; maintainer go signal
+- **Blocker and Resume Condition**: `None — awaiting review (#5)`
 
 ### Completion Gate
 
-- **Completion State**: `planned`
-- **Acceptance Results**: Pending
-- **Changed-File Summary**: Pending
+- **Completion State**: `awaiting_review`
+- **Acceptance Results**: `AC-1..AC-5 PASS`
+- **Changed-File Summary**: verification engine only; zero changes to state/router/CLI surfaces
 - **Completion Exception**: `None`
-- **Completion Decision and Timestamp**: Pending
+- **Completion Decision and Timestamp**: `awaiting_review` by DSH agent 2026-09-14; each slice carried its own GO

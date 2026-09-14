@@ -57,6 +57,9 @@ Source: `ARCHITECTURE.md` §2 (P1–P10) + Appendix B.
 
 ## 4. Open Items
 
+- [ ] **MS-6 obligation (from MS-5)**: `file_not_modified` fails closed without a baseline; the CLI must capture `file-baseline` evidence (path + sha256) at `planned→implementing` for every must_not path in the bound contract — otherwise the check can only ever block. Not yet in cli-reference.md; joins MS-6 scope + docs-amendment list.
+- [ ] **Verify-gate stage count (#14)**: AGENTS says 3-stage, CONTRIBUTING includes format:check — ruling pending (recommendation on file).
+
 - [x] **Maintainer-identity ruling (2026-09-14, "okay" batch)**: the human driving this chat session _is_ the maintainer. Their explicit in-chat GO — including "okay" to a decision presented to them — is the per-milestone sign-off, and "commit"/"push" language in that GO is the per-instance push authorization the #11 ruling requires. **Silence, absence, tool defaults, and my own inference never constitute authorization.** Recorded here; `AGENTS.md`'s "Do not force-push to main. Ever." remains absolute.
 
 ### Governance rulings (adopted — canonical copy; the 9 Task Records link here)
