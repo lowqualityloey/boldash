@@ -7,6 +7,7 @@ Boldash is the deterministic control plane for AI coding agents. It sits between
 **Status:** Pre-alpha. Design phase. Not yet installable.
 **Predecessor:** [PromptKit OS v1](https://github.com/lowqualityloey/promptkit-os)
 **Full design:** [ARCHITECTURE.md](./ARCHITECTURE.md)
+**CI:** [![CI](https://github.com/lowqualityloey/boldash/actions/workflows/ci.yml/badge.svg)](https://github.com/lowqualityloey/boldash/actions/workflows/ci.yml)
 
 ---
 
