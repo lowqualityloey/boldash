@@ -71,10 +71,10 @@ describe('task.schema.json (AC-1)', () => {
     expect(check('task', { ...validTask, status: 'complete' })).toBe(false);
     expect(check('task', { ...validTask, status: 'blocked' })).toBe(false);
   });
-  it('rejects bad ids, wrong schema_version, and empty requirements', () => {
+  it('accepts empty requirements (structure permits; lifecycle enforces ≥1) but rejects bad ids and wrong version', () => {
+    expect(check('task', { ...validTask, requirements: [] })).toBe(true);
     expect(check('task', { ...validTask, id: 'task one' })).toBe(false);
     expect(check('task', { ...validTask, schema_version: 2 })).toBe(false);
-    expect(check('task', { ...validTask, requirements: [] })).toBe(false);
   });
 });
 

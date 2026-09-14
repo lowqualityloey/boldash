@@ -2,46 +2,113 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://boldash.local/schemas/task.schema.json",
   "title": "Boldash Task",
-  "description": "One unit of work inside .boldash/state/tasks.json. ARCHITECTURE.md §8.1. Task carries requirements and evidence; verification proves existence of evidence, never code quality (P4, non-goals).",
+  "description": "One unit of work inside .boldash/state/tasks.json. ARCHITECTURE.md \u00a78.1. Task carries requirements and evidence; verification proves existence of evidence, never code quality (P4, non-goals).",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "id", "title", "type", "risk", "level", "status", "requirements", "version", "created_at", "updated_at"],
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "type",
+    "risk",
+    "level",
+    "status",
+    "requirements",
+    "version",
+    "created_at",
+    "updated_at"
+  ],
   "properties": {
     "schema_version": {
       "const": 1,
-      "description": "State schema version (ARCHITECTURE §7). Readers must refuse unknown versions, never guess."
+      "description": "State schema version (ARCHITECTURE \u00a77). Readers must refuse unknown versions, never guess."
     },
-    "id": { "type": "string", "pattern": "^TASK-[0-9A-Za-z-]+$" },
-    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "id": {
+      "type": "string",
+      "pattern": "^TASK-[0-9A-Za-z-]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
     "type": {
       "type": "string",
-      "enum": ["bugfix", "feature", "refactor", "migration", "security", "architecture", "docs", "chore"]
+      "enum": [
+        "bugfix",
+        "feature",
+        "refactor",
+        "migration",
+        "security",
+        "architecture",
+        "docs",
+        "chore"
+      ]
     },
-    "risk": { "type": "string", "enum": ["trivial", "low", "medium", "high", "critical"] },
-    "level": { "type": "integer", "minimum": 0, "maximum": 3 },
+    "risk": {
+      "type": "string",
+      "enum": [
+        "trivial",
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3
+    },
     "status": {
       "type": "string",
-      "enum": ["proposed", "planned", "implementing", "verifying", "complete", "blocked", "failed"]
+      "enum": [
+        "proposed",
+        "planned",
+        "implementing",
+        "verifying",
+        "complete",
+        "blocked",
+        "failed"
+      ]
     },
     "owner": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Current claimant under lease; null when unowned."
     },
-    "summary": { "type": "string", "maxLength": 500 },
+    "summary": {
+      "type": "string",
+      "maxLength": 500
+    },
     "requirements": {
       "type": "array",
-      "minItems": 1,
-      "description": "Acceptance conditions. Transition past planned requires at least one (STATE_MISSING_REQUIREMENT).",
+      "description": "Acceptance conditions. A task may exist with zero (authored incrementally); the planned\u2192implementing lifecycle guard enforces \u22651 (STATE_MISSING_REQUIREMENT). Structure permits, lifecycle enforces.",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "text"],
+        "required": [
+          "id",
+          "text"
+        ],
         "properties": {
-          "id": { "type": "string", "pattern": "^R[0-9]+$" },
-          "text": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "id": {
+            "type": "string",
+            "pattern": "^R[0-9]+$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
           "evidence": {
             "type": "array",
-            "items": { "type": "string", "pattern": "^EVID-[0-9A-Za-z-]+$" },
+            "items": {
+              "type": "string",
+              "pattern": "^EVID-[0-9A-Za-z-]+$"
+            },
             "description": "Evidence references; FACTs only, never prose claims."
           }
         }
@@ -52,11 +119,24 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "text"],
+        "required": [
+          "id",
+          "text"
+        ],
         "properties": {
-          "id": { "type": "string", "pattern": "^RSK-[0-9]+$" },
-          "text": { "type": "string", "minLength": 1, "maxLength": 500 },
-          "mitigation": { "type": "string", "maxLength": 500 }
+          "id": {
+            "type": "string",
+            "pattern": "^RSK-[0-9]+$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "mitigation": {
+            "type": "string",
+            "maxLength": 500
+          }
         }
       }
     },
@@ -64,29 +144,95 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "files": { "type": "array", "items": { "type": "string" } },
-        "systems": { "type": "array", "items": { "type": "string" } }
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "systems": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
       }
     },
-    "workflow": { "type": "string" },
+    "workflow": {
+      "type": "string"
+    },
     "version": {
       "type": "integer",
       "minimum": 1,
-      "description": "Optimistic concurrency token. Every write must send the version it read; mismatch ⇒ CONCURRENT_MODIFICATION (exit 4)."
+      "description": "Optimistic concurrency token. Every write must send the version it read; mismatch \u21d2 CONCURRENT_MODIFICATION (exit 4)."
     },
-    "blocked_reason": { "type": ["string", "null"] },
-    "created_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$" },
-    "updated_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$" },
-    "completed_at": { "type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})?$" }
+    "blocked_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$"
+    },
+    "updated_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$"
+    },
+    "completed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})?$"
+    }
   },
   "allOf": [
     {
-      "if": { "properties": { "status": { "const": "complete" } }, "required": ["status"] },
-      "then": { "required": ["completed_at"], "properties": { "completed_at": { "type": "string" } } }
+      "if": {
+        "properties": {
+          "status": {
+            "const": "complete"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "completed_at"
+        ],
+        "properties": {
+          "completed_at": {
+            "type": "string"
+          }
+        }
+      }
     },
     {
-      "if": { "properties": { "status": { "const": "blocked" } }, "required": ["status"] },
-      "then": { "required": ["blocked_reason"], "properties": { "blocked_reason": { "type": "string", "minLength": 1 } } }
+      "if": {
+        "properties": {
+          "status": {
+            "const": "blocked"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "blocked_reason"
+        ],
+        "properties": {
+          "blocked_reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
     }
   ]
 }
