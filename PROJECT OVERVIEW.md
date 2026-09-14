@@ -1,0 +1,340 @@
+# Project Overview
+
+> **Boldash** — the deterministic control plane for AI coding agents.
+>
+> **One sentence:** The LLM proposes. Boldash validates, enforces, records, and verifies.
+
+---
+
+## Table of Contents
+
+- [What Boldash Is](#what-boldash-is)
+- [What Boldash Is Not](#what-boldash-is-not)
+- [Why It Exists](#why-it-exists)
+- [Who It Is For](#who-it-is-for)
+- [Who It Is Not For](#who-it-is-not-for)
+- [What It Does](#what-it-does)
+- [Core Concepts](#core-concepts)
+- [Design Principles](#design-principles)
+- [Relationship to PromptKit OS v1](#relationship-to-promptkit-os-v1)
+- [Project Status](#project-status)
+- [Roadmap Summary](#roadmap-summary)
+- [Success Criteria](#success-criteria)
+- [Failure Modes We Are Watching](#failure-modes-we-are-watching)
+- [What We Will Not Build](#what-we-will-not-build)
+- [Where to Read More](#where-to-read-more)
+
+---
+
+## What Boldash Is
+
+Boldash is a **local-first, Git-native runtime** that sits between an AI coding agent and a software repository. It does four things the agent cannot reliably do for itself:
+
+1. **Validates routing.** The agent proposes a structured route (JSON). Boldash validates it against schemas, a workflow registry, and the host's capabilities.
+2. **Owns canonical state.** Task state lives in `.boldash/state/*.json`. Markdown files are generated projections, never the source of truth.
+3. **Enforces policy.** Machine-readable rules determine whether an action (commit, release, migration) is permitted. Rules are evaluated outside the LLM.
+4. **Runs gates and records evidence.** `boldash verify` returns a non-zero exit code on failure. Every meaningful operation is written to an append-only event log.
+
+Boldash is a CLI. It has no GUI, no daemon, no cloud dependency, and no database.
+
+---
+
+## What Boldash Is Not
+
+| Boldash is not | Because |
+|---|---|
+| An LLM | It does not generate code, write specs, or reason about design. |
+| An IDE | It provides no editor and no chat interface. |
+| A prompt framework | It is the runtime *around* prompts, not a collection of prompts. |
+| A SaaS | It is local-first; the core has no cloud dependency. |
+| A general workflow engine | It is scoped to AI coding agents. Not Airflow, Temporal, or n8n. |
+| A full policy language | Policy rules are simple, declarative, and constrained. Not OPA or Cedar. |
+| A sandbox | It validates commands; it does not sandbox the shell. |
+| A correctness guarantee | It verifies evidence exists. Whether code is *good* is human judgment. |
+| A replacement for the agent | It governs the agent; it does not become the agent. |
+
+---
+
+## Why It Exists
+
+Every AI coding framework today shares the same structural flaw:
+
+```
+Agent reads "run tests before committing"
+       ↓
+Agent decides whether it ran the tests
+       ↓
+Agent decides whether the tests passed
+       ↓
+Agent decides it is done
+       ↓
+Agent commits
+```
+
+The agent is the executor **and** the judge. That is not enforcement. It is self-attestation.
+
+No amount of better prompting fixes this. You cannot prompt your way into a guarantee. The failure is architectural, not textual.
+
+Boldash exists to move enforcement out of the LLM and into deterministic machinery:
+
+```
+Before:  LLM ──reads──► Markdown ──decides──► Action
+After:   LLM ──proposes──► JSON ──validated by──► Boldash ──permits──► Action
+```
+
+---
+
+## Who It Is For
+
+- **Solo developers** using Claude Code, Cursor, Antigravity, Codex, or Gemini CLI who want their agent to stop cutting corners.
+- **Small teams** who need a shared, Git-native record of what an agent did and why.
+- **Engineering leads** evaluating AI coding tools who need evidence, not marketing claims.
+- **Prompt framework authors** (including PromptKit OS v1 users) who want enforcement layered on top of their existing protocols.
+- **Researchers** studying agent reliability who need structured, reproducible task state.
+
+---
+
+## Who It Is Not For
+
+- Users who want a fully autonomous agent with no oversight.
+- Users who do not want a CLI in their workflow.
+- Users who want a cloud dashboard.
+- Users who want Boldash to *write* their code. Boldash governs; the agent writes.
+- Users who want a drop-in replacement for existing prompt frameworks. Boldash is a new layer, not a replacement.
+
+---
+
+## What It Does
+
+### 1. Validates routing
+
+The agent proposes:
+
+```json
+{
+  "task": { "type": "feature", "risk": "medium", "scope": { "files": ["src/auth/*"] } },
+  "route": { "workflow": "feature", "level": 2 }
+}
+```
+
+Boldash checks it against a JSON schema, the workflow registry, and the host's declared capabilities. Invalid proposals return structured errors the agent can correct.
+
+### 2. Owns canonical state
+
+Task state lives in `.boldash/state/tasks.json` and related files. The agent queries it with `boldash state get TASK-42` — about 100 tokens of JSON — instead of reading five Markdown files and guessing.
+
+Markdown files under `docs/` are regenerated from canonical state. They carry a `GENERATED BY BOLDASH` header and are read-only for humans and agents.
+
+### 3. Enforces policy
+
+```yaml
+- id: commit-requires-verification
+  action: git.commit
+  requires:
+    - "state.task.status == 'verifying'"
+    - "verification.all_requirements_verified == true"
+    - "git.working_tree_clean == true"
+  block_message: "Cannot commit: requirements not verified."
+```
+
+The agent can ask to commit. Boldash decides whether to permit it.
+
+### 4. Runs real gates
+
+```bash
+$ boldash verify TASK-42
+✓ R1 implemented
+✓ R2 implemented
+✓ R3 implemented
+✓ No secrets detected
+✓ Working tree clean
+
+STATUS: VERIFIED
+Exit code: 0
+```
+
+Non-zero exit code on failure. Host adapters use this exit code to block downstream actions.
+
+### 5. Records evidence
+
+Every operation is written to `.boldash/events.jsonl`. `boldash explain TASK-42` produces a traceability graph linking requirements → implementation → tests → review → verification.
+
+This answers the question *"why does Boldash think this is done?"* with recorded evidence.
+
+---
+
+## Core Concepts
+
+| Term | Meaning |
+|---|---|
+| **Route** | A structured JSON proposal from the LLM describing task type, risk, scope, and workflow. |
+| **Task** | A unit of work with canonical state, requirements, evidence, and a version. |
+| **Workflow** | A versioned unit of work with a Markdown protocol and a machine-readable contract. |
+| **Lifecycle stage** | A grouping of workflows: `DISCOVER`, `PLAN`, `BUILD`, `VERIFY`, `SHIP`, `LEARN`. |
+| **Capability** | A feature a host provides (`subagents`, `git.worktree`, `mcp`). |
+| **Gate** | A deterministic check that returns PASS or BLOCK with an exit code. |
+| **Profile** | A policy preset: `lite`, `balanced`, `strict`, `accelerated`. |
+| **Adapter** | A host-specific implementation of Boldash's capabilities. |
+| **Evidence** | A recorded artifact (test run, review, secret scan) attached to a task. |
+| **Event** | A single append-only entry in the event log. |
+| **Projection** | A Markdown file generated from canonical state for human reading. |
+
+Full definitions in [ARCHITECTURE.md § 19](./ARCHITECTURE.md#19-glossary).
+
+---
+
+## Design Principles
+
+1. **Separation of intelligence and enforcement.** The LLM reasons; Boldash enforces. These never cross.
+2. **Canonical state is machine-readable.** Markdown is a projection, never the truth.
+3. **Deterministic work belongs outside the LLM.** If a check can be code, it must not be a prompt.
+4. **Every gate returns an exit code.** A gate that cannot block is a suggestion.
+5. **Zero ceremony for trivial work.** Risk determines ceremony. A one-line rename should be invisible.
+6. **Local-first, Git-native, no daemon.** State is files. Everything travels with the repository.
+7. **Model-agnostic.** All model output is validated against schemas. No model is assumed.
+8. **Graceful degradation.** If Boldash is unavailable, the agent still works — with reduced guarantees.
+9. **The runtime may be complex; the LLM interface must be tiny.** Schemas and errors fit in a few hundred tokens.
+10. **Every decision is explainable.** If `boldash explain` cannot justify a decision with evidence, the design is wrong.
+
+Full rationale in [ARCHITECTURE.md § 2](./ARCHITECTURE.md#2-core-principles).
+
+---
+
+## Relationship to PromptKit OS v1
+
+Boldash is the successor to [PromptKit OS v1](https://github.com/lowqualityloey/promptkit-os), but it is **not a rewrite**. It is a different layer.
+
+| Aspect | v1 (PromptKit OS) | Boldash |
+|---|---|---|
+| **Form** | Markdown protocols only | Runtime + Markdown protocols |
+| **Enforcement** | Self-attestation | Deterministic gates |
+| **State** | Distributed Markdown | Canonical JSON + Markdown projection |
+| **Routing** | LLM reads Markdown, chooses | LLM proposes JSON, Boldash validates |
+| **Capabilities** | Implicit | Explicit and enforced |
+| **Evidence** | Prose in Markdown | Append-only event log |
+| **Host support** | Generated directive files | Adapter interface |
+| **Distribution** | Git submodule | npm package + git submodule option |
+
+v1 remains valid as a **protocol specification**. Boldash is the **runtime** that makes the specification enforceable.
+
+Existing v1 workflows can be imported:
+
+```bash
+boldash workflow import ../promptkit-os/workflows/
+```
+
+The protocols survive; verification contracts are added. Users do not have to rewrite their prompts.
+
+---
+
+## Project Status
+
+**Phase:** Pre-alpha. Design phase. **Not yet installable.**
+
+| Component | Status |
+|---|---|
+| Architecture | Drafted (`ARCHITECTURE.md`) |
+| README | Drafted |
+| Project overview | This file |
+| Security policy | Drafted |
+| Changelog | Initialized |
+| License | MIT |
+| JSON schemas | Not yet written |
+| CLI implementation | Not started |
+| Reference workflows | Not started |
+| Benchmark suite | Not started |
+| Host adapters | Not started |
+
+**Nothing in this repository is production-ready.** Treat all content as a design specification, not a product.
+
+---
+
+## Roadmap Summary
+
+| Phase | Version | Focus | Exit Criteria |
+|---|---|---|---|
+| **1** | v0.1.0 | Foundation: `init`, `route`, `state`, `verify`. Generic adapter. v1 import. | A user can initialize a project, propose a route, transition a task, and verify it from the CLI. |
+| **2** | v0.2.0 | Policy engine, capability manager, Claude adapter, `doctor`, `explain`. | A Claude Code user has commit gates enforced by Boldash. |
+| **3** | v0.3.0 | Event log, evidence storage, subagent protocol, Cursor adapter. | Two agents can work on sibling tasks without clobbering each other's state. |
+| **4** | v0.4.0+ | Antigravity adapter, workflow registry, benchmark suite, plugin API. | A third party can publish a workflow pack and a host adapter. |
+
+Full roadmap with tasks in [ARCHITECTURE.md § 16](./ARCHITECTURE.md#16-development-roadmap).
+
+---
+
+## Success Criteria
+
+Boldash succeeds if, on realistic engineering tasks, it measurably improves **engineering cost per verified task** compared to a baseline agent.
+
+The primary metric is **not**:
+
+- Tokens per request
+- Seconds per response
+- Number of workflows shipped
+- Lines of code written
+
+The primary metric **is**:
+
+> **Engineering cost per verified task = LLM cost + developer time + review time + retry cost + failure cost, divided by tasks that pass verification.**
+
+A run that uses 5,000 tokens and ships the wrong thing is worse than a run that uses 9,000 tokens and ships the right thing.
+
+Boldash will publish a benchmark suite. If Boldash cannot demonstrate improvement over baseline agents on that suite, the design is wrong and will be revisited.
+
+---
+
+## Failure Modes We Are Watching
+
+These are the ways Boldash could fail. They are named here so they can be tracked.
+
+| Failure mode | Why it matters | Mitigation |
+|---|---|---|
+| **The runtime becomes a bureaucracy** | If trivial tasks require ceremony, users will bypass Boldash. | Zero-ceremony principle; risk-based profile. |
+| **The LLM-facing surface grows too large** | If the agent must read 2,000 tokens to understand Boldash, token savings vanish. | P9: runtime may be complex, LLM interface must be tiny. |
+| **Verification becomes theater** | Beautiful green checkmarks on bad software. | Distinguish FACT / CLAIM / JUDGMENT / INFERENCE in evidence. |
+| **Host adapters rot** | Claude, Cursor, etc. change; adapters break. | Version adapters; fall back to generic adapter. |
+| **Users bypass gates** | If `boldash verify` is optional, it will be skipped. | Host hooks enforce critical gates; advisory mode is explicit. |
+| **State conflicts under multi-agent work** | Two agents clobber each other's transitions. | Optimistic locking; leases; conflict detection. |
+| **Docs diverge from code** | Architecture becomes fiction. | Docs are versioned with code; ADRs record decisions. |
+| **The project stalls at design phase** | No code ships. | Phase 1 exit criteria are small and explicit. |
+
+---
+
+## What We Will Not Build
+
+Stated as non-goals to prevent scope creep.
+
+- A GUI or web dashboard.
+- A hosted SaaS in the core.
+- A general-purpose workflow engine.
+- A general-purpose policy language.
+- A runtime sandbox.
+- A code generator or spec writer.
+- A model provider or model router at the core level. (Model allocation is a future *feature*, not a runtime responsibility.)
+- A replacement for the host agent.
+- A replacement for the user's judgment.
+
+Full non-goals in [ARCHITECTURE.md § 3](./ARCHITECTURE.md#3-non-goals).
+
+---
+
+## Where to Read More
+
+| Document | Purpose |
+|---|---|
+| [`README.md`](./README.md) | The pitch. What Boldash is and why it matters. |
+| [`ARCHITECTURE.md`](./ARCHITECTURE.md) | The full design. Layers, engines, schemas, roadmap, testing. |
+| [`SECURITY.md`](./SECURITY.md) | Threat model, reporting, known design limitations. |
+| [`CHANGELOG.md`](./CHANGELOG.md) | Version history. |
+| [`LICENSE`](./LICENSE) | MIT license. |
+| `docs/getting-started.md` | *(planned)* First 10 minutes for a new user. |
+| `docs/state-model.md` | *(planned)* The canonical state model. |
+| `docs/routing-contract.md` | *(planned)* The routing schema and validation pipeline. |
+| `docs/verification-guide.md` | *(planned)* How to write a `done.schema.json`. |
+| `docs/migration-from-v1.md` | *(planned)* Migrating from PromptKit OS v1. |
+
+---
+
+> **The LLM proposes. Boldash validates, enforces, records, and verifies.**
+>
+> If a design decision does not serve that sentence, it is wrong.

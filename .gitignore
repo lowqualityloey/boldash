@@ -1,0 +1,59 @@
+# ─── Node.js ────────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+.pnpm-store/
+.yarn/
+
+# ─── Build output ───────────────────────────────────────────────────────────
+dist/
+build/
+out/
+lib/
+*.tsbuildinfo
+
+# ─── Test / coverage ────────────────────────────────────────────────────────
+coverage/
+.nyc_output/
+*.lcov
+
+# ─── Environment ────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─── Editor / OS ────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+*~
+
+# ─── Logs / temp ────────────────────────────────────────────────────────────
+*.log
+*.tmp
+*.temp
+.cache/
+.tmp/
+
+# ─── Boldash runtime (regenerable or local-only) ────────────────────────────
+# These are NOT committed. See ARCHITECTURE.md § 7.2.
+.boldash/cache/
+.boldash/locks/
+
+# ─── Boldash state (committed — do NOT ignore) ──────────────────────────────
+# The following are intentionally tracked:
+#   .boldash/config.yaml
+#   .boldash/state/*.json
+#   .boldash/evidence/**
+#   .boldash/events.jsonl
+#
+# If you are about to add an ignore rule for .boldash/, stop. Read
+# ARCHITECTURE.md § 7 first. State travels with the repository by design.
