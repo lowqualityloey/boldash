@@ -293,6 +293,8 @@ Used for:
 
 Declaring `src/auth/*` does not prevent modifying `src/db/*`. Boldash warns; it does not block. Enforcement belongs in policy rules.
 
+Declarations containing glob metacharacters are not evaluated (they state intent, not an existing path), and nothing is checked against an empty project root. A missing literal file yields one `SCOPE_FILE_NOT_FOUND` entry in an optional `warnings` array on the success payload — the key is omitted entirely when there is nothing to report, so the payloads in §What the Agent Sees stay exact.
+
 ---
 
 ## What the Agent Sees
