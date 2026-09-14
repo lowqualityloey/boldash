@@ -57,6 +57,7 @@ P1–P10 + tie-breaker, verbatim in `docs/NOTES.md` §3. Pending additions on RF
 ## 7. Next Immediate Actions (single lane, per handoff)
 1. **Maintainer**: issue `GO-MS4`. MS-3 is closed; checkpoint-001's "exactly one prioritized next action" is **consumed** (record completed, #3 closed at 2026-09-14 14:31 UTC).
 2. **Next session**: on GO, patch `TASK-2026-09-15-v010-ms4-router` → `ready` → `in_progress`, claim the pointer, then implement the 7-step router pipeline per `docs/routing-contract.md` §The Validation Pipeline with its 4 catalog errors. Do not start without GO (Gated Mode).
+3. **MS-4 plan prepared, awaiting ruling**: `docs/tasks/TASK-2026-09-15-v010-ms4-router.plan-001.md` — module design, 13-test PASS/BLOCK plan, AC traceability. It surfaces **three gaps that need a maintainer decision before code**: D-1 (example 4 routes to `migration`, which is not one of the 4 built-in packs, so step 3 shadows step 5), D-2 (`ARCHITECTURE.md` §5.3 mandates `manifest.yaml`, but a YAML parser would breach the ajv-only dependency invariant), D-3 (warning channel for step 6 is additive to a documented payload shape). No `src/` changes were made while planning.
 
 ## 8. Session Continuity Log
 | Date | Engineer / Agent | Focus | Artifacts |
