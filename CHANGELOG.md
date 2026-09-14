@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial design-phase corpus: `README.md`, `ARCHITECTURE.md`, `PROJECT OVERVIEW.md`, `SECURITY.md`, `CHANGELOG.md`, MIT `LICENSE`.
 - Working-state notes with milestone roadmap, document-authority map, and locked invariants (`docs/NOTES.md`).
 - Boldash-native GitHub templates (PR evidence table, task issues with verification seams).
+- **MS-1 scaffold (v0.1.0):** TypeScript strict + ESM toolchain, `npm run verify` release gate (lint → typecheck → vitest), ESLint 10 flat config, CI workflow on Node 20/22/24, populated `PROMPTKIT.md` project profile.
 
 ### Changed
 
