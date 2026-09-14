@@ -42,6 +42,15 @@ const SECRET_PATTERNS: ReadonlyArray<{ re: RegExp; keep: string }> = [
     re: /\b(password|secret|token|api[_-]?key)\b(\s*[:=]\s*)(['"])((?!\[REDACTED])[^'"\r\n]+)\3/gi,
     keep: '$1$2$3[REDACTED]$3',
   },
+  {
+    // Backslash-escaped quotes (`k = \"v\"`) — the shape a declared command
+    // string carries, and the shape JSON serialization adds. The evidence
+    // store's scanner PROBEs this form (see patternHits), so the redactor must
+    // clear it too; otherwise scanner and redactor disagree and every such
+    // command blocks on evidence-write instead of redacting. (Found by test.)
+    re: /\b(password|secret|token|api[_-]?key)\b(\s*[:=]\s*)\\(['"])((?!\[REDACTED])[^'"\r\n]+)\\\3/gi,
+    keep: '$1$2\\$3[REDACTED]\\$3',
+  },
 ];
 
 const REPLACER = '[REDACTED]';

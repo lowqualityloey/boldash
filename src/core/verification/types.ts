@@ -11,6 +11,7 @@
 
 import type { Task } from '../state/types.js';
 import type { ErrorInfo } from '../../shared/result.js';
+import type { EvidenceRecord } from './evidence.js';
 
 /** Ceremony-free literal unions kept aligned with the meta-schema enums. */
 export type PassCheckType =
@@ -105,7 +106,10 @@ export interface GateResult {
   finished_at: string;
 }
 
-/** Everything a check may consult, injected by the CLI/gate layer (no ambient reads). */
+/** Everything a check may consult, injected by the gate layer (no ambient
+ * reads). Evidence views are computed once up front by verifyTask, so a
+ * corrupt index fails the whole run loudly instead of masquerading as
+ * "no evidence" — and no check ever swallows an index error to pass. */
 export interface VerifyEnv {
   /** Absolute project root; every `path` resolves against it, escape-checked. */
   cwd: string;
@@ -113,4 +117,6 @@ export interface VerifyEnv {
   task: Task;
   /** Kinds currently attached to the task (evidence_exists oracle). */
   evidenceKinds: ReadonlySet<string>;
+  /** Full entries for the task (file_not_modified baseline lookup). */
+  evidenceEntries: readonly EvidenceRecord[];
 }

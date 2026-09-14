@@ -210,8 +210,10 @@ export class EvidenceStore {
     return raw.entries;
   }
 
-  /** Null = readIndex threw (corrupt/rejected/unreadable). Callers must fail closed. */
-  private tryReadIndex(): EvidenceRecord[] | null {
+  /** Null = readIndex threw (corrupt/rejected/unreadable). Callers must fail closed.
+   * Public: verifyTask uses this to abort the WHOLE run as a value when history
+   * is unreadable — never silently treating "unknown" as "no evidence". */
+  tryReadIndex(): EvidenceRecord[] | null {
     try {
       return this.readIndex();
     } catch {
