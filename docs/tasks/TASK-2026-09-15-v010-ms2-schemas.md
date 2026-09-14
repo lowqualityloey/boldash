@@ -56,12 +56,12 @@
 - **Host Timer Capability**: `None observed in DSH harness — checkpoints enforced by convention only`
 
 ## 5. State and Active Ownership
-- **Execution State**: `awaiting_review`
-- **Mapped `pk:tasks` Status**: `In Review`
-- **Active Task Pointer**: `None` (MS-2 review-parked; held throughout in_progress — see transition note)
+- **Execution State**: `completed`
+- **Mapped `pk:tasks` Status**: `Done`
+- **Active Task Pointer**: `None`
 - **Start Time**: `2026-09-15 01:35 UTC`
 - **Current Actor**: `DSH agent (executing under maintainer GO-MS2, 2026-09-15)`
-- **Next Action**: `Maintainer review on issue #2; MS-3 unlocks on approval`
+- **Next Action**: `None — completed; #2 closed`
 
 ### Transition History
 | Previous State | New State | Timestamp | Actor | Reason | Supporting Evidence |
@@ -70,6 +70,7 @@
 | `planned` | `ready` | 2026-09-15 01:35 UTC | Lead Engineer | MS-1 completed → dependency satisfied; GO-MS2 issued | #1 closed |
 | `ready` | `in_progress` | 2026-09-15 01:35 UTC | DSH agent | Pointer claimed (transition recorded; pointer field corrected to match in this commit — earlier replace silently missed due to missing backticks in template) | this record |
 | `in_progress` | `awaiting_review` | 2026-09-15 01:46 UTC | DSH agent | AC-1…AC-4 PASS; CI 34851150797 success on c2316de | `npm run verify` + `gh run list --json headSha` |
+| `awaiting_review` | `completed` | 2026-09-15 01:52 UTC | Lead Engineer | Maintainer review approved; CI re-confirmed green on 928bcf5 (run 34852013278) | #2 closed |
 
 ## 6. Evidence and Completion Gate
 - **Changed Files**:
@@ -86,15 +87,15 @@
 - **TDD Execution Evidence**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Exception Verification**: `N/A - Code Work`
 - **CI Evidence**: GitHub Actions run `34851150797`, headSha `c2316de`, push, **completed/success** (node 20/22/24)
-- **Review Evidence**: pending maintainer review
+- **Review Evidence**: Maintainer approval 2026-09-15 01:52 UTC ('Approve MS-2, GO MS-3'); #2 closed
 - **Commit Evidence**: `b7fe900` feat(schemas) · `c2316de` feat(shared)
 - **Pull Request Evidence**: `N/A before PR`
 - **Release Evidence**: `N/A`
 - **Blocker and Resume Condition**: `None — awaiting maintainer review (#2)`
 
 ### Completion Gate
-- **Completion State**: `awaiting_review`
+- **Completion State**: `completed`
 - **Acceptance Results**: `AC-1 PASS · AC-2 PASS · AC-3 PASS · AC-4 PASS`
 - **Changed-File Summary**: 5 schemas, 5 kernel modules, 3 test files; no engine logic — exactly milestone scope
 - **Completion Exception**: `None`
-- **Completion Decision and Timestamp**: `awaiting_review` recorded by DSH agent 2026-09-15 01:46 UTC; maintainer decision pending
+- **Completion Decision and Timestamp**: `completed` — Lead Engineer, 2026-09-15 01:52 UTC
