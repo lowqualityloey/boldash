@@ -6,7 +6,7 @@
 - **Overall Status**: ACTIVE
 - **Target Release / Deadline**: v0.1.0 (no date committed)
 - **Current Working Branch**: `main`
-- **Last Updated**: 2026-09-15
+- **Last Updated**: 2026-09-14 14:16 UTC (pk:checkpoint) — NOTE: timestamps written this session as '2026-09-15 01:xx UTC' were host-local (UTC+12) mislabeled; ordering sound, basis corrected going forward via `date -u`
 
 ## 2. Milestone & Task Progress
 
@@ -53,10 +53,8 @@ P1–P10 + tie-breaker, verbatim in `docs/NOTES.md` §3. Pending additions on RF
 | 2026-09-15 | Hand-rolled argv kernel | CLI surface is a tested contract; deps are liabilities | `docs/adrs/0004-handrolled-argv.md` |
 | 2026-09-15 | Scope trims: no `claim`, no `--no-cache` in v0.1.0 | Leases/caching deferred to Phase 3 substrate | `docs/adrs/0005-v010-scope-trims.md` |
 
-## 7. Next Immediate Actions
-1. `MAINT-02` — human sign-off to commit + push planning artifacts (this turn's card).
-2. `GO-MS1` — maintainer go signal; MS-3/MS-4/MS-5 are dependency-parallelizable after MS-2.
-3. Pre-code `pk:grill` on MS-3/MS-5 risk areas is recommended (RFC §8) but optional.
+## 7. Next Immediate Actions (single lane, per handoff)
+1. **Maintainer**: review MS-3 (#3). On approval, the next session executes `docs/tasks/TASK-2026-09-15-v010-ms3-state.checkpoint-001.md` §"Exactly one prioritized next action" (complete #3 → start MS-4 router) after passing the checklist in `…ms3-state.handoff-001.md`.
 
 ## 8. Session Continuity Log
 | Date | Engineer / Agent | Focus | Artifacts |
@@ -64,3 +62,4 @@ P1–P10 + tie-breaker, verbatim in `docs/NOTES.md` §3. Pending additions on RF
 | 2026-09-14 | Lead + DSH agent | lineage intake, anomaly fixes, repo reset #1 | 10-file corpus, `docs/NOTES.md` salvage |
 | 2026-09-15 | Lead Engineer | intentional v1 reinstall (`.promptkit` @ v1.5.1-26); authored 7-doc v0.1.0 surface-spec corpus + native `AGENTS.md` | `AGENTS.md`, `CONTRIBUTING.md`, `docs/{cli-reference,routing-contract,verification-guide,errors,getting-started,faq}.md` |
 | 2026-09-15 | DSH agent (pk:plan, L2/Full) | v0.1.0 Foundation RFC; STATE.md re-populated from template | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
+| 2026-09-14 | DSH agent (pk:checkpoint) | Session boundary | MS-1 ✅ · MS-2 ✅ · MS-3 awaiting_review; 42/42 green; checkpoint-001 + handoff-001 records written; timestamp-basis anomaly documented |
