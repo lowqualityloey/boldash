@@ -1,0 +1,201 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://boldash.local/schemas/done.schema.json",
+  "title": "Boldash Verification Contract (meta-schema)",
+  "description": "Contract each workflow pack declares as done.schema.json. Only commands written here may ever be executed (SECURITY.md \u00a71). Source: docs/verification-guide.md + RFC \u00a73.4 amendment (timeout_ms).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_id",
+    "must_pass"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Task this contract applies to; usually templated as {{task_id}} in workflow packs."
+    },
+    "must_pass": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/check"
+      }
+    },
+    "must_not": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/negativeCheck"
+      }
+    }
+  },
+  "definitions": {
+    "common": {
+      "type": "object",
+      "required": [
+        "type",
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 120,
+          "description": "User-visible label. Rule 5: descriptive, never just 'test'."
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 3600000,
+          "description": "RFC \u00a73.4 amendment. Meaningful for command checks; Rule 4: set it when a command may exceed the 300 s default."
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "run": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pattern": {
+          "type": "string",
+          "minLength": 1
+        },
+        "check": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "check": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/common"
+        },
+        {
+          "properties": {
+            "type": {
+              "enum": [
+                "file_exists",
+                "command",
+                "regex_in_file",
+                "state_check",
+                "evidence_exists"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "type": {
+                  "const": "file_exists"
+                }
+              },
+              "required": [
+                "path"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "type": {
+                  "const": "command"
+                }
+              },
+              "required": [
+                "run"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "type": {
+                  "const": "regex_in_file"
+                }
+              },
+              "required": [
+                "path",
+                "pattern"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "type": {
+                  "const": "state_check"
+                }
+              },
+              "required": [
+                "check"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "type": {
+                  "const": "evidence_exists"
+                }
+              },
+              "required": [
+                "path"
+              ],
+              "description": "path is the evidence kind: review, test-run, secret-scan\u2026",
+              "type": "object"
+            }
+          ]
+        }
+      ]
+    },
+    "negativeCheck": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/common"
+        },
+        {
+          "properties": {
+            "type": {
+              "enum": [
+                "file_not_modified",
+                "command_fails"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "type": {
+                  "const": "file_not_modified"
+                }
+              },
+              "required": [
+                "path"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "type": {
+                  "const": "command_fails"
+                }
+              },
+              "required": [
+                "run"
+              ],
+              "type": "object"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

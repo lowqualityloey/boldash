@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://boldash.local/schemas/event.schema.json",
+  "title": "Boldash Event",
+  "description": "One line of .boldash/events.jsonl — append-only record of every state mutation and gate run (P10: decisions must be explainable from recorded evidence).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "ts", "action", "actor"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^evt_[0-9a-z]+$" },
+    "ts": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$" },
+    "task": { "type": ["string", "null"], "pattern": "^TASK-[0-9A-Za-z-]+$" },
+    "action": {
+      "type": "string",
+      "enum": [
+        "task.created",
+        "task.transitioned",
+        "task.requirement_added",
+        "task.evidence_added",
+        "task.claimed",
+        "verify.run",
+        "state.migrated",
+        "route.validated",
+        "policy.blocked"
+      ]
+    },
+    "actor": { "type": "string", "minLength": 1 },
+    "payload": { "type": "object", "additionalProperties": true }
+  }
+}

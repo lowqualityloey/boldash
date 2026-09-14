@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://boldash.local/schemas/route.schema.json",
+  "title": "Boldash Route Proposal",
+  "description": "The structured route proposal an LLM submits to `boldash route`. Source of truth: docs/routing-contract.md. Canonical state is JSON (P2); this schema is the contract (P7).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["task", "route"],
+  "properties": {
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "risk", "scope"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "bugfix",
+            "feature",
+            "refactor",
+            "migration",
+            "security",
+            "architecture",
+            "docs",
+            "chore"
+          ]
+        },
+        "risk": {
+          "type": "string",
+          "enum": ["trivial", "low", "medium", "high", "critical"]
+        },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "files": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Glob patterns relative to project root. Advisory: scope warns, it does not block."
+            },
+            "systems": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Freeform system names for summaries and policy rules."
+            }
+          }
+        },
+        "summary": { "type": "string", "maxLength": 200 }
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workflow", "level"],
+      "properties": {
+        "workflow": {
+          "type": "string",
+          "description": "Name of a workflow in the registry. Checked at step 3: WORKFLOW_NOT_FOUND."
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3,
+          "description": "Ceremony level. Must be >= the level required by risk; never lower (LEVEL_RISK_MISMATCH)."
+        },
+        "requirements": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Explicit overrides for the workflow's default requirements.",
+          "properties": {
+            "task_record": { "type": "boolean" },
+            "specification": { "type": "boolean" },
+            "tests": { "type": "boolean" },
+            "review": { "type": "boolean" },
+            "human_approval": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -13,6 +13,7 @@
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
+    "esModuleInterop": true,
     "noEmit": true
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"],

@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://boldash.local/schemas/task-state-file.schema.json",
+  "title": "Boldash Task State File",
+  "description": "Root shape of .boldash/state/tasks.json (ADR 0001: single file). Expand-Contract: fields are added optionally, never destructively; schema_version guards readers.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "tasks"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "tasks": {
+      "type": "array",
+      "items": { "$ref": "https://boldash.local/schemas/task.schema.json" }
+    }
+  }
+}
