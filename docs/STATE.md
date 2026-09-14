@@ -23,12 +23,13 @@
 - **GitHub issue map (Local Task Records remain authoritative):** MS-1→#1 · MS-2→#2 · MS-3→#3 · MS-4→#4 · MS-5→#5 · MS-6→#6 · MS-7→#7 · MS-8→#8 · MS-9→#9
 - [x] `MAINT-02` — planning artifacts committed & pushed (`5b5e4f5…8c25fa7`)
 - [x] `GO-MS1` — **GIVEN**; MS-1 executed & **maintainer-approved** → `completed`; #1 closed
-- [/] `GO-MS2` — **GIVEN 2026-09-15 01:35**; MS-2 executed: 5 draft-07 schemas, shared kernel (Result, doc-oracle error catalog, writeJsonAtomic, injected clock, ajv seam), `npm run verify` green (26/26), CI run 34851150797 success on `c2316de` → record `awaiting_review`
-- [ ] `GO-MS3`: maintainer go signal for MS-3 (state engine) — blocked on MS-2 review
+- [x] `GO-MS2` — **GIVEN**; MS-2 executed & **maintainer-approved** → `completed`; #2 closed
+- [/] `GO-MS3` — **GIVEN 2026-09-15 01:52**; MS-3 in_progress (pointer held): state engine build started
+- [ ] `GO-MS4`: maintainer review of MS-3 unlocks MS-4 (router)
 
 ## 3. Active Working Set
 - **Active RFC / Spec**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`
-- **Active Task Pointer**: `None` (MS-2 awaiting review)
+- **Active Task Pointer**: `TASK-2026-09-15-v010-ms3-state` (in_progress)
 - **Key Source Files in Flight**: the v0.1.0 surface corpus (`docs/cli-reference.md`, `docs/routing-contract.md`, `docs/verification-guide.md`, `docs/errors.md`, `docs/getting-started.md`, `docs/faq.md`, `AGENTS.md`, `CONTRIBUTING.md`) — authority map in `docs/NOTES.md` §2
 - **Verification Commands (Scoped)**: `npm run verify` = THE gate (live since MS-1, 2026-09-15). CI: `verify` workflow, node 20/22/24 on push+PR.
 
