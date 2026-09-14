@@ -1,4 +1,7 @@
 .promptkit/
 dist/
 node_modules/
-docs/
+# docs/ is deliberately NOT ignored: CONTRIBUTING.md §Documentation requires
+# Markdown to follow the Prettier settings, and `npm run format:check` belongs
+# in the release gate. When Boldash ships generated projections (MS-9), exempt
+# those by specific path — never the whole docs tree.

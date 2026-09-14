@@ -140,12 +140,12 @@ npx boldash init --profile strict
 npx boldash init --profile accelerated
 ```
 
-| Profile | Behavior |
-|---|---|
-| `lite` | Minimal ceremony. Verification is basic. Evidence is off. |
-| `balanced` | Risk-based ceremony. Full verification. Evidence on. |
-| `strict` | Strict policy. Human approval for high-risk tasks. Full audit. |
-| `accelerated` | Relaxed for low-risk. Full verification for high-risk. |
+| Profile       | Behavior                                                       |
+| ------------- | -------------------------------------------------------------- |
+| `lite`        | Minimal ceremony. Verification is basic. Evidence is off.      |
+| `balanced`    | Risk-based ceremony. Full verification. Evidence on.           |
+| `strict`      | Strict policy. Human approval for high-risk tasks. Full audit. |
+| `accelerated` | Relaxed for low-risk. Full verification for high-risk.         |
 
 You can change the profile later in `.boldash/config.yaml`.
 
@@ -270,7 +270,7 @@ The task cannot move to `complete` until verification returns `VERIFIED`.
 
 ### What blocks what
 
-With the `balanced` profile and a Claude Code host, verification is enforced *before commit*:
+With the `balanced` profile and a Claude Code host, verification is enforced _before commit_:
 
 ```
 Agent: "git commit -m '...'"
@@ -329,17 +329,17 @@ Do not edit these by hand. They are generated.
 
 ## Understanding the Output
 
-| Output | Meaning |
-|---|---|
-| `✓` | Check passed. |
-| `✗` | Check failed. Verification will return `BLOCKED`. |
-| `STATUS: VERIFIED` | All checks passed. Exit code 0. |
-| `STATUS: BLOCKED` | At least one check failed. Exit code 1. |
-| `Exit code: 0` | Success. |
-| `Exit code: 1` | Verification failed. |
-| `Exit code: 2` | Invalid input. |
-| `Exit code: 3` | Missing capability. |
-| `Exit code: 4` | Concurrency conflict. |
+| Output             | Meaning                                           |
+| ------------------ | ------------------------------------------------- |
+| `✓`                | Check passed.                                     |
+| `✗`                | Check failed. Verification will return `BLOCKED`. |
+| `STATUS: VERIFIED` | All checks passed. Exit code 0.                   |
+| `STATUS: BLOCKED`  | At least one check failed. Exit code 1.           |
+| `Exit code: 0`     | Success.                                          |
+| `Exit code: 1`     | Verification failed.                              |
+| `Exit code: 2`     | Invalid input.                                    |
+| `Exit code: 3`     | Missing capability.                               |
+| `Exit code: 4`     | Concurrency conflict.                             |
 
 Full exit code reference: [`docs/errors.md`](./errors.md).
 
@@ -363,7 +363,7 @@ Boldash falls back to the `generic` adapter. Add `--host <name>` to override det
 
 ### Verification passes but the code is wrong
 
-Boldash verifies *evidence exists*. It does not judge code quality. If your `done.schema.json` is too weak, it will pass weak work. See [`docs/verification-guide.md`](./verification-guide.md) for how to write meaningful checks.
+Boldash verifies _evidence exists_. It does not judge code quality. If your `done.schema.json` is too weak, it will pass weak work. See [`docs/verification-guide.md`](./verification-guide.md) for how to write meaningful checks.
 
 ### A commit is blocked but I do not know why
 

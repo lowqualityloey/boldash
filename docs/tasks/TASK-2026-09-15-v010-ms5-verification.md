@@ -3,6 +3,7 @@
 <a id="TASK-2026-09-15-v010-ms5-verification"></a>
 
 ## 1. Identity and Authority
+
 - **Record Type**: `Task Record`
 - **Task ID**: `TASK-2026-09-15-v010-ms5-verification`
 - **Work Type**: `Code Work`
@@ -14,6 +15,7 @@
 - **Created**: `2026-09-15 00:40 UTC`
 
 ## 2. Objective and Boundaries
+
 - **Objective**: must_pass (file_exists, command, regex_in_file, state_check, evidence_exists) + must_not (file_not_modified, command_fails); per-check timeout_ms default 300s; output capture → evidence with secret redaction; GateResult; exits 0/1/2/12.
 - **In Scope**: see Objective; files named therein.
 - **Explicit Non-Goals**:
@@ -24,6 +26,7 @@
 - **Verification Condition**: `npm run verify green; pass/block matrix`
 
 ## 3. Acceptance Criteria
+
 - [ ] **AC-1**: `EVERY check type has one PASS and one BLOCK test (a gate that only passes is not a gate).`
   - **Result**: Pending
   - **Evidence**: Pending
@@ -41,6 +44,7 @@
   - **Evidence**: Pending
 
 ## 4. Execution Policy
+
 - **Mode**: `Gated Mode`
 - **TDD Enforcement Mode**: `disabled`
 - **Batch Authorization**: `N/A`
@@ -51,6 +55,7 @@
 - **Host Timer Capability**: `None observed in DSH harness — checkpoints enforced by convention only`
 
 ## 5. State and Active Ownership
+
 - **Execution State**: `in_progress`
 - **Mapped `pk:tasks` Status**: `In Progress`
 - **Active Task Pointer**: `TASK-2026-09-15-v010-ms5-verification`
@@ -59,13 +64,15 @@
 - **Next Action**: `Design note (plan-001): evidence layout, state_check grammar, timeout/redaction mechanics; then implement with PASS+BLOCK tests per check type`
 
 ### Transition History
-| Previous State | New State | Timestamp | Actor | Reason | Supporting Evidence |
-|---|---|---|---|---|---|
-| — | `planned` | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
-| `planned` | `ready` | 2026-09-14 | Lead Engineer | MS-4 completed → dependency satisfied; GO-MS5 in "okay" batch | #4 closed |
-| `ready` | `in_progress` | 2026-09-14 | DSH agent | Pointer claimed (backticked, MS-3 lesson applied) | this record |
+
+| Previous State | New State     | Timestamp            | Actor                | Reason                                                              | Supporting Evidence                               |
+| -------------- | ------------- | -------------------- | -------------------- | ------------------------------------------------------------------- | ------------------------------------------------- |
+| —              | `planned`     | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
+| `planned`      | `ready`       | 2026-09-14           | Lead Engineer        | MS-4 completed → dependency satisfied; GO-MS5 in "okay" batch       | #4 closed                                         |
+| `ready`        | `in_progress` | 2026-09-14           | DSH agent            | Pointer claimed (backticked, MS-3 lesson applied)                   | this record                                       |
 
 ## 6. Evidence and Completion Gate
+
 - **Changed Files**:
   - `[pending]`
 - **Scope Change Records**: `None`
@@ -84,6 +91,7 @@
 - **Blocker and Resume Condition**: Depends on MS-3; maintainer go signal
 
 ### Completion Gate
+
 - **Completion State**: `planned`
 - **Acceptance Results**: Pending
 - **Changed-File Summary**: Pending

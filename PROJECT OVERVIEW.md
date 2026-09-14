@@ -41,17 +41,17 @@ Boldash is a CLI. It has no GUI, no daemon, no cloud dependency, and no database
 
 ## What Boldash Is Not
 
-| Boldash is not | Because |
-|---|---|
-| An LLM | It does not generate code, write specs, or reason about design. |
-| An IDE | It provides no editor and no chat interface. |
-| A prompt framework | It is the runtime *around* prompts, not a collection of prompts. |
-| A SaaS | It is local-first; the core has no cloud dependency. |
-| A general workflow engine | It is scoped to AI coding agents. Not Airflow, Temporal, or n8n. |
-| A full policy language | Policy rules are simple, declarative, and constrained. Not OPA or Cedar. |
-| A sandbox | It validates commands; it does not sandbox the shell. |
-| A correctness guarantee | It verifies evidence exists. Whether code is *good* is human judgment. |
-| A replacement for the agent | It governs the agent; it does not become the agent. |
+| Boldash is not              | Because                                                                  |
+| --------------------------- | ------------------------------------------------------------------------ |
+| An LLM                      | It does not generate code, write specs, or reason about design.          |
+| An IDE                      | It provides no editor and no chat interface.                             |
+| A prompt framework          | It is the runtime _around_ prompts, not a collection of prompts.         |
+| A SaaS                      | It is local-first; the core has no cloud dependency.                     |
+| A general workflow engine   | It is scoped to AI coding agents. Not Airflow, Temporal, or n8n.         |
+| A full policy language      | Policy rules are simple, declarative, and constrained. Not OPA or Cedar. |
+| A sandbox                   | It validates commands; it does not sandbox the shell.                    |
+| A correctness guarantee     | It verifies evidence exists. Whether code is _good_ is human judgment.   |
+| A replacement for the agent | It governs the agent; it does not become the agent.                      |
 
 ---
 
@@ -99,7 +99,7 @@ After:   LLM ──proposes──► JSON ──validated by──► Boldash �
 - Users who want a fully autonomous agent with no oversight.
 - Users who do not want a CLI in their workflow.
 - Users who want a cloud dashboard.
-- Users who want Boldash to *write* their code. Boldash governs; the agent writes.
+- Users who want Boldash to _write_ their code. Boldash governs; the agent writes.
 - Users who want a drop-in replacement for existing prompt frameworks. Boldash is a new layer, not a replacement.
 
 ---
@@ -132,9 +132,9 @@ Markdown files under `docs/` are regenerated from canonical state. They carry a 
   action: git.commit
   requires:
     - "state.task.status == 'verifying'"
-    - "verification.all_requirements_verified == true"
-    - "git.working_tree_clean == true"
-  block_message: "Cannot commit: requirements not verified."
+    - 'verification.all_requirements_verified == true'
+    - 'git.working_tree_clean == true'
+  block_message: 'Cannot commit: requirements not verified.'
 ```
 
 The agent can ask to commit. Boldash decides whether to permit it.
@@ -159,25 +159,25 @@ Non-zero exit code on failure. Host adapters use this exit code to block downstr
 
 Every operation is written to `.boldash/events.jsonl`. `boldash explain TASK-42` produces a traceability graph linking requirements → implementation → tests → review → verification.
 
-This answers the question *"why does Boldash think this is done?"* with recorded evidence.
+This answers the question _"why does Boldash think this is done?"_ with recorded evidence.
 
 ---
 
 ## Core Concepts
 
-| Term | Meaning |
-|---|---|
-| **Route** | A structured JSON proposal from the LLM describing task type, risk, scope, and workflow. |
-| **Task** | A unit of work with canonical state, requirements, evidence, and a version. |
-| **Workflow** | A versioned unit of work with a Markdown protocol and a machine-readable contract. |
-| **Lifecycle stage** | A grouping of workflows: `DISCOVER`, `PLAN`, `BUILD`, `VERIFY`, `SHIP`, `LEARN`. |
-| **Capability** | A feature a host provides (`subagents`, `git.worktree`, `mcp`). |
-| **Gate** | A deterministic check that returns PASS or BLOCK with an exit code. |
-| **Profile** | A policy preset: `lite`, `balanced`, `strict`, `accelerated`. |
-| **Adapter** | A host-specific implementation of Boldash's capabilities. |
-| **Evidence** | A recorded artifact (test run, review, secret scan) attached to a task. |
-| **Event** | A single append-only entry in the event log. |
-| **Projection** | A Markdown file generated from canonical state for human reading. |
+| Term                | Meaning                                                                                  |
+| ------------------- | ---------------------------------------------------------------------------------------- |
+| **Route**           | A structured JSON proposal from the LLM describing task type, risk, scope, and workflow. |
+| **Task**            | A unit of work with canonical state, requirements, evidence, and a version.              |
+| **Workflow**        | A versioned unit of work with a Markdown protocol and a machine-readable contract.       |
+| **Lifecycle stage** | A grouping of workflows: `DISCOVER`, `PLAN`, `BUILD`, `VERIFY`, `SHIP`, `LEARN`.         |
+| **Capability**      | A feature a host provides (`subagents`, `git.worktree`, `mcp`).                          |
+| **Gate**            | A deterministic check that returns PASS or BLOCK with an exit code.                      |
+| **Profile**         | A policy preset: `lite`, `balanced`, `strict`, `accelerated`.                            |
+| **Adapter**         | A host-specific implementation of Boldash's capabilities.                                |
+| **Evidence**        | A recorded artifact (test run, review, secret scan) attached to a task.                  |
+| **Event**           | A single append-only entry in the event log.                                             |
+| **Projection**      | A Markdown file generated from canonical state for human reading.                        |
 
 Full definitions in [ARCHITECTURE.md § 19](./ARCHITECTURE.md#19-glossary).
 
@@ -204,16 +204,16 @@ Full rationale in [ARCHITECTURE.md § 2](./ARCHITECTURE.md#2-core-principles).
 
 Boldash is the successor to [PromptKit OS v1](https://github.com/lowqualityloey/promptkit-os), but it is **not a rewrite**. It is a different layer.
 
-| Aspect | v1 (PromptKit OS) | Boldash |
-|---|---|---|
-| **Form** | Markdown protocols only | Runtime + Markdown protocols |
-| **Enforcement** | Self-attestation | Deterministic gates |
-| **State** | Distributed Markdown | Canonical JSON + Markdown projection |
-| **Routing** | LLM reads Markdown, chooses | LLM proposes JSON, Boldash validates |
-| **Capabilities** | Implicit | Explicit and enforced |
-| **Evidence** | Prose in Markdown | Append-only event log |
-| **Host support** | Generated directive files | Adapter interface |
-| **Distribution** | Git submodule | npm package + git submodule option |
+| Aspect           | v1 (PromptKit OS)           | Boldash                              |
+| ---------------- | --------------------------- | ------------------------------------ |
+| **Form**         | Markdown protocols only     | Runtime + Markdown protocols         |
+| **Enforcement**  | Self-attestation            | Deterministic gates                  |
+| **State**        | Distributed Markdown        | Canonical JSON + Markdown projection |
+| **Routing**      | LLM reads Markdown, chooses | LLM proposes JSON, Boldash validates |
+| **Capabilities** | Implicit                    | Explicit and enforced                |
+| **Evidence**     | Prose in Markdown           | Append-only event log                |
+| **Host support** | Generated directive files   | Adapter interface                    |
+| **Distribution** | Git submodule               | npm package + git submodule option   |
 
 v1 remains valid as a **protocol specification**. Boldash is the **runtime** that makes the specification enforceable.
 
@@ -231,19 +231,19 @@ The protocols survive; verification contracts are added. Users do not have to re
 
 **Phase:** Pre-alpha. Design phase. **Not yet installable.**
 
-| Component | Status |
-|---|---|
-| Architecture | Drafted (`ARCHITECTURE.md`) |
-| README | Drafted |
-| Project overview | This file |
-| Security policy | Drafted |
-| Changelog | Initialized |
-| License | MIT |
-| JSON schemas | Not yet written |
-| CLI implementation | Not started |
-| Reference workflows | Not started |
-| Benchmark suite | Not started |
-| Host adapters | Not started |
+| Component           | Status                      |
+| ------------------- | --------------------------- |
+| Architecture        | Drafted (`ARCHITECTURE.md`) |
+| README              | Drafted                     |
+| Project overview    | This file                   |
+| Security policy     | Drafted                     |
+| Changelog           | Initialized                 |
+| License             | MIT                         |
+| JSON schemas        | Not yet written             |
+| CLI implementation  | Not started                 |
+| Reference workflows | Not started                 |
+| Benchmark suite     | Not started                 |
+| Host adapters       | Not started                 |
 
 **Nothing in this repository is production-ready.** Treat all content as a design specification, not a product.
 
@@ -251,12 +251,12 @@ The protocols survive; verification contracts are added. Users do not have to re
 
 ## Roadmap Summary
 
-| Phase | Version | Focus | Exit Criteria |
-|---|---|---|---|
-| **1** | v0.1.0 | Foundation: `init`, `route`, `state`, `verify`. Generic adapter. v1 import. | A user can initialize a project, propose a route, transition a task, and verify it from the CLI. |
-| **2** | v0.2.0 | Policy engine, capability manager, Claude adapter, `doctor`, `explain`. | A Claude Code user has commit gates enforced by Boldash. |
-| **3** | v0.3.0 | Event log, evidence storage, subagent protocol, Cursor adapter. | Two agents can work on sibling tasks without clobbering each other's state. |
-| **4** | v0.4.0+ | Antigravity adapter, workflow registry, benchmark suite, plugin API. | A third party can publish a workflow pack and a host adapter. |
+| Phase | Version | Focus                                                                       | Exit Criteria                                                                                    |
+| ----- | ------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| **1** | v0.1.0  | Foundation: `init`, `route`, `state`, `verify`. Generic adapter. v1 import. | A user can initialize a project, propose a route, transition a task, and verify it from the CLI. |
+| **2** | v0.2.0  | Policy engine, capability manager, Claude adapter, `doctor`, `explain`.     | A Claude Code user has commit gates enforced by Boldash.                                         |
+| **3** | v0.3.0  | Event log, evidence storage, subagent protocol, Cursor adapter.             | Two agents can work on sibling tasks without clobbering each other's state.                      |
+| **4** | v0.4.0+ | Antigravity adapter, workflow registry, benchmark suite, plugin API.        | A third party can publish a workflow pack and a host adapter.                                    |
 
 Full roadmap with tasks in [ARCHITECTURE.md § 16](./ARCHITECTURE.md#16-development-roadmap).
 
@@ -287,16 +287,16 @@ Boldash will publish a benchmark suite. If Boldash cannot demonstrate improvemen
 
 These are the ways Boldash could fail. They are named here so they can be tracked.
 
-| Failure mode | Why it matters | Mitigation |
-|---|---|---|
-| **The runtime becomes a bureaucracy** | If trivial tasks require ceremony, users will bypass Boldash. | Zero-ceremony principle; risk-based profile. |
-| **The LLM-facing surface grows too large** | If the agent must read 2,000 tokens to understand Boldash, token savings vanish. | P9: runtime may be complex, LLM interface must be tiny. |
-| **Verification becomes theater** | Beautiful green checkmarks on bad software. | Distinguish FACT / CLAIM / JUDGMENT / INFERENCE in evidence. |
-| **Host adapters rot** | Claude, Cursor, etc. change; adapters break. | Version adapters; fall back to generic adapter. |
-| **Users bypass gates** | If `boldash verify` is optional, it will be skipped. | Host hooks enforce critical gates; advisory mode is explicit. |
-| **State conflicts under multi-agent work** | Two agents clobber each other's transitions. | Optimistic locking; leases; conflict detection. |
-| **Docs diverge from code** | Architecture becomes fiction. | Docs are versioned with code; ADRs record decisions. |
-| **The project stalls at design phase** | No code ships. | Phase 1 exit criteria are small and explicit. |
+| Failure mode                               | Why it matters                                                                   | Mitigation                                                    |
+| ------------------------------------------ | -------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| **The runtime becomes a bureaucracy**      | If trivial tasks require ceremony, users will bypass Boldash.                    | Zero-ceremony principle; risk-based profile.                  |
+| **The LLM-facing surface grows too large** | If the agent must read 2,000 tokens to understand Boldash, token savings vanish. | P9: runtime may be complex, LLM interface must be tiny.       |
+| **Verification becomes theater**           | Beautiful green checkmarks on bad software.                                      | Distinguish FACT / CLAIM / JUDGMENT / INFERENCE in evidence.  |
+| **Host adapters rot**                      | Claude, Cursor, etc. change; adapters break.                                     | Version adapters; fall back to generic adapter.               |
+| **Users bypass gates**                     | If `boldash verify` is optional, it will be skipped.                             | Host hooks enforce critical gates; advisory mode is explicit. |
+| **State conflicts under multi-agent work** | Two agents clobber each other's transitions.                                     | Optimistic locking; leases; conflict detection.               |
+| **Docs diverge from code**                 | Architecture becomes fiction.                                                    | Docs are versioned with code; ADRs record decisions.          |
+| **The project stalls at design phase**     | No code ships.                                                                   | Phase 1 exit criteria are small and explicit.                 |
 
 ---
 
@@ -310,7 +310,7 @@ Stated as non-goals to prevent scope creep.
 - A general-purpose policy language.
 - A runtime sandbox.
 - A code generator or spec writer.
-- A model provider or model router at the core level. (Model allocation is a future *feature*, not a runtime responsibility.)
+- A model provider or model router at the core level. (Model allocation is a future _feature_, not a runtime responsibility.)
 - A replacement for the host agent.
 - A replacement for the user's judgment.
 
@@ -320,18 +320,18 @@ Full non-goals in [ARCHITECTURE.md § 3](./ARCHITECTURE.md#3-non-goals).
 
 ## Where to Read More
 
-| Document | Purpose |
-|---|---|
-| [`README.md`](./README.md) | The pitch. What Boldash is and why it matters. |
+| Document                               | Purpose                                                      |
+| -------------------------------------- | ------------------------------------------------------------ |
+| [`README.md`](./README.md)             | The pitch. What Boldash is and why it matters.               |
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | The full design. Layers, engines, schemas, roadmap, testing. |
-| [`SECURITY.md`](./SECURITY.md) | Threat model, reporting, known design limitations. |
-| [`CHANGELOG.md`](./CHANGELOG.md) | Version history. |
-| [`LICENSE`](./LICENSE) | MIT license. |
-| `docs/getting-started.md` | *(planned)* First 10 minutes for a new user. |
-| `docs/state-model.md` | *(planned)* The canonical state model. |
-| `docs/routing-contract.md` | *(planned)* The routing schema and validation pipeline. |
-| `docs/verification-guide.md` | *(planned)* How to write a `done.schema.json`. |
-| `docs/migration-from-v1.md` | *(planned)* Migrating from PromptKit OS v1. |
+| [`SECURITY.md`](./SECURITY.md)         | Threat model, reporting, known design limitations.           |
+| [`CHANGELOG.md`](./CHANGELOG.md)       | Version history.                                             |
+| [`LICENSE`](./LICENSE)                 | MIT license.                                                 |
+| `docs/getting-started.md`              | _(planned)_ First 10 minutes for a new user.                 |
+| `docs/state-model.md`                  | _(planned)_ The canonical state model.                       |
+| `docs/routing-contract.md`             | _(planned)_ The routing schema and validation pipeline.      |
+| `docs/verification-guide.md`           | _(planned)_ How to write a `done.schema.json`.               |
+| `docs/migration-from-v1.md`            | _(planned)_ Migrating from PromptKit OS v1.                  |
 
 ---
 

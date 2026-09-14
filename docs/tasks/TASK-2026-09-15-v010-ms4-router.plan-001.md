@@ -10,29 +10,29 @@
 
 ## 0. Verification baseline at time of writing
 
-| Item | Value | Source |
-|---|---|---|
-| Revision | `eb87c7e` == origin/main | `git rev-parse` |
-| Gate | `npm run verify` exit 0 · lint 0 · tsc 0 · **42/42** | executed this session |
-| CI | `completed/success` on headSha `eb87c7e` | `gh run list` (exact-sha match) |
-| Runtime deps | `ajv@8.20.0` only | `package.json` |
-| Catalog parity | `src/shared/errors.ts` ≡ `docs/errors.md`, proven by doc-as-oracle test | `tests/unit/errors.test.ts` |
+| Item           | Value                                                                   | Source                          |
+| -------------- | ----------------------------------------------------------------------- | ------------------------------- |
+| Revision       | `eb87c7e` == origin/main                                                | `git rev-parse`                 |
+| Gate           | `npm run verify` exit 0 · lint 0 · tsc 0 · **42/42**                    | executed this session           |
+| CI             | `completed/success` on headSha `eb87c7e`                                | `gh run list` (exact-sha match) |
+| Runtime deps   | `ajv@8.20.0` only                                                       | `package.json`                  |
+| Catalog parity | `src/shared/errors.ts` ≡ `docs/errors.md`, proven by doc-as-oracle test | `tests/unit/errors.test.ts`     |
 
 ## 1. Inputs and provenance (nothing below is inferred)
 
-| Fact used | Where it comes from |
-|---|---|
-| 7 pipeline steps + which error each emits | `docs/routing-contract.md` §The Validation Pipeline |
-| Every step returns `{ok:true,data}` / `{ok:false,error}`; no exceptions cross the boundary | same section, closing line |
-| The 4 example payloads to use verbatim | §Examples: `Valid: feature, medium risk` · `Valid: trivial chore` · `Invalid: level too low for risk` · `Invalid: missing capability` |
-| Success payload shape (exactly 3 fields) | §What the Agent Sees |
-| Risk→level map, one-way (higher allowed, lower rejected) | §Level and Risk |
-| Token claim "~60 success / ~100 failure" | §Token cost |
-| `route.schema.json` exists; `task.type` enum has 8 values incl. `migration`; `route.workflow` is a **free string** (not an enum) | `schemas/route.schema.json` |
-| Exits: `WORKFLOW_NOT_FOUND 2` · `LEVEL_RISK_MISMATCH 2` · `SCOPE_FILE_NOT_FOUND 0 // warning` · `CAPABILITY_MISSING 3` | `src/shared/errors.ts` lines 17–30 |
-| Generic host has `filesystem.read/write`, `shell.execute`, `git.read`, `human_approval`; **lacks** `git.commit`, `git.branch`, `git.worktree`, `github`, `mcp`, **`subagents`**, `pre/post_tool_hooks` | `ARCHITECTURE.md` §5.3 matrix, Generic column |
-| Pack declaration format `workflows/<name>/manifest.yaml` with `requires:`/`optional:` | `ARCHITECTURE.md` §5.3 |
-| RFC scope: "7-step pipeline, built-in registry (**4 packs**), risk→level map, capability context (generic host)" | spec §5 MS-4 row |
+| Fact used                                                                                                                                                                                              | Where it comes from                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 7 pipeline steps + which error each emits                                                                                                                                                              | `docs/routing-contract.md` §The Validation Pipeline                                                                                   |
+| Every step returns `{ok:true,data}` / `{ok:false,error}`; no exceptions cross the boundary                                                                                                             | same section, closing line                                                                                                            |
+| The 4 example payloads to use verbatim                                                                                                                                                                 | §Examples: `Valid: feature, medium risk` · `Valid: trivial chore` · `Invalid: level too low for risk` · `Invalid: missing capability` |
+| Success payload shape (exactly 3 fields)                                                                                                                                                               | §What the Agent Sees                                                                                                                  |
+| Risk→level map, one-way (higher allowed, lower rejected)                                                                                                                                               | §Level and Risk                                                                                                                       |
+| Token claim "~60 success / ~100 failure"                                                                                                                                                               | §Token cost                                                                                                                           |
+| `route.schema.json` exists; `task.type` enum has 8 values incl. `migration`; `route.workflow` is a **free string** (not an enum)                                                                       | `schemas/route.schema.json`                                                                                                           |
+| Exits: `WORKFLOW_NOT_FOUND 2` · `LEVEL_RISK_MISMATCH 2` · `SCOPE_FILE_NOT_FOUND 0 // warning` · `CAPABILITY_MISSING 3`                                                                                 | `src/shared/errors.ts` lines 17–30                                                                                                    |
+| Generic host has `filesystem.read/write`, `shell.execute`, `git.read`, `human_approval`; **lacks** `git.commit`, `git.branch`, `git.worktree`, `github`, `mcp`, **`subagents`**, `pre/post_tool_hooks` | `ARCHITECTURE.md` §5.3 matrix, Generic column                                                                                         |
+| Pack declaration format `workflows/<name>/manifest.yaml` with `requires:`/`optional:`                                                                                                                  | `ARCHITECTURE.md` §5.3                                                                                                                |
+| RFC scope: "7-step pipeline, built-in registry (**4 packs**), risk→level map, capability context (generic host)"                                                                                       | spec §5 MS-4 row                                                                                                                      |
 
 ## 2. Module design
 
@@ -57,15 +57,15 @@ exported function gets TSDoc. `ajv` stays confined to `shared/schema.ts` — the
 
 ## 3. Pipeline → behaviour map
 
-| # | Step | Failure | Exit | Notes |
-|---|---|---|---|---|
-| 1 | Parse JSON | `SCHEMA_PARSE` | 2 | input arrives as text; malformed → step 1 error |
-| 2 | Validate vs `route.schema.json` | `SCHEMA_VALIDATION` | 2 | ajv instancePath → dotted `field` (e.g. `route.level`) |
-| 3 | Workflow in registry | `WORKFLOW_NOT_FOUND` | 2 | `context.enabled` = registered names (AC-4) |
-| 4 | Level consistent with risk | `LEVEL_RISK_MISMATCH` | 2 | `field: "route.level"`, suggestion "Raise level to N." |
-| 5 | Requirements vs capabilities | `CAPABILITY_MISSING` | 3 | `context.missing: string[]` (the list, per P4/AC) |
-| 6 | Scope files exist | `SCOPE_FILE_NOT_FOUND` | **0** | warning channel, never a `Result` failure |
-| 7 | Emit `ResolvedRoute` | — | 0 | `{workflow, level, requirements}` |
+| #   | Step                            | Failure                | Exit  | Notes                                                  |
+| --- | ------------------------------- | ---------------------- | ----- | ------------------------------------------------------ |
+| 1   | Parse JSON                      | `SCHEMA_PARSE`         | 2     | input arrives as text; malformed → step 1 error        |
+| 2   | Validate vs `route.schema.json` | `SCHEMA_VALIDATION`    | 2     | ajv instancePath → dotted `field` (e.g. `route.level`) |
+| 3   | Workflow in registry            | `WORKFLOW_NOT_FOUND`   | 2     | `context.enabled` = registered names (AC-4)            |
+| 4   | Level consistent with risk      | `LEVEL_RISK_MISMATCH`  | 2     | `field: "route.level"`, suggestion "Raise level to N." |
+| 5   | Requirements vs capabilities    | `CAPABILITY_MISSING`   | 3     | `context.missing: string[]` (the list, per P4/AC)      |
+| 6   | Scope files exist               | `SCOPE_FILE_NOT_FOUND` | **0** | warning channel, never a `Result` failure              |
+| 7   | Emit `ResolvedRoute`            | —                      | 0     | `{workflow, level, requirements}`                      |
 
 Step 3 preceding step 5 is load-bearing for the test design in §6 (see D-1).
 
@@ -75,11 +75,11 @@ Required level (from §Level and Risk): `trivial 0 · low 1 · medium 2 · high 
 Guard: `proposed >= required` (higher permitted, lower → step-4 error).
 
 | Level | task_record | specification | tests | review | human_approval |
-|---|---|---|---|---|---|
-| 0 | false | false | false | false | false |
-| 1 | true | false | false | false | false |
-| 2 | true | true | true | false | false |
-| 3 | true | true | true | true | risk-dependent |
+| ----- | ----------- | ------------- | ----- | ------ | -------------- |
+| 0     | false       | false         | false | false  | false          |
+| 1     | true        | false         | false | false  | false          |
+| 2     | true        | true          | true  | false  | false          |
+| 3     | true        | true          | true  | true   | risk-dependent |
 
 `human_approval` is forced `true` when `risk === "critical"` (the "3 **+ human approval**"
 row). Level-2 row reproduces the documented success payload field-for-field.
@@ -105,21 +105,21 @@ No mocked `fs`, no mocked clocks (inherited invariant). File-existence tests run
 real temp directories created with `mkdtemp`; the `fileExists` seam is a real predicate
 over that directory, not a stub returning canned values.
 
-| Test | Fixture | Asserts |
-|---|---|---|
-| T-1 example 1 valid feature/medium | literal JSON, §Examples | `ok:true`; data **deep-equals the documented payload** |
-| T-2 example 2 trivial chore | literal JSON | `ok:true`; all requirements false |
-| T-3 example 3 level too low | literal JSON | `ok:false` `LEVEL_RISK_MISMATCH`, `field:"route.level"`, message contains "requires level 3", exit 2 |
-| T-4 example 4 missing capability | literal JSON + registry containing a `migration` pack requiring `subagents`, generic context | `ok:false` `CAPABILITY_MISSING`, `context.missing==["subagents"]`, exit 3 |
-| T-5 same payload, **default** registry | literal JSON | `ok:false` `WORKFLOW_NOT_FOUND` (step 3 fires first) + `context.enabled` lists exactly the 4 built-ins |
-| T-6 malformed JSON | `"{"` | `SCHEMA_PARSE`, no throw |
-| T-7 schema-invalid | `{}`; `route.level: 9`; unknown key (`additionalProperties:false`) | `SCHEMA_VALIDATION` with the offending dotted path |
-| T-8 BLOCK half of step 3 | 4 built-ins registered | each resolves (PASS); a 5th unknown name fails (BLOCK) |
-| T-9 higher-level-allowed | `risk:trivial, level:3` | passes with level-3 requirements (one-way rule) |
-| T-10 scope PASS/BLOCK | temp dir with `README.md`, asking for `README.md` + `src/x.ts` | PASS silent; missing → warning **only**, `ok:true`, exit 0 (AC-3) |
-| T-11 greenfield mode | empty dir | no warning raised |
-| T-12 token budget (AC-2) | payloads from T-1, T-2 | `JSON.stringify(data).length/4 <= 80`; also measured on **pretty-printed** form (worst case) |
-| T-13 built-ins safe on generic | all 4 packs | none yields `CAPABILITY_MISSING` |
+| Test                                   | Fixture                                                                                      | Asserts                                                                                                |
+| -------------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| T-1 example 1 valid feature/medium     | literal JSON, §Examples                                                                      | `ok:true`; data **deep-equals the documented payload**                                                 |
+| T-2 example 2 trivial chore            | literal JSON                                                                                 | `ok:true`; all requirements false                                                                      |
+| T-3 example 3 level too low            | literal JSON                                                                                 | `ok:false` `LEVEL_RISK_MISMATCH`, `field:"route.level"`, message contains "requires level 3", exit 2   |
+| T-4 example 4 missing capability       | literal JSON + registry containing a `migration` pack requiring `subagents`, generic context | `ok:false` `CAPABILITY_MISSING`, `context.missing==["subagents"]`, exit 3                              |
+| T-5 same payload, **default** registry | literal JSON                                                                                 | `ok:false` `WORKFLOW_NOT_FOUND` (step 3 fires first) + `context.enabled` lists exactly the 4 built-ins |
+| T-6 malformed JSON                     | `"{"`                                                                                        | `SCHEMA_PARSE`, no throw                                                                               |
+| T-7 schema-invalid                     | `{}`; `route.level: 9`; unknown key (`additionalProperties:false`)                           | `SCHEMA_VALIDATION` with the offending dotted path                                                     |
+| T-8 BLOCK half of step 3               | 4 built-ins registered                                                                       | each resolves (PASS); a 5th unknown name fails (BLOCK)                                                 |
+| T-9 higher-level-allowed               | `risk:trivial, level:3`                                                                      | passes with level-3 requirements (one-way rule)                                                        |
+| T-10 scope PASS/BLOCK                  | temp dir with `README.md`, asking for `README.md` + `src/x.ts`                               | PASS silent; missing → warning **only**, `ok:true`, exit 0 (AC-3)                                      |
+| T-11 greenfield mode                   | empty dir                                                                                    | no warning raised                                                                                      |
+| T-12 token budget (AC-2)               | payloads from T-1, T-2                                                                       | `JSON.stringify(data).length/4 <= 80`; also measured on **pretty-printed** form (worst case)           |
+| T-13 built-ins safe on generic         | all 4 packs                                                                                  | none yields `CAPABILITY_MISSING`                                                                       |
 
 Measured now against the doc's own success payload: compact **159 B → 39.8 tokens**,
 pretty **234 B → 58.5 tokens**; both inside the 80 budget with headroom. (Side note: the
@@ -128,39 +128,39 @@ approximation, not a gate — flagged for the MS-9 docs audit.)
 
 ## 7. Acceptance-criteria traceability
 
-| AC | Covered by |
-|---|---|
-| AC-1 all 4 examples as tests | T-1 … T-4 (+T-5) |
-| AC-2 success payload ≤ 80 tokens | T-12 |
-| AC-3 `SCOPE_FILE_NOT_FOUND` warning-only, exit 0 | T-10, T-11 |
-| AC-4 unknown workflow → `WORKFLOW_NOT_FOUND` with enabled list | T-5, T-8 |
+| AC                                                             | Covered by       |
+| -------------------------------------------------------------- | ---------------- |
+| AC-1 all 4 examples as tests                                   | T-1 … T-4 (+T-5) |
+| AC-2 success payload ≤ 80 tokens                               | T-12             |
+| AC-3 `SCOPE_FILE_NOT_FOUND` warning-only, exit 0               | T-10, T-11       |
+| AC-4 unknown workflow → `WORKFLOW_NOT_FOUND` with enabled list | T-5, T-8         |
 
 ## 8. Three gaps requiring your ruling before code — **ALL RESOLVED, see §12**
 
 **D-1 — the CAPABILITY_MISSING example cannot be reached on the default registry.**
 Example 4 routes `workflow: "migration"`, but the RFC fixes the built-in registry at
 **4 packs** (feature/bugfix/docs/chore) and `migration` is not one of them — while
-`migration` *is* a valid `task.type`. Step 3 runs before step 5, so on the default registry
+`migration` _is_ a valid `task.type`. Step 3 runs before step 5, so on the default registry
 that payload returns `WORKFLOW_NOT_FOUND`, never `CAPABILITY_MISSING`.
-*Recommendation*: keep 4 packs; make the registry injectable (§5); test the literal payload
+_Recommendation_: keep 4 packs; make the registry injectable (§5); test the literal payload
 both ways (T-4 with an injected `migration` pack, T-5 with the default). No scope change,
-both documented behaviours proven. *Alternative*: add `migration` as a 5th built-in, which
+both documented behaviours proven. _Alternative_: add `migration` as a 5th built-in, which
 needs a Scope Change Record against the RFC "4 packs" line.
 
 **D-2 — `manifest.yaml` collides with the ajv-only runtime dependency.**
 `ARCHITECTURE.md` §5.3 specifies packs as `workflows/<name>/manifest.yaml`, but no YAML
 parser is available and adding one breaches the ajv-only invariant — **this needs a
 decision, not a silent workaround**.
-*Recommendation*: ship the 4 built-ins as typed constants in `registry.ts` (zero parsing,
+_Recommendation_: ship the 4 built-ins as typed constants in `registry.ts` (zero parsing,
 zero deps, deterministic), declare the `WorkflowPack` shape now, and defer the pack **file**
 format to MS-8 — where packs are produced anyway — under its own ADR.
-*Alternatives*: (b) hand-rolled subset parser, following the ADR-0004 precedent that
+_Alternatives_: (b) hand-rolled subset parser, following the ADR-0004 precedent that
 "dependencies are liabilities"; (c) `manifest.json` today, deviating from the §5.3 naming.
 
 **D-3 — warnings have no home in the documented payload.**
 Step 6 must report missing scope files without failing, but §What the Agent Sees fixes the
 success payload to exactly `{workflow, level, requirements}`.
-*Recommendation*: add an optional `warnings?: RoutingWarning[]` present **only when
+_Recommendation_: add an optional `warnings?: RoutingWarning[]` present **only when
 non-empty**, so T-1/T-2 payloads stay byte-identical to the docs. Being additive to a
 documented contract, this requires one new line in `routing-contract.md` in the same commit
 (docs and code ship together). Router stays stateless — it writes no events and no state;
@@ -188,7 +188,7 @@ no new dependency — low risk, as the record's Risk field says.
 
 ## 11. Invariants this plan protects
 
-- **P3/P4** every failing step returns a code and a real exit; step 6 is deliberately *not*
+- **P3/P4** every failing step returns a code and a real exit; step 6 is deliberately _not_
   called a gate because it cannot block.
 - **P7** all input schema-validated before trusted.
 - **P9** payload shape pinned to the doc; AC-2 measured, not asserted by faith.
@@ -204,11 +204,11 @@ no new dependency — low risk, as the record's Risk field says.
 Accepted in the DSH session that authored this plan; the recommended option was taken in
 all three cases. These bind implementation.
 
-| # | Ruling | Consequences for the code |
-|---|---|---|
-| **D-1** | Injectable registry + fixture pack. The RFC's 4 built-in packs stand. | `createRegistry(packs = WORKFLOW_PACKS)` is a required seam, not a nicety. The literal example-4 payload is tested **both ways**: T-4 (injected `migration` pack requiring `subagents`, generic context → `CAPABILITY_MISSING`, exit 3) and T-5 (default registry → `WORKFLOW_NOT_FOUND`, exit 2, `context.enabled` == the 4 built-ins). No Scope Change Record needed. |
-| **D-2** | Built-in packs ship as typed TS constants in `registry.ts`; pack **file** format deferred to MS-8 under its own ADR. | No YAML parser, no new runtime dependency — ajv-only invariant intact. `WorkflowPack` is still declared as a public type so MS-8's importer has a target shape, and `ARCHITECTURE.md` §5.3 stays untouched (deferral, not deviation). **Follow-up for MS-8: ADR required before any pack is loaded from disk.** |
-| **D-3** | Optional `warnings?: RoutingWarning[]`, present only when non-empty; one added line in `docs/routing-contract.md`. | `ResolvedRoute` remains `{workflow, level, requirements}` for the two valid examples — T-1/T-2 assert byte-identity against the doc. AC-2 (≤80 tokens) is measured **including** any warnings array, worst case. Router stays stateless: no events, no state writes; the CLI owns logging in MS-6. Docs and code land in the same commit. |
+| #       | Ruling                                                                                                               | Consequences for the code                                                                                                                                                                                                                                                                                                                                               |
+| ------- | -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **D-1** | Injectable registry + fixture pack. The RFC's 4 built-in packs stand.                                                | `createRegistry(packs = WORKFLOW_PACKS)` is a required seam, not a nicety. The literal example-4 payload is tested **both ways**: T-4 (injected `migration` pack requiring `subagents`, generic context → `CAPABILITY_MISSING`, exit 3) and T-5 (default registry → `WORKFLOW_NOT_FOUND`, exit 2, `context.enabled` == the 4 built-ins). No Scope Change Record needed. |
+| **D-2** | Built-in packs ship as typed TS constants in `registry.ts`; pack **file** format deferred to MS-8 under its own ADR. | No YAML parser, no new runtime dependency — ajv-only invariant intact. `WorkflowPack` is still declared as a public type so MS-8's importer has a target shape, and `ARCHITECTURE.md` §5.3 stays untouched (deferral, not deviation). **Follow-up for MS-8: ADR required before any pack is loaded from disk.**                                                         |
+| **D-3** | Optional `warnings?: RoutingWarning[]`, present only when non-empty; one added line in `docs/routing-contract.md`.   | `ResolvedRoute` remains `{workflow, level, requirements}` for the two valid examples — T-1/T-2 assert byte-identity against the doc. AC-2 (≤80 tokens) is measured **including** any warnings array, worst case. Router stays stateless: no events, no state writes; the CLI owns logging in MS-6. Docs and code land in the same commit.                               |
 
 Push authorisation for the plan commit and the closure commit was given in the same session
 (docs-only; `npm run verify` re-run green immediately before each push). **GO-MS4 to write

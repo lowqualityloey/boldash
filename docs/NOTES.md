@@ -18,21 +18,21 @@
 
 ## 2. Document Authority Map
 
-| Question about… | Authority |
-|---|---|
-| Agent contract & hard rules | `AGENTS.md` (root) |
-| Product intent, audience, success metric, failure modes | `PROJECT OVERVIEW.md` |
-| System design, engines, schemas, roadmap, testing | `ARCHITECTURE.md` |
-| Public pitch & comparison | `README.md` |
-| Contribution process, ADR rules, doc style | `CONTRIBUTING.md` |
-| v0.1.0 surface: commands, flags, exit codes | `docs/cli-reference.md` |
-| Route contract: schema, validation pipeline, risk→level map | `docs/routing-contract.md` |
+| Question about…                                                  | Authority                    |
+| ---------------------------------------------------------------- | ---------------------------- |
+| Agent contract & hard rules                                      | `AGENTS.md` (root)           |
+| Product intent, audience, success metric, failure modes          | `PROJECT OVERVIEW.md`        |
+| System design, engines, schemas, roadmap, testing                | `ARCHITECTURE.md`            |
+| Public pitch & comparison                                        | `README.md`                  |
+| Contribution process, ADR rules, doc style                       | `CONTRIBUTING.md`            |
+| v0.1.0 surface: commands, flags, exit codes                      | `docs/cli-reference.md`      |
+| Route contract: schema, validation pipeline, risk→level map      | `docs/routing-contract.md`   |
 | Verification: `done.schema.json`, check types, FACT/CLAIM typing | `docs/verification-guide.md` |
-| Error catalog: stable codes → exit codes | `docs/errors.md` |
-| User onboarding: 10-minute first task | `docs/getting-started.md` |
-| Positioning Q&A / objections | `docs/faq.md` |
-| Threat model & reporting | `SECURITY.md` |
-| Working state & invariants | this file |
+| Error catalog: stable codes → exit codes                         | `docs/errors.md`             |
+| User onboarding: 10-minute first task                            | `docs/getting-started.md`    |
+| Positioning Q&A / objections                                     | `docs/faq.md`                |
+| Threat model & reporting                                         | `SECURITY.md`                |
+| Working state & invariants                                       | this file                    |
 
 > The v1 engine is intentionally reinstalled (submodule + injected block between
 > `PROMPTKIT_START/END` in `AGENTS.md`, lines 374–470). Its `docs/STATE.md` is a fresh
@@ -53,11 +53,11 @@ Source: `ARCHITECTURE.md` §2 (P1–P10) + Appendix B.
 8. **P8** Graceful degradation — without Boldash the agent still works with reduced guarantees.
 9. **P9** Tiny LLM interface — schemas/commands/errors fit in a few hundred tokens.
 10. **P10** Every decision explainable via `boldash explain` with a traceable evidence chain.
-11. **Tie-breaker** — *"The LLM proposes. Boldash validates, enforces, records, and verifies."* Any decision not serving that sentence is wrong.
+11. **Tie-breaker** — _"The LLM proposes. Boldash validates, enforces, records, and verifies."_ Any decision not serving that sentence is wrong.
 
 ## 4. Open Items
 
-- [x] **Maintainer-identity ruling (2026-09-14, "okay" batch)**: the human driving this chat session *is* the maintainer. Their explicit in-chat GO — including "okay" to a decision presented to them — is the per-milestone sign-off, and "commit"/"push" language in that GO is the per-instance push authorization the #11 ruling requires. **Silence, absence, tool defaults, and my own inference never constitute authorization.** Recorded here; `AGENTS.md`'s "Do not force-push to main. Ever." remains absolute.
+- [x] **Maintainer-identity ruling (2026-09-14, "okay" batch)**: the human driving this chat session _is_ the maintainer. Their explicit in-chat GO — including "okay" to a decision presented to them — is the per-milestone sign-off, and "commit"/"push" language in that GO is the per-instance push authorization the #11 ruling requires. **Silence, absence, tool defaults, and my own inference never constitute authorization.** Recorded here; `AGENTS.md`'s "Do not force-push to main. Ever." remains absolute.
 
 ### Governance rulings (adopted — canonical copy; the 9 Task Records link here)
 
@@ -92,11 +92,11 @@ Source: `ARCHITECTURE.md` §2 (P1–P10) + Appendix B.
 
 ## 6. History
 
-| Date | Event |
-|---|---|
-| 2026-09-14 | Lineage intake: Boldash confirmed as v2 successor to PromptKit OS v1 (different layer, not rewrite). |
-| 2026-09-14 | Anomaly sweep: SECURITY filename typo, MIT license declaration, template placeholders populated. |
-| 2026-09-14 | v1 engine (`.promptkit` submodule + directives) used briefly to dogfood the repo, then **fully removed in a history reset** — repo reborn as a pure Boldash design corpus (single initial commit, force-pushed). |
-| 2026-09-15 | Lead Engineer intentionally reinstalled v1 (`submodule add + init.sh`, @v1.5.1-26) alongside new native `AGENTS.md`; authored the 7-doc v0.1.0 surface-spec corpus. |
-| 2026-09-15 | `pk:plan` (L2/Full): v0.1.0 Foundation RFC — 9 milestones, 6 decision records, FMEA; §18-Q1 resolved (single `tasks.json`). Maintainer approved same session (TDD disabled; vitest+ajv@8+hand-rolled argv). |
-| 2026-09-15 | `pk:tasks` → 9 records + issues #1–#9 (+#10 CODE_OF_CONDUCT gap). **MS-1 executed**: toolchain pinned, `npm ci && npm run verify` green, CI run 34848611604 success (node 20/22/24) → record `awaiting_review`. **Incident + lesson**: all 9 records were silently truncated to 0 bytes by an agent scripting bug — `open(f,"w").write(open(f).read()…)` performs the truncating open *before* the read — and committed empty; caught by cross-checking grep vs git log, restored fully. Standing rules: build content in memory before opening for write; assert non-zero byte counts after batch writes; never trust success prints that follow silent string-replaces. |
+| Date       | Event                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-09-14 | Lineage intake: Boldash confirmed as v2 successor to PromptKit OS v1 (different layer, not rewrite).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| 2026-09-14 | Anomaly sweep: SECURITY filename typo, MIT license declaration, template placeholders populated.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| 2026-09-14 | v1 engine (`.promptkit` submodule + directives) used briefly to dogfood the repo, then **fully removed in a history reset** — repo reborn as a pure Boldash design corpus (single initial commit, force-pushed).                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| 2026-09-15 | Lead Engineer intentionally reinstalled v1 (`submodule add + init.sh`, @v1.5.1-26) alongside new native `AGENTS.md`; authored the 7-doc v0.1.0 surface-spec corpus.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| 2026-09-15 | `pk:plan` (L2/Full): v0.1.0 Foundation RFC — 9 milestones, 6 decision records, FMEA; §18-Q1 resolved (single `tasks.json`). Maintainer approved same session (TDD disabled; vitest+ajv@8+hand-rolled argv).                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| 2026-09-15 | `pk:tasks` → 9 records + issues #1–#9 (+#10 CODE_OF_CONDUCT gap). **MS-1 executed**: toolchain pinned, `npm ci && npm run verify` green, CI run 34848611604 success (node 20/22/24) → record `awaiting_review`. **Incident + lesson**: all 9 records were silently truncated to 0 bytes by an agent scripting bug — `open(f,"w").write(open(f).read()…)` performs the truncating open _before_ the read — and committed empty; caught by cross-checking grep vs git log, restored fully. Standing rules: build content in memory before opening for write; assert non-zero byte counts after batch writes; never trust success prints that follow silent string-replaces. |

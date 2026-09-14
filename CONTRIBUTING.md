@@ -29,18 +29,18 @@
 
 Not everything is code. Boldash needs all of these:
 
-| Contribution | Effort | Impact |
-|---|---|---|
-| Report a bug | Low | High |
-| Improve documentation | Low | High |
-| Propose a workflow pack | Medium | High |
-| Propose a host adapter | High | High |
-| Write a verification contract | Medium | Medium |
-| Add a test | Medium | Medium |
-| Implement a CLI command | High | High |
-| Benchmark agent performance | High | Very High |
-| Translate documentation | Medium | Medium |
-| Review a PR | Medium | High |
+| Contribution                  | Effort | Impact    |
+| ----------------------------- | ------ | --------- |
+| Report a bug                  | Low    | High      |
+| Improve documentation         | Low    | High      |
+| Propose a workflow pack       | Medium | High      |
+| Propose a host adapter        | High   | High      |
+| Write a verification contract | Medium | Medium    |
+| Add a test                    | Medium | Medium    |
+| Implement a CLI command       | High   | High      |
+| Benchmark agent performance   | High   | Very High |
+| Translate documentation       | Medium | Medium    |
+| Review a PR                   | Medium | High      |
 
 If you are unsure where to start, look for issues labeled `good first issue` or `help wanted`.
 
@@ -64,20 +64,20 @@ If you have not read them, stop and read them now. Every PR that ignores the arc
 
 ### Prerequisites
 
-| Tool | Version |
-|---|---|
-| Node.js | 20 LTS or later |
-| npm | 10 or later |
-| Git | 2.30 or later |
+| Tool       | Version                       |
+| ---------- | ----------------------------- |
+| Node.js    | 20 LTS or later               |
+| npm        | 10 or later                   |
+| Git        | 2.30 or later                 |
 | TypeScript | Provided by `devDependencies` |
 
 Optional:
 
-| Tool | Why |
-|---|---|
-| `gh` CLI | For GitHub integration tests |
-| Claude Code, Cursor, or another supported host | For adapter integration tests |
-| `jq` | For inspecting JSON output during development |
+| Tool                                           | Why                                           |
+| ---------------------------------------------- | --------------------------------------------- |
+| `gh` CLI                                       | For GitHub integration tests                  |
+| Claude Code, Cursor, or another supported host | For adapter integration tests                 |
+| `jq`                                           | For inspecting JSON output during development |
 
 ### Clone and install
 
@@ -194,16 +194,16 @@ This is not bureaucracy. It prevents you from writing a large PR that cannot be 
 
 Tests are not optional. Every change requires them.
 
-| Change | Required test |
-|---|---|
-| New CLI command | Integration test against a fixture repository |
-| New schema | Schema validation test with valid and invalid fixtures |
-| New engine branch | Unit test for each branch |
-| New adapter | Shared contract test suite |
-| Bug fix | Regression test that fails before the fix |
-| Refactor | Existing tests pass unchanged |
-| Documentation | None |
-| Workflow pack | Contract test that `manifest.yaml` and `done.schema.json` validate |
+| Change            | Required test                                                      |
+| ----------------- | ------------------------------------------------------------------ |
+| New CLI command   | Integration test against a fixture repository                      |
+| New schema        | Schema validation test with valid and invalid fixtures             |
+| New engine branch | Unit test for each branch                                          |
+| New adapter       | Shared contract test suite                                         |
+| Bug fix           | Regression test that fails before the fix                          |
+| Refactor          | Existing tests pass unchanged                                      |
+| Documentation     | None                                                               |
+| Workflow pack     | Contract test that `manifest.yaml` and `done.schema.json` validate |
 
 ### Test conventions
 
@@ -442,14 +442,14 @@ Harassment, discrimination, and personal attacks are not tolerated. Neither is "
 
 ## Getting Help
 
-| Question type | Where |
-|---|---|
-| "How do I use Boldash?" | Open a [Discussion](https://github.com/lowqualityloey/boldash/discussions) |
-| "Is this a bug?" | Open an issue using the bug template |
-| "Should Boldash do X?" | Open an issue using the feature template |
-| "I want to contribute but don't know where" | Open a Discussion or comment on a `good first issue` |
-| "Security vulnerability" | See [`SECURITY.md`](./SECURITY.md) |
-| "Code of conduct issue" | See [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md) |
+| Question type                               | Where                                                                      |
+| ------------------------------------------- | -------------------------------------------------------------------------- |
+| "How do I use Boldash?"                     | Open a [Discussion](https://github.com/lowqualityloey/boldash/discussions) |
+| "Is this a bug?"                            | Open an issue using the bug template                                       |
+| "Should Boldash do X?"                      | Open an issue using the feature template                                   |
+| "I want to contribute but don't know where" | Open a Discussion or comment on a `good first issue`                       |
+| "Security vulnerability"                    | See [`SECURITY.md`](./SECURITY.md)                                         |
+| "Code of conduct issue"                     | See [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md)                           |
 
 Response times are best-effort. This is a small project. Be patient. If a week passes without a response, comment on your own issue to bump it.
 

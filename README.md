@@ -27,7 +27,7 @@ Agent decides it is done
 Agent commits
 ```
 
-The agent is the executor *and* the judge. That is not enforcement. It is self-attestation.
+The agent is the executor _and_ the judge. That is not enforcement. It is self-attestation.
 
 No amount of better prompts fixes this. You cannot prompt your way into a guarantee.
 
@@ -35,9 +35,9 @@ No amount of better prompts fixes this. You cannot prompt your way into a guaran
 
 Boldash splits the work in two:
 
-| | |
-|---|---|
-| **The LLM reasons.** | Plans, writes code, writes tests, proposes decisions. |
+|                       |                                                                              |
+| --------------------- | ---------------------------------------------------------------------------- |
+| **The LLM reasons.**  | Plans, writes code, writes tests, proposes decisions.                        |
 | **Boldash enforces.** | Validates routes, tracks state, checks policy, runs gates, records evidence. |
 
 The LLM never verifies its own work. It proposes; Boldash decides.
@@ -77,9 +77,9 @@ Task state lives in `.boldash/state/*.json`. Markdown files in `docs/` are gener
   action: git.commit
   requires:
     - "state.task.status == 'verifying'"
-    - "verification.all_requirements_verified == true"
-    - "git.working_tree_clean == true"
-  block_message: "Cannot commit: requirements not verified."
+    - 'verification.all_requirements_verified == true'
+    - 'git.working_tree_clean == true'
+  block_message: 'Cannot commit: requirements not verified.'
 ```
 
 The agent can ask to commit. Boldash decides whether to permit it.
@@ -113,7 +113,7 @@ TASK-42
 Verification: VERIFIED (3/3 requirements, 1/1 risk mitigated)
 ```
 
-This answers the question *"why does Boldash think this is done?"* with recorded evidence, not agent prose.
+This answers the question _"why does Boldash think this is done?"_ with recorded evidence, not agent prose.
 
 ---
 
@@ -138,20 +138,20 @@ That is it. Everything else is optional. The core value — route validation, st
 
 ## CLI Reference (Planned)
 
-| Command | Purpose |
-|---|---|
-| `boldash init` | Scaffold `.boldash/`, detect host, write config |
-| `boldash doctor` | Diagnose config, host, state, capabilities |
-| `boldash route` | Validate an LLM route proposal |
-| `boldash state get <task>` | Read canonical task state |
-| `boldash state list` | List tasks with filters |
-| `boldash state transition <task> <status>` | Apply a state transition |
-| `boldash verify <task>` | Run verification gates (exit 0 or 1) |
-| `boldash explain <task>` | Traceability graph |
-| `boldash policy check <action>` | Evaluate policy rules |
-| `boldash checkpoint <task>` | Snapshot task state |
-| `boldash evidence list <task>` | List events for a task |
-| `boldash workflow import <path>` | Import a v1 workflow pack |
+| Command                                    | Purpose                                         |
+| ------------------------------------------ | ----------------------------------------------- |
+| `boldash init`                             | Scaffold `.boldash/`, detect host, write config |
+| `boldash doctor`                           | Diagnose config, host, state, capabilities      |
+| `boldash route`                            | Validate an LLM route proposal                  |
+| `boldash state get <task>`                 | Read canonical task state                       |
+| `boldash state list`                       | List tasks with filters                         |
+| `boldash state transition <task> <status>` | Apply a state transition                        |
+| `boldash verify <task>`                    | Run verification gates (exit 0 or 1)            |
+| `boldash explain <task>`                   | Traceability graph                              |
+| `boldash policy check <action>`            | Evaluate policy rules                           |
+| `boldash checkpoint <task>`                | Snapshot task state                             |
+| `boldash evidence list <task>`             | List events for a task                          |
+| `boldash workflow import <path>`           | Import a v1 workflow pack                       |
 
 Every command supports `--format json` for agent consumption.
 
@@ -194,15 +194,15 @@ Every command supports `--format json` for agent consumption.
 
 ## How It Compares
 
-| | **PromptKit OS v1** | **Superpowers** | **get.ship.done** | **Boldash** |
-|---|---|---|---|---|
-| **Form** | Markdown protocols | Methodology + skills | Methodology | Runtime + protocols |
-| **Enforcement** | Self-attestation | Self-attestation | Self-attestation | Deterministic gates |
-| **State** | Distributed Markdown | Session-based | Session-based | Canonical JSON |
-| **Routing** | LLM reads Markdown | Skill selection | Phase selection | Schema-validated JSON |
-| **Evidence** | Prose in Markdown | None | None | Append-only event log |
-| **Host support** | Generated directive files | Multiple harnesses | Claude Code | Adapter interface |
-| **Distribution** | Git submodule | Plugin marketplace | npx | npm + git submodule |
+|                  | **PromptKit OS v1**       | **Superpowers**      | **get.ship.done** | **Boldash**           |
+| ---------------- | ------------------------- | -------------------- | ----------------- | --------------------- |
+| **Form**         | Markdown protocols        | Methodology + skills | Methodology       | Runtime + protocols   |
+| **Enforcement**  | Self-attestation          | Self-attestation     | Self-attestation  | Deterministic gates   |
+| **State**        | Distributed Markdown      | Session-based        | Session-based     | Canonical JSON        |
+| **Routing**      | LLM reads Markdown        | Skill selection      | Phase selection   | Schema-validated JSON |
+| **Evidence**     | Prose in Markdown         | None                 | None              | Append-only event log |
+| **Host support** | Generated directive files | Multiple harnesses   | Claude Code       | Adapter interface     |
+| **Distribution** | Git submodule             | Plugin marketplace   | npx               | npm + git submodule   |
 
 Boldash does not compete on "better prompts." It competes on **enforcement**, **state**, and **evidence** — the layer that prompt frameworks cannot provide.
 
@@ -215,7 +215,7 @@ Boldash does not compete on "better prompts." It competes on **enforcement**, **
 - **Not a SaaS.** Local-first. No cloud dependency in the core.
 - **Not a general workflow engine.** Not Airflow, Temporal, or n8n.
 - **Not a sandbox.** Boldash validates commands; it does not sandbox the shell.
-- **Not a correctness guarantee.** Boldash verifies evidence exists. Whether the code is *good* is a human judgment.
+- **Not a correctness guarantee.** Boldash verifies evidence exists. Whether the code is _good_ is a human judgment.
 
 ---
 
@@ -243,12 +243,12 @@ boldash/
 
 ## Roadmap
 
-| Phase | Version | Focus |
-|---|---|---|
-| **1** | v0.1.0 | Foundation: `init`, `route`, `state`, `verify`. Generic adapter. v1 import. |
-| **2** | v0.2.0 | Policy engine, capability manager, Claude adapter, `doctor`, `explain`. |
-| **3** | v0.3.0 | Event log, evidence storage, subagent protocol, Cursor adapter. |
-| **4** | v0.4.0+ | Antigravity adapter, workflow registry, benchmark suite, plugin API. |
+| Phase | Version | Focus                                                                       |
+| ----- | ------- | --------------------------------------------------------------------------- |
+| **1** | v0.1.0  | Foundation: `init`, `route`, `state`, `verify`. Generic adapter. v1 import. |
+| **2** | v0.2.0  | Policy engine, capability manager, Claude adapter, `doctor`, `explain`.     |
+| **3** | v0.3.0  | Event log, evidence storage, subagent protocol, Cursor adapter.             |
+| **4** | v0.4.0+ | Antigravity adapter, workflow registry, benchmark suite, plugin API.        |
 
 See [ARCHITECTURE.md § 16](./ARCHITECTURE.md#16-development-roadmap) for exit criteria.
 

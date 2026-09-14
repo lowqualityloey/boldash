@@ -39,7 +39,7 @@
 
 Boldash exists because prompt-based agent frameworks cannot enforce their own rules.
 
-v1 (PromptKit OS) defines *how an agent should behave* using Markdown protocols. This works until you need a guarantee. An LLM reading a Markdown file that says "run tests before committing" is not the same as a system that blocks the commit when tests fail.
+v1 (PromptKit OS) defines _how an agent should behave_ using Markdown protocols. This works until you need a guarantee. An LLM reading a Markdown file that says "run tests before committing" is not the same as a system that blocks the commit when tests fail.
 
 Boldash is the deterministic layer that turns protocol into enforcement.
 
@@ -59,7 +59,7 @@ The LLM reasons, plans, and writes code. Boldash coordinates, validates, enforce
 
 ### P2 — Canonical state is machine-readable
 
-Markdown is a human-facing *projection*, never the source of truth. Canonical state lives in JSON. Any workflow that requires the LLM to infer relationships between Markdown files is architecturally wrong.
+Markdown is a human-facing _projection_, never the source of truth. Canonical state lives in JSON. Any workflow that requires the LLM to infer relationships between Markdown files is architecturally wrong.
 
 ### P3 — Deterministic work belongs outside the LLM
 
@@ -106,7 +106,7 @@ Boldash explicitly does **not** attempt to:
 - **Be a general-purpose workflow engine.** Boldash is specifically for AI coding agents. It is not Airflow, Temporal, or n8n.
 - **Be a full policy language.** Policy rules are simple, declarative, and scoped. Boldash is not OPA or Cedar.
 - **Provide a runtime sandbox.** Boldash validates commands; it does not sandbox the shell. Sandboxing is the host's responsibility.
-- **Guarantee correctness of code.** Boldash verifies that *evidence exists*. Whether the code is *good* is a human judgment.
+- **Guarantee correctness of code.** Boldash verifies that _evidence exists_. Whether the code is _good_ is a human judgment.
 
 ---
 
@@ -221,7 +221,7 @@ Every step in this lifecycle is deterministic except steps 2 and 6, which are th
 
 ### 5.1 Purpose
 
-Host adapters translate Boldash's abstract capabilities into host-native features. They are the *only* place where Boldash knows about a specific agent host.
+Host adapters translate Boldash's abstract capabilities into host-native features. They are the _only_ place where Boldash knows about a specific agent host.
 
 ### 5.2 Adapter Interface
 
@@ -261,32 +261,32 @@ interface HostAdapter {
 
 ### 5.3 Adapter Capability Matrix
 
-| Capability | Claude | Cursor | Antigravity | Codex | Gemini | Generic |
-|---|---|---|---|---|---|---|
-| `filesystem.read` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `filesystem.write` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `shell.execute` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `git.read` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `git.commit` | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ |
-| `git.branch` | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ |
-| `git.worktree` | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ |
-| `github` | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ |
-| `mcp` | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ |
-| `subagents` | ✓ | ✗ | ✓ | ✗ | ✗ | ✗ |
-| `human_approval` | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `pre_tool_hooks` | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ |
-| `post_tool_hooks` | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ |
+| Capability         | Claude | Cursor | Antigravity | Codex | Gemini | Generic |
+| ------------------ | ------ | ------ | ----------- | ----- | ------ | ------- |
+| `filesystem.read`  | ✓      | ✓      | ✓           | ✓     | ✓      | ✓       |
+| `filesystem.write` | ✓      | ✓      | ✓           | ✓     | ✓      | ✓       |
+| `shell.execute`    | ✓      | ✓      | ✓           | ✓     | ✓      | ✓       |
+| `git.read`         | ✓      | ✓      | ✓           | ✓     | ✓      | ✓       |
+| `git.commit`       | ✓      | ✓      | ✓           | ✓     | ✓      | ✗       |
+| `git.branch`       | ✓      | ✓      | ✓           | ✓     | ✓      | ✗       |
+| `git.worktree`     | ✓      | ✓      | ✓           | ✗     | ✗      | ✗       |
+| `github`           | ✓      | ✓      | ✓           | ✓     | ✗      | ✗       |
+| `mcp`              | ✓      | ✓      | ✓           | ✗     | ✓      | ✗       |
+| `subagents`        | ✓      | ✗      | ✓           | ✗     | ✗      | ✗       |
+| `human_approval`   | ✓      | ✓      | ✓           | ✓     | ✓      | ✓       |
+| `pre_tool_hooks`   | ✓      | ✓      | ✓           | ✗     | ✗      | ✗       |
+| `post_tool_hooks`  | ✓      | ✓      | ✓           | ✗     | ✗      | ✗       |
 
-A host that lacks `pre_tool_hooks` cannot *block* a commit. For these hosts, Boldash's enforcement is advisory — it can warn, log, and report, but it cannot prevent. This limitation must be visible to the user during `boldash init`.
+A host that lacks `pre_tool_hooks` cannot _block_ a commit. For these hosts, Boldash's enforcement is advisory — it can warn, log, and report, but it cannot prevent. This limitation must be visible to the user during `boldash init`.
 
 ### 5.4 Adapter Failure Modes
 
-| Failure | Behavior |
-|---|---|
-| Host binary not found | Fall back to `generic` adapter; warn user. |
-| Capability probe inconclusive | Assume the capability is unavailable; require user confirmation to enable. |
-| Hook registration fails | Log warning; continue without enforcement; mark project as "advisory mode." |
-| Host version change breaks adapter | Adapter returns `DIAGNOSTIC_FAILED`; user is prompted to upgrade Boldash. |
+| Failure                            | Behavior                                                                    |
+| ---------------------------------- | --------------------------------------------------------------------------- |
+| Host binary not found              | Fall back to `generic` adapter; warn user.                                  |
+| Capability probe inconclusive      | Assume the capability is unavailable; require user confirmation to enable.  |
+| Hook registration fails            | Log warning; continue without enforcement; mark project as "advisory mode." |
+| Host version change breaks adapter | Adapter returns `DIAGNOSTIC_FAILED`; user is prompted to upgrade Boldash.   |
 
 ---
 
@@ -299,11 +299,13 @@ The core is composed of six engines. Each engine has a single responsibility.
 **Responsibility:** Validate the LLM's proposed route against schema and policy.
 
 **Inputs:**
+
 - A JSON route proposal from the LLM
 - The project's canonical state
 - The workflow registry
 
 **Outputs:**
+
 - A validated `ResolvedRoute` object, or a structured error
 
 **Route proposal schema (`schemas/route.schema.json`):**
@@ -322,8 +324,16 @@ The core is composed of six engines. Each engine has a single responsibility.
       "required": ["type", "risk", "scope"],
       "properties": {
         "type": {
-          "enum": ["bugfix", "feature", "refactor", "migration",
-                   "security", "architecture", "docs", "chore"]
+          "enum": [
+            "bugfix",
+            "feature",
+            "refactor",
+            "migration",
+            "security",
+            "architecture",
+            "docs",
+            "chore"
+          ]
         },
         "risk": {
           "enum": ["trivial", "low", "medium", "high", "critical"]
@@ -332,7 +342,7 @@ The core is composed of six engines. Each engine has a single responsibility.
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "files":   { "type": "array", "items": { "type": "string" } },
+            "files": { "type": "array", "items": { "type": "string" } },
             "systems": { "type": "array", "items": { "type": "string" } }
           }
         },
@@ -345,16 +355,16 @@ The core is composed of six engines. Each engine has a single responsibility.
       "required": ["workflow", "level"],
       "properties": {
         "workflow": { "type": "string" },
-        "level":    { "type": "integer", "minimum": 0, "maximum": 3 },
+        "level": { "type": "integer", "minimum": 0, "maximum": 3 },
         "requirements": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "task_record":     { "type": "boolean" },
-            "specification":   { "type": "boolean" },
-            "tests":           { "type": "boolean" },
-            "review":          { "type": "boolean" },
-            "human_approval":  { "type": "boolean" }
+            "task_record": { "type": "boolean" },
+            "specification": { "type": "boolean" },
+            "tests": { "type": "boolean" },
+            "review": { "type": "boolean" },
+            "human_approval": { "type": "boolean" }
           }
         }
       }
@@ -397,12 +407,12 @@ Every error is structured. The LLM does not need to parse prose.
 
 **Canonical state files (in `.boldash/state/`):**
 
-| File | Contents |
-|---|---|
-| `project.json` | Project metadata, config reference, active profile |
-| `tasks.json` | All tasks and their current state |
-| `decisions.json` | Architectural decisions (ADR-like) |
-| `evidence.json` | Evidence index (references to files in `evidence/`) |
+| File             | Contents                                            |
+| ---------------- | --------------------------------------------------- |
+| `project.json`   | Project metadata, config reference, active profile  |
+| `tasks.json`     | All tasks and their current state                   |
+| `decisions.json` | Architectural decisions (ADR-like)                  |
+| `evidence.json`  | Evidence index (references to files in `evidence/`) |
 
 **State transition rules:**
 
@@ -460,9 +470,9 @@ rules:
     action: git.commit
     requires:
       - "state.task.status == 'verifying'"
-      - "verification.all_requirements_verified == true"
-      - "git.working_tree_clean == true"
-    block_message: "Cannot commit: requirements not verified or working tree dirty."
+      - 'verification.all_requirements_verified == true'
+      - 'git.working_tree_clean == true'
+    block_message: 'Cannot commit: requirements not verified or working tree dirty.'
 
   - id: migration-requires-rollback
     action: workflow.migration.execute
@@ -470,15 +480,15 @@ rules:
       - "evidence.exists('rollback-test') == true"
     applies_when:
       - "state.task.risk in ['high', 'critical']"
-    block_message: "Migration requires rollback evidence for high/critical risk."
+    block_message: 'Migration requires rollback evidence for high/critical risk.'
 
   - id: release-requires-human-approval
     action: git.release
     requires:
-      - "human_approval.recorded == true"
+      - 'human_approval.recorded == true'
     applies_when:
       - "state.task.risk in ['high', 'critical']"
-    block_message: "Release requires human approval for high/critical risk tasks."
+    block_message: 'Release requires human approval for high/critical risk tasks.'
 ```
 
 **Evaluation contract:**
@@ -565,14 +575,19 @@ optional:
         "required": ["type", "name"],
         "properties": {
           "type": {
-            "enum": ["file_exists", "command", "regex_in_file",
-                     "state_check", "evidence_exists"]
+            "enum": [
+              "file_exists",
+              "command",
+              "regex_in_file",
+              "state_check",
+              "evidence_exists"
+            ]
           },
-          "name":        { "type": "string" },
-          "path":        { "type": "string" },
-          "run":         { "type": "string" },
-          "pattern":     { "type": "string" },
-          "check":       { "type": "string" }
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "run": { "type": "string" },
+          "pattern": { "type": "string" },
+          "check": { "type": "string" }
         }
       }
     },
@@ -585,7 +600,7 @@ optional:
           "type": { "enum": ["file_not_modified", "command_fails"] },
           "name": { "type": "string" },
           "path": { "type": "string" },
-          "run":  { "type": "string" }
+          "run": { "type": "string" }
         }
       }
     }
@@ -661,23 +676,23 @@ Exit code: 0
 
 **Event types:**
 
-| Type | Emitted by | Payload |
-|---|---|---|
-| `TASK_CREATED` | Boldash | `{ task_id, type, risk }` |
-| `ROUTE_PROPOSED` | Agent | `{ proposal }` |
-| `ROUTE_VALIDATED` | Boldash | `{ ok, errors? }` |
-| `WORKFLOW_LOADED` | Boldash | `{ workflow, version }` |
-| `STATE_TRANSITIONED` | Boldash | `{ task_id, from, to }` |
-| `FILE_MODIFIED` | Host adapter | `{ path, hash_before, hash_after }` |
-| `TEST_EXECUTED` | Agent or Boldash | `{ command, exit_code, duration_ms }` |
-| `CHECKPOINT_CREATED` | Boldash | `{ task_id, snapshot_ref }` |
-| `REVIEW_COMPLETED` | Agent | `{ reviewer, verdict }` |
-| `VERIFICATION_STARTED` | Boldash | `{ task_id }` |
-| `VERIFICATION_PASSED` | Boldash | `{ task_id }` |
-| `VERIFICATION_BLOCKED` | Boldash | `{ task_id, reasons[] }` |
-| `COMMIT_CREATED` | Host adapter | `{ sha, message }` |
-| `PR_CREATED` | Host adapter | `{ number, url }` |
-| `RELEASE_CREATED` | Host adapter | `{ tag, url }` |
+| Type                   | Emitted by       | Payload                               |
+| ---------------------- | ---------------- | ------------------------------------- |
+| `TASK_CREATED`         | Boldash          | `{ task_id, type, risk }`             |
+| `ROUTE_PROPOSED`       | Agent            | `{ proposal }`                        |
+| `ROUTE_VALIDATED`      | Boldash          | `{ ok, errors? }`                     |
+| `WORKFLOW_LOADED`      | Boldash          | `{ workflow, version }`               |
+| `STATE_TRANSITIONED`   | Boldash          | `{ task_id, from, to }`               |
+| `FILE_MODIFIED`        | Host adapter     | `{ path, hash_before, hash_after }`   |
+| `TEST_EXECUTED`        | Agent or Boldash | `{ command, exit_code, duration_ms }` |
+| `CHECKPOINT_CREATED`   | Boldash          | `{ task_id, snapshot_ref }`           |
+| `REVIEW_COMPLETED`     | Agent            | `{ reviewer, verdict }`               |
+| `VERIFICATION_STARTED` | Boldash          | `{ task_id }`                         |
+| `VERIFICATION_PASSED`  | Boldash          | `{ task_id }`                         |
+| `VERIFICATION_BLOCKED` | Boldash          | `{ task_id, reasons[] }`              |
+| `COMMIT_CREATED`       | Host adapter     | `{ sha, message }`                    |
+| `PR_CREATED`           | Host adapter     | `{ number, url }`                     |
+| `RELEASE_CREATED`      | Host adapter     | `{ tag, url }`                        |
 
 **Append-only guarantees:**
 
@@ -705,7 +720,7 @@ TASK-42
 Verification: VERIFIED (3/3 requirements, 1/1 risk mitigated)
 ```
 
-This answers the question *"why does Boldash think this task is complete?"* with actual recorded evidence, not agent prose.
+This answers the question _"why does Boldash think this task is complete?"_ with actual recorded evidence, not agent prose.
 
 ---
 
@@ -734,14 +749,14 @@ Every project that uses Boldash has a `.boldash/` directory at its root:
 
 ### 7.2 Committed vs. Ignored
 
-| Path | Git status |
-|---|---|
-| `.boldash/config.yaml` | Committed |
-| `.boldash/state/*.json` | Committed |
-| `.boldash/evidence/**` | Committed |
-| `.boldash/events.jsonl` | Committed |
-| `.boldash/locks/**` | Ignored |
-| `.boldash/cache/**` | Ignored |
+| Path                    | Git status |
+| ----------------------- | ---------- |
+| `.boldash/config.yaml`  | Committed  |
+| `.boldash/state/*.json` | Committed  |
+| `.boldash/evidence/**`  | Committed  |
+| `.boldash/events.jsonl` | Committed  |
+| `.boldash/locks/**`     | Ignored    |
+| `.boldash/cache/**`     | Ignored    |
 
 State travels with the repository. A teammate who clones the repo sees the same task state, evidence, and event log.
 
@@ -821,11 +836,11 @@ If the process crashes mid-write, the original file remains intact. The temp fil
   "host": "claude",
   "capabilities": {
     "filesystem": { "read": true, "write": true },
-    "shell":      { "execute": true },
-    "git":        { "read": true, "commit": true, "worktree": true },
-    "github":     { "available": true },
-    "mcp":        { "available": true },
-    "subagents":  { "available": true }
+    "shell": { "execute": true },
+    "git": { "read": true, "commit": true, "worktree": true },
+    "github": { "available": true },
+    "mcp": { "available": true },
+    "subagents": { "available": true }
   },
   "workflows_enabled": ["feature", "bugfix", "refactor", "test", "review"],
   "created_at": "2026-09-14T09:00:00Z"
@@ -854,24 +869,24 @@ If the process crashes mid-write, the original file remains intact. The temp fil
 
 Boldash is driven by a single CLI: `boldash`.
 
-| Command | Purpose | Output |
-|---|---|---|
-| `boldash init` | Scaffold `.boldash/`, detect host, write config | Human + JSON |
-| `boldash doctor` | Diagnose config, host, state, capabilities | Human + JSON |
-| `boldash route` | Validate an LLM route proposal | JSON (for agents) |
-| `boldash state get <task>` | Read canonical task state | Human + JSON |
-| `boldash state list` | List tasks with filters | Human + JSON |
-| `boldash state transition <task> <status>` | Apply a state transition | Human + JSON |
-| `boldash state evidence add <task> --type <t> --ref <evt>` | Attach evidence | Human + JSON |
-| `boldash verify <task>` | Run verification gates | Human + JSON; exit 0/1 |
-| `boldash explain <task>` | Traceability graph | Human + JSON |
-| `boldash checkpoint <task>` | Snapshot task state | Human + JSON |
-| `boldash diff <task>` | State diff since last checkpoint | Human + JSON |
-| `boldash evidence list <task>` | List events for a task | Human + JSON |
-| `boldash evidence show <evt>` | Show a single event | Human + JSON |
-| `boldash policy check <action> --task <task>` | Evaluate policy | Human + JSON |
-| `boldash workflow list` | List enabled workflows | Human + JSON |
-| `boldash workflow import <path>` | Import a v1 workflow pack | Human + JSON |
+| Command                                                    | Purpose                                         | Output                 |
+| ---------------------------------------------------------- | ----------------------------------------------- | ---------------------- |
+| `boldash init`                                             | Scaffold `.boldash/`, detect host, write config | Human + JSON           |
+| `boldash doctor`                                           | Diagnose config, host, state, capabilities      | Human + JSON           |
+| `boldash route`                                            | Validate an LLM route proposal                  | JSON (for agents)      |
+| `boldash state get <task>`                                 | Read canonical task state                       | Human + JSON           |
+| `boldash state list`                                       | List tasks with filters                         | Human + JSON           |
+| `boldash state transition <task> <status>`                 | Apply a state transition                        | Human + JSON           |
+| `boldash state evidence add <task> --type <t> --ref <evt>` | Attach evidence                                 | Human + JSON           |
+| `boldash verify <task>`                                    | Run verification gates                          | Human + JSON; exit 0/1 |
+| `boldash explain <task>`                                   | Traceability graph                              | Human + JSON           |
+| `boldash checkpoint <task>`                                | Snapshot task state                             | Human + JSON           |
+| `boldash diff <task>`                                      | State diff since last checkpoint                | Human + JSON           |
+| `boldash evidence list <task>`                             | List events for a task                          | Human + JSON           |
+| `boldash evidence show <evt>`                              | Show a single event                             | Human + JSON           |
+| `boldash policy check <action> --task <task>`              | Evaluate policy                                 | Human + JSON           |
+| `boldash workflow list`                                    | List enabled workflows                          | Human + JSON           |
+| `boldash workflow import <path>`                           | Import a v1 workflow pack                       | Human + JSON           |
 
 ### 9.1 Output Contract
 
@@ -882,14 +897,14 @@ Every command supports `--format json`. In JSON mode:
 
 Exit codes:
 
-| Code | Meaning |
-|---|---|
-| 0 | Success |
-| 1 | Verification failed / policy blocked |
-| 2 | Invalid input / schema error |
-| 3 | Missing capability / host incompatibility |
-| 4 | Concurrency conflict |
-| 10+ | Internal error |
+| Code | Meaning                                   |
+| ---- | ----------------------------------------- |
+| 0    | Success                                   |
+| 1    | Verification failed / policy blocked      |
+| 2    | Invalid input / schema error              |
+| 3    | Missing capability / host incompatibility |
+| 4    | Concurrency conflict                      |
+| 10+  | Internal error                            |
 
 ### 9.2 The Three-Command Minimum
 
@@ -937,16 +952,16 @@ The router resolves `intent → lifecycle → workflow → policy → execution`
 
 Boldash ships with a minimal set of reference packs:
 
-| Pack | Lifecycle | Purpose |
-|---|---|---|
-| `feature` | BUILD | Implement a new feature |
-| `bugfix` | VERIFY | Diagnose and fix a bug |
-| `refactor` | BUILD | Improve structure without changing behavior |
-| `migration` | BUILD | Apply schema or data changes with rollback |
-| `test` | VERIFY | Add or improve tests |
-| `review` | VERIFY | Review a change against requirements |
-| `commit` | SHIP | Commit with evidence |
-| `release` | SHIP | Cut a release |
+| Pack        | Lifecycle | Purpose                                     |
+| ----------- | --------- | ------------------------------------------- |
+| `feature`   | BUILD     | Implement a new feature                     |
+| `bugfix`    | VERIFY    | Diagnose and fix a bug                      |
+| `refactor`  | BUILD     | Improve structure without changing behavior |
+| `migration` | BUILD     | Apply schema or data changes with rollback  |
+| `test`      | VERIFY    | Add or improve tests                        |
+| `review`    | VERIFY    | Review a change against requirements        |
+| `commit`    | SHIP      | Commit with evidence                        |
+| `release`   | SHIP      | Cut a release                               |
 
 Additional packs can be installed from a registry or imported from v1.
 
@@ -966,7 +981,7 @@ The importer:
 4. Generates a minimal `done.schema.json` (empty `must_pass`).
 5. Warns that verification contracts must be authored by the user.
 
-v1 workflows become *content* for Boldash. The protocols survive; the enforcement is added.
+v1 workflows become _content_ for Boldash. The protocols survive; the enforcement is added.
 
 ---
 
@@ -974,12 +989,12 @@ v1 workflows become *content* for Boldash. The protocols survive; the enforcemen
 
 Profiles are **policy presets**. They do not change the architecture. They change what is required, enforced, and logged.
 
-| Profile | Routing | State | Policy | Verification | Evidence |
-|---|---|---|---|---|---|
-| **Lite** | Structured | Minimal | Risk-based | Basic | Off |
-| **Balanced** | Structured | Full | Risk-based | Full | On |
-| **Strict** | Structured | Full | Strict | Full + gates | Full + audit |
-| **Accelerated** | Structured | Full | Relaxed for low-risk | Full for high-risk | On |
+| Profile         | Routing    | State   | Policy               | Verification       | Evidence     |
+| --------------- | ---------- | ------- | -------------------- | ------------------ | ------------ |
+| **Lite**        | Structured | Minimal | Risk-based           | Basic              | Off          |
+| **Balanced**    | Structured | Full    | Risk-based           | Full               | On           |
+| **Strict**      | Structured | Full    | Strict               | Full + gates       | Full + audit |
+| **Accelerated** | Structured | Full    | Relaxed for low-risk | Full for high-risk | On           |
 
 **`config.yaml` example:**
 
@@ -1014,19 +1029,19 @@ Profiles are declared in the project config, not hardcoded in the runtime. A use
 Boldash runs on a developer's machine, in a repository the developer controls. The threat model assumes:
 
 - The user is trusted.
-- The host agent is *semi-trusted* — it may produce incorrect or malicious output.
+- The host agent is _semi-trusted_ — it may produce incorrect or malicious output.
 - The repository may contain untrusted content (e.g., a cloned dependency).
 - Boldash must not escalate privileges beyond what the user already has.
 
 ### 12.2 Principles
 
-| Principle | Implementation |
-|---|---|
-| No shell execution without a declared command | Verification contracts must list every command they run. |
-| No network by default | Boldash makes no network calls in the core. Adapters may, but only with explicit user consent. |
-| No secrets in state | Evidence payloads are scanned for common secret patterns; matches are redacted. |
-| No silent state mutation | Every state change is logged as an event. |
-| No capability escalation | Boldash never enables a capability the host does not declare. |
+| Principle                                     | Implementation                                                                                 |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| No shell execution without a declared command | Verification contracts must list every command they run.                                       |
+| No network by default                         | Boldash makes no network calls in the core. Adapters may, but only with explicit user consent. |
+| No secrets in state                           | Evidence payloads are scanned for common secret patterns; matches are redacted.                |
+| No silent state mutation                      | Every state change is logged as an event.                                                      |
+| No capability escalation                      | Boldash never enables a capability the host does not declare.                                  |
 
 ### 12.3 Command Execution Rules
 
@@ -1072,13 +1087,13 @@ Matches are replaced with `<redacted:pattern-name>` and the event is flagged `RE
 
 ### 13.2 Comparative Token Cost
 
-| Operation | v1 (Markdown) | Boldash | Savings |
-|---|---|---|---|
-| Static briefing | ~881–2,099 | ~400 | ~50% |
-| Routing decision | ~1,500 | ~200 (JSON) | ~85% |
-| State query | ~2,000 | ~100 (JSON) | ~95% |
-| Verification | ~1,000 | ~50 (status) | ~95% |
-| Workflow loading | full workflow | protocol + contract | ~30% |
+| Operation        | v1 (Markdown) | Boldash             | Savings |
+| ---------------- | ------------- | ------------------- | ------- |
+| Static briefing  | ~881–2,099    | ~400                | ~50%    |
+| Routing decision | ~1,500        | ~200 (JSON)         | ~85%    |
+| State query      | ~2,000        | ~100 (JSON)         | ~95%    |
+| Verification     | ~1,000        | ~50 (status)        | ~95%    |
+| Workflow loading | full workflow | protocol + contract | ~30%    |
 
 These are targets, not guarantees. They will be validated by the benchmark suite (Section 17).
 
@@ -1094,11 +1109,11 @@ Once routing is structured, Boldash can allocate models by task complexity:
 
 ```yaml
 model_allocation:
-  trivial:    { model: "fast-cheap" }
-  low:        { model: "balanced" }
-  medium:     { model: "balanced" }
-  high:       { model: "strong" }
-  critical:   { model: "strong", require_human: true }
+  trivial: { model: 'fast-cheap' }
+  low: { model: 'balanced' }
+  medium: { model: 'balanced' }
+  high: { model: 'strong' }
+  critical: { model: 'strong', require_human: true }
 ```
 
 This is out of scope for v0.1.0. It is listed here because the architecture must not preclude it.
@@ -1135,12 +1150,12 @@ A parent task may spawn subagent tasks. Each subagent receives:
 task:
   id: TASK-42-A
   parent: TASK-42
-  objective: "Implement OAuth callback"
+  objective: 'Implement OAuth callback'
   scope:
-    paths: ["src/auth/*"]
+    paths: ['src/auth/*']
   constraints:
-    - "Do not modify database schema"
-  output_schema: "schemas/subagent-result.schema.json"
+    - 'Do not modify database schema'
+  output_schema: 'schemas/subagent-result.schema.json'
 ```
 
 A subagent returns:
@@ -1156,7 +1171,7 @@ A subagent returns:
 }
 ```
 
-The parent consumes the *structured result*, not arbitrary prose. This is the central improvement over v1's subagent concept.
+The parent consumes the _structured result_, not arbitrary prose. This is the central improvement over v1's subagent concept.
 
 ### 14.5 Conflict Detection
 
@@ -1317,12 +1332,12 @@ boldash/
 
 ### 17.1 Layers
 
-| Layer | What it tests | Tooling |
-|---|---|---|
-| **Unit** | Schema validation, state transitions, policy evaluation | Vitest or Node test runner |
-| **Contract** | Adapter interface conformance | A shared test suite every adapter must pass |
-| **Integration** | End-to-end flows: init → route → state → verify | Fixture repositories |
-| **Benchmark** | Token usage, wall-clock time, retries | `bench/runner.ts` against fixed tasks |
+| Layer           | What it tests                                           | Tooling                                     |
+| --------------- | ------------------------------------------------------- | ------------------------------------------- |
+| **Unit**        | Schema validation, state transitions, policy evaluation | Vitest or Node test runner                  |
+| **Contract**    | Adapter interface conformance                           | A shared test suite every adapter must pass |
+| **Integration** | End-to-end flows: init → route → state → verify         | Fixture repositories                        |
+| **Benchmark**   | Token usage, wall-clock time, retries                   | `bench/runner.ts` against fixed tasks       |
 
 ### 17.2 The Benchmark Suite
 
@@ -1367,52 +1382,52 @@ Every release additionally runs:
 
 These are unresolved. They must be answered before the corresponding phase ships.
 
-| # | Question | Phase |
-|---|---|---|
-| 1 | Should state be one file per task or a single `tasks.json`? Single file is simpler; per-file scales better. | Phase 1 |
-| 2 | Should policy rules be pure YAML or allow a restricted expression language? Current draft uses a constrained string grammar. | Phase 2 |
-| 3 | How should `boldash` behave when the host lacks pre-tool hooks? Advisory mode is the current answer, but the user experience needs definition. | Phase 2 |
-| 4 | Should evidence be stored inline in `events.jsonl` or as separate files referenced by the event? Current draft uses separate files. | Phase 3 |
-| 5 | What is the retention policy for evidence in long-lived projects? | Phase 3 |
-| 6 | Should Boldash ship a hosted registry for workflow packs, or is GitHub the registry? | Phase 4 |
-| 7 | How does Boldash handle monorepos with multiple projects? | Phase 4 |
+| #   | Question                                                                                                                                       | Phase   |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| 1   | Should state be one file per task or a single `tasks.json`? Single file is simpler; per-file scales better.                                    | Phase 1 |
+| 2   | Should policy rules be pure YAML or allow a restricted expression language? Current draft uses a constrained string grammar.                   | Phase 2 |
+| 3   | How should `boldash` behave when the host lacks pre-tool hooks? Advisory mode is the current answer, but the user experience needs definition. | Phase 2 |
+| 4   | Should evidence be stored inline in `events.jsonl` or as separate files referenced by the event? Current draft uses separate files.            | Phase 3 |
+| 5   | What is the retention policy for evidence in long-lived projects?                                                                              | Phase 3 |
+| 6   | Should Boldash ship a hosted registry for workflow packs, or is GitHub the registry?                                                           | Phase 4 |
+| 7   | How does Boldash handle monorepos with multiple projects?                                                                                      | Phase 4 |
 
 ---
 
 ## 19. Glossary
 
-| Term | Definition |
-|---|---|
-| **Adapter** | A host-specific implementation of the `HostAdapter` interface. |
-| **Capability** | A feature a host provides, e.g. `subagents`, `git.worktree`. |
-| **Canonical state** | The JSON representation of project state. The source of truth. |
-| **Evidence** | A recorded artifact (test run, review, secret scan) attached to a task. |
-| **Event** | A single entry in the append-only event log. |
-| **Gate** | A deterministic check that returns PASS or BLOCK. |
-| **Host** | The agent runtime Boldash runs under: Claude Code, Cursor, etc. |
-| **Lifecycle stage** | A grouping of workflows: DISCOVER, PLAN, BUILD, VERIFY, SHIP, LEARN. |
-| **Profile** | A named policy preset: Lite, Balanced, Strict, Accelerated. |
-| **Projection** | A Markdown file generated from canonical state for human reading. |
-| **Route** | A structured proposal from the LLM describing task type, risk, and workflow. |
-| **Task** | A unit of work tracked by Boldash. |
-| **Verification contract** | A machine-readable definition of what "done" means for a workflow. |
-| **Workflow** | A named, versioned unit of work with a protocol and a contract. |
-| **Workflow pack** | The directory containing a workflow's manifest, protocol, and contract. |
+| Term                      | Definition                                                                   |
+| ------------------------- | ---------------------------------------------------------------------------- |
+| **Adapter**               | A host-specific implementation of the `HostAdapter` interface.               |
+| **Capability**            | A feature a host provides, e.g. `subagents`, `git.worktree`.                 |
+| **Canonical state**       | The JSON representation of project state. The source of truth.               |
+| **Evidence**              | A recorded artifact (test run, review, secret scan) attached to a task.      |
+| **Event**                 | A single entry in the append-only event log.                                 |
+| **Gate**                  | A deterministic check that returns PASS or BLOCK.                            |
+| **Host**                  | The agent runtime Boldash runs under: Claude Code, Cursor, etc.              |
+| **Lifecycle stage**       | A grouping of workflows: DISCOVER, PLAN, BUILD, VERIFY, SHIP, LEARN.         |
+| **Profile**               | A named policy preset: Lite, Balanced, Strict, Accelerated.                  |
+| **Projection**            | A Markdown file generated from canonical state for human reading.            |
+| **Route**                 | A structured proposal from the LLM describing task type, risk, and workflow. |
+| **Task**                  | A unit of work tracked by Boldash.                                           |
+| **Verification contract** | A machine-readable definition of what "done" means for a workflow.           |
+| **Workflow**              | A named, versioned unit of work with a protocol and a contract.              |
+| **Workflow pack**         | The directory containing a workflow's manifest, protocol, and contract.      |
 
 ---
 
 ## Appendix A — Relationship to PromptKit OS v1
 
-| Aspect | v1 | Boldash |
-|---|---|---|
-| **Form** | Markdown protocols, no runtime | Runtime + Markdown protocols |
-| **Enforcement** | Self-attestation | Deterministic gates |
-| **State** | Distributed Markdown | Canonical JSON + Markdown projection |
-| **Routing** | LLM reads Markdown, chooses | LLM proposes JSON, Boldash validates |
-| **Capabilities** | Implicit | Explicit and enforced |
-| **Evidence** | Prose in Markdown | Structured event log |
-| **Host support** | Generated directive files | Adapter interface |
-| **Distribution** | Git submodule | npm package + git submodule option |
+| Aspect           | v1                             | Boldash                              |
+| ---------------- | ------------------------------ | ------------------------------------ |
+| **Form**         | Markdown protocols, no runtime | Runtime + Markdown protocols         |
+| **Enforcement**  | Self-attestation               | Deterministic gates                  |
+| **State**        | Distributed Markdown           | Canonical JSON + Markdown projection |
+| **Routing**      | LLM reads Markdown, chooses    | LLM proposes JSON, Boldash validates |
+| **Capabilities** | Implicit                       | Explicit and enforced                |
+| **Evidence**     | Prose in Markdown              | Structured event log                 |
+| **Host support** | Generated directive files      | Adapter interface                    |
+| **Distribution** | Git submodule                  | npm package + git submodule option   |
 
 v1 remains valid as a protocol specification. Boldash is the runtime that makes the specification enforceable. Workflows written for v1 can be imported into Boldash via `boldash workflow import`.
 

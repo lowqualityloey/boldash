@@ -3,6 +3,7 @@
 <a id="TASK-2026-09-15-v010-ms1-scaffold"></a>
 
 ## 1. Identity and Authority
+
 - **Record Type**: `Task Record`
 - **Task ID**: `TASK-2026-09-15-v010-ms1-scaffold`
 - **Work Type**: `Code Work`
@@ -15,6 +16,7 @@
 - **Created**: `2026-09-15 00:40 UTC`
 
 ## 2. Objective and Boundaries
+
 - **Objective**: Deliver buildable skeleton: package.json (ESM, exact-pinned deps, no post-install), strict tsconfig, vitest, eslint flat config, npm scripts incl. `npm run verify` (lint+typecheck+test), GitHub Actions CI (Linux, Node 20/22/24).
 - **In Scope**: see Objective; files named therein.
 - **Explicit Non-Goals**:
@@ -25,6 +27,7 @@
 - **Verification Condition**: `npm run verify exits 0 locally and in CI`
 
 ## 3. Acceptance Criteria
+
 - [x] **AC-1**: `Given a clean checkout, When `npm ci && npm run verify` runs, Then exit 0 with a passing suite.`
   - **Result**: PASS
   - **Evidence**: `rm -rf node_modules && npm ci && npm run verify` → exit 0, 2026-09-15 01:11 UTC (1 test, 193 ms)
@@ -39,6 +42,7 @@
   - **Evidence**: devDeps exact-pinned (typescript 6.0.3, vitest 5.0.0, eslint 10.10.0, typescript-eslint 8.70.0, prettier 3.9.6, @types/node 26.5.1); no ^/~; no lifecycle scripts
 
 ## 4. Execution Policy
+
 - **Mode**: `Gated Mode`
 - **TDD Enforcement Mode**: `disabled`
 - **Batch Authorization**: `N/A`
@@ -49,6 +53,7 @@
 - **Host Timer Capability**: `None observed in DSH harness — checkpoints enforced by convention only`
 
 ## 5. State and Active Ownership
+
 - **Execution State**: `completed`
 - **Mapped `pk:tasks` Status**: `Done`
 - **Active Task Pointer**: `None`
@@ -57,14 +62,16 @@
 - **Next Action**: `None — completed; issue #1 closed`
 
 ### Transition History
-| Previous State | New State | Timestamp | Actor | Reason | Supporting Evidence |
-|---|---|---|---|---|---|
-| — | `planned` | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved: TDD disabled + vitest/ajv/hand-rolled-argv | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
-| `planned` | `ready` | 2026-09-15 00:58 UTC | Lead Engineer | Readiness complete; maintainer GO (ask_user_question batch) | decision record in session |
-| `ready` | `in_progress` | 2026-09-15 00:58 UTC | DSH agent | Pointer claimed; scaffold started | this record |
-| `in_progress` | `awaiting_review` | 2026-09-15 01:22 UTC | DSH agent | AC-1…4 PASS; CI 34848611604 success | `npm run verify` + `gh run watch`
+
+| Previous State | New State         | Timestamp            | Actor                | Reason                                                      | Supporting Evidence                               |
+| -------------- | ----------------- | -------------------- | -------------------- | ----------------------------------------------------------- | ------------------------------------------------- |
+| —              | `planned`         | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved: TDD disabled + vitest/ajv/hand-rolled-argv    | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
+| `planned`      | `ready`           | 2026-09-15 00:58 UTC | Lead Engineer        | Readiness complete; maintainer GO (ask_user_question batch) | decision record in session                        |
+| `ready`        | `in_progress`     | 2026-09-15 00:58 UTC | DSH agent            | Pointer claimed; scaffold started                           | this record                                       |
+| `in_progress`  | `awaiting_review` | 2026-09-15 01:22 UTC | DSH agent            | AC-1…4 PASS; CI 34848611604 success                         | `npm run verify` + `gh run watch`                 |
 
 ## 6. Evidence and Completion Gate
+
 - **Changed Files**:
   - `package.json` + `package-lock.json` — exact-pinned toolchain, verify scripts
   - `tsconfig.json` + `tsconfig.build.json` — strict NodeNext noEmit gate / dist build
@@ -87,6 +94,7 @@
 - **Blocker and Resume Condition**: None — awaiting maintainer review
 
 ### Completion Gate
+
 - **Completion State**: `completed`
 - **Acceptance Results**: AC-1 PASS; AC-2 PASS; AC-3 PASS; AC-4 PASS
 - **Changed-File Summary**: scaffold only — engines correctly deferred to MS-2+

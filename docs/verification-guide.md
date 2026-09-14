@@ -31,14 +31,14 @@ Verification is the moment Boldash becomes an enforcement layer rather than a su
 
 ## What Verification Is Not
 
-| Verification is not | Because |
-|---|---|
-| A correctness guarantee | It confirms evidence exists, not that the code is good. |
-| A code review | Review is a separate workflow. |
-| A test runner | It runs tests *declared in the contract*. It does not generate tests. |
-| A static analyzer | It runs analyzers you declare. It does not decide what to analyze. |
-| A security scanner | It runs scanners you declare. It does not replace human review. |
-| An LLM judgment | It contains no LLM calls. |
+| Verification is not     | Because                                                               |
+| ----------------------- | --------------------------------------------------------------------- |
+| A correctness guarantee | It confirms evidence exists, not that the code is good.               |
+| A code review           | Review is a separate workflow.                                        |
+| A test runner           | It runs tests _declared in the contract_. It does not generate tests. |
+| A static analyzer       | It runs analyzers you declare. It does not decide what to analyze.    |
+| A security scanner      | It runs scanners you declare. It does not replace human review.       |
+| An LLM judgment         | It contains no LLM calls.                                             |
 
 If verification passes and the code is still wrong, the contract is too weak. Fix the contract, not the engine.
 
@@ -67,14 +67,19 @@ Location: `workflows/<name>/done.schema.json`
         "required": ["type", "name"],
         "properties": {
           "type": {
-            "enum": ["file_exists", "command", "regex_in_file",
-                     "state_check", "evidence_exists"]
+            "enum": [
+              "file_exists",
+              "command",
+              "regex_in_file",
+              "state_check",
+              "evidence_exists"
+            ]
           },
-          "name":        { "type": "string" },
-          "path":        { "type": "string" },
-          "run":         { "type": "string" },
-          "pattern":     { "type": "string" },
-          "check":       { "type": "string" }
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "run": { "type": "string" },
+          "pattern": { "type": "string" },
+          "check": { "type": "string" }
         }
       }
     },
@@ -87,7 +92,7 @@ Location: `workflows/<name>/done.schema.json`
           "type": { "enum": ["file_not_modified", "command_fails"] },
           "name": { "type": "string" },
           "path": { "type": "string" },
-          "run":  { "type": "string" }
+          "run": { "type": "string" }
         }
       }
     }
@@ -97,11 +102,11 @@ Location: `workflows/<name>/done.schema.json`
 
 ### Field reference
 
-| Field | Required | Description |
-|---|---|---|
-| `task_id` | Yes | The task this contract applies to (usually templated). |
-| `must_pass` | Yes | Array of checks that must pass. |
-| `must_not` | No | Array of checks that must fail (negative checks). |
+| Field       | Required | Description                                            |
+| ----------- | -------- | ------------------------------------------------------ |
+| `task_id`   | Yes      | The task this contract applies to (usually templated). |
+| `must_pass` | Yes      | Array of checks that must pass.                        |
+| `must_not`  | No       | Array of checks that must fail (negative checks).      |
 
 ---
 
@@ -120,7 +125,11 @@ Passes if the file at `path` exists.
 Runs a shell command. Passes if the exit code is 0.
 
 ```json
-{ "type": "command", "name": "unit tests pass", "run": "npm test -- --grep oauth_callback" }
+{
+  "type": "command",
+  "name": "unit tests pass",
+  "run": "npm test -- --grep oauth_callback"
+}
 ```
 
 Rules:
@@ -135,7 +144,12 @@ Rules:
 Passes if `pattern` matches somewhere in the file at `path`.
 
 ```json
-{ "type": "regex_in_file", "name": "callback registered", "path": "src/auth/index.ts", "pattern": "registerCallback\\(" }
+{
+  "type": "regex_in_file",
+  "name": "callback registered",
+  "path": "src/auth/index.ts",
+  "pattern": "registerCallback\\("
+}
 ```
 
 Patterns are JavaScript regex. Use anchors and escaping carefully.
@@ -145,7 +159,11 @@ Patterns are JavaScript regex. Use anchors and escaping carefully.
 Evaluates a state expression. Passes if the expression is true.
 
 ```json
-{ "type": "state_check", "name": "task risk not critical", "check": "state.task.risk != 'critical'" }
+{
+  "type": "state_check",
+  "name": "task risk not critical",
+  "check": "state.task.risk != 'critical'"
+}
 ```
 
 State expressions use the same constrained grammar as policy rules (see [`docs/state-model.md`](./state-model.md)).
@@ -213,7 +231,12 @@ This is useless. It creates false confidence.
 Long-running commands can hang CI. Set `timeout_ms` when a command might exceed 300 seconds.
 
 ```json
-{ "type": "command", "name": "integration tests", "run": "npm run test:integration", "timeout_ms": 900000 }
+{
+  "type": "command",
+  "name": "integration tests",
+  "run": "npm run test:integration",
+  "timeout_ms": 900000
+}
 ```
 
 ### Rule 5 — Name every check
@@ -235,8 +258,8 @@ Good: `{ "type": "command", "name": "OAuth callback integration test", ... }`
   "task_id": "{{task_id}}",
   "must_pass": [
     { "type": "file_exists", "name": "implementation file", "path": "src/feature.ts" },
-    { "type": "command",     "name": "tests pass",          "run": "npm test" },
-    { "type": "command",     "name": "typecheck pass",      "run": "npm run typecheck" }
+    { "type": "command", "name": "tests pass", "run": "npm test" },
+    { "type": "command", "name": "typecheck pass", "run": "npm run typecheck" }
   ]
 }
 ```
@@ -247,12 +270,12 @@ Good: `{ "type": "command", "name": "OAuth callback integration test", ... }`
 {
   "task_id": "{{task_id}}",
   "must_pass": [
-    { "type": "file_exists",     "name": "migration file",     "path": "db/migrations/001.sql" },
-    { "type": "file_exists",     "name": "rollback file",      "path": "db/rollbacks/001.sql" },
-    { "type": "command",         "name": "migration test",     "run": "npm run test:migration" },
-    { "type": "command",         "name": "rollback test",      "run": "npm run test:rollback" },
-    { "type": "evidence_exists", "name": "backup recorded",    "path": "backup" },
-    { "type": "evidence_exists", "name": "review completed",   "path": "review" }
+    { "type": "file_exists", "name": "migration file", "path": "db/migrations/001.sql" },
+    { "type": "file_exists", "name": "rollback file", "path": "db/rollbacks/001.sql" },
+    { "type": "command", "name": "migration test", "run": "npm run test:migration" },
+    { "type": "command", "name": "rollback test", "run": "npm run test:rollback" },
+    { "type": "evidence_exists", "name": "backup recorded", "path": "backup" },
+    { "type": "evidence_exists", "name": "review completed", "path": "review" }
   ],
   "must_not": [
     { "type": "file_not_modified", "name": "no data loss", "path": "data/critical.json" }
@@ -266,10 +289,23 @@ Good: `{ "type": "command", "name": "OAuth callback integration test", ... }`
 {
   "task_id": "{{task_id}}",
   "must_pass": [
-    { "type": "command",         "name": "vulnerability test passes", "run": "npm test -- --grep cve-2024" },
-    { "type": "command",         "name": "no new high-severity deps", "run": "npm audit --audit-level=high" },
-    { "type": "regex_in_file",   "name": "input sanitized",           "path": "src/input.ts", "pattern": "sanitize\\(" },
-    { "type": "evidence_exists", "name": "security review",           "path": "security-review" }
+    {
+      "type": "command",
+      "name": "vulnerability test passes",
+      "run": "npm test -- --grep cve-2024"
+    },
+    {
+      "type": "command",
+      "name": "no new high-severity deps",
+      "run": "npm audit --audit-level=high"
+    },
+    {
+      "type": "regex_in_file",
+      "name": "input sanitized",
+      "path": "src/input.ts",
+      "pattern": "sanitize\\("
+    },
+    { "type": "evidence_exists", "name": "security review", "path": "security-review" }
   ]
 }
 ```
@@ -280,11 +316,11 @@ Good: `{ "type": "command", "name": "OAuth callback integration test", ... }`
 
 `boldash verify <task>` exits:
 
-| Code | Meaning | When |
-|---|---|---|
-| 0 | VERIFIED | All `must_pass` passed. All `must_not` passed. |
-| 1 | BLOCKED | At least one check failed. |
-| 2 | Invalid input | Task not found, contract malformed. |
+| Code | Meaning       | When                                           |
+| ---- | ------------- | ---------------------------------------------- |
+| 0    | VERIFIED      | All `must_pass` passed. All `must_not` passed. |
+| 1    | BLOCKED       | At least one check failed.                     |
+| 2    | Invalid input | Task not found, contract malformed.            |
 
 ### Host integration
 
@@ -310,12 +346,12 @@ This is not managed by Boldash. It is a fallback for hosts that lack native hook
 
 The most important distinction in verification:
 
-| Kind | Example | Trust |
-|---|---|---|
-| **FACT** | `npm test` returned exit code 0 | High. Recorded, verifiable. |
-| **CLAIM** | Agent says "requirement R3 implemented" | Low. Not independently verified. |
-| **HUMAN JUDGMENT** | Reviewer approved PR #77 | Medium. Depends on the reviewer. |
-| **INFERENCE** | "likely correct because tests pass" | Low. Not a check. |
+| Kind               | Example                                 | Trust                            |
+| ------------------ | --------------------------------------- | -------------------------------- |
+| **FACT**           | `npm test` returned exit code 0         | High. Recorded, verifiable.      |
+| **CLAIM**          | Agent says "requirement R3 implemented" | Low. Not independently verified. |
+| **HUMAN JUDGMENT** | Reviewer approved PR #77                | Medium. Depends on the reviewer. |
+| **INFERENCE**      | "likely correct because tests pass"     | Low. Not a check.                |
 
 Boldash checks produce FACTs. Review produces HUMAN JUDGMENT. Agent prose produces CLAIMs.
 

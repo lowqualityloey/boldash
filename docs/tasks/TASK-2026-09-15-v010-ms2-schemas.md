@@ -3,6 +3,7 @@
 <a id="TASK-2026-09-15-v010-ms2-schemas"></a>
 
 ## 1. Identity and Authority
+
 - **Record Type**: `Task Record`
 - **Task ID**: `TASK-2026-09-15-v010-ms2-schemas`
 - **Work Type**: `Code Work`
@@ -14,6 +15,7 @@
 - **Created**: `2026-09-15 00:40 UTC`
 
 ## 2. Objective and Boundaries
+
 - **Objective**: schemas/route.schema.json (verbatim routing-contract.md), task-state (schema_version:1), done meta-schema INCLUDING timeout_ms, event schema; src/shared/: Result<T,E>, errors.ts (full docs/errors.md code→exit catalog), atomic fs helpers (temp+rename), injected clock.
 - **In Scope**: see Objective; files named therein.
 - **Explicit Non-Goals**:
@@ -24,6 +26,7 @@
 - **Verification Condition**: `npm run verify green; fixture suite exits 0`
 
 ## 3. Acceptance Criteria
+
 - [x] **AC-1**: `Every schema has ≥1 valid and ≥2 invalid fixture tests via ajv@8.`
   - **Result**: PASS
   - **Evidence**: tests/unit/schemas.test.ts — 14 tests; each of route/task/task-state-file/done/event has ≥1 valid + ≥2 invalid fixtures under ajv strict mode
@@ -46,6 +49,7 @@
   - **Evidence**: Pending
 
 ## 4. Execution Policy
+
 - **Mode**: `Gated Mode`
 - **TDD Enforcement Mode**: `disabled`
 - **Batch Authorization**: `N/A`
@@ -56,6 +60,7 @@
 - **Host Timer Capability**: `None observed in DSH harness — checkpoints enforced by convention only`
 
 ## 5. State and Active Ownership
+
 - **Execution State**: `completed`
 - **Mapped `pk:tasks` Status**: `Done`
 - **Active Task Pointer**: `None`
@@ -64,15 +69,17 @@
 - **Next Action**: `None — completed; #2 closed`
 
 ### Transition History
-| Previous State | New State | Timestamp | Actor | Reason | Supporting Evidence |
-|---|---|---|---|---|---|
-| — | `planned` | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
-| `planned` | `ready` | 2026-09-15 01:35 UTC | Lead Engineer | MS-1 completed → dependency satisfied; GO-MS2 issued | #1 closed |
-| `ready` | `in_progress` | 2026-09-15 01:35 UTC | DSH agent | Pointer claimed (transition recorded; pointer field corrected to match in this commit — earlier replace silently missed due to missing backticks in template) | this record |
-| `in_progress` | `awaiting_review` | 2026-09-15 01:46 UTC | DSH agent | AC-1…AC-4 PASS; CI 34851150797 success on c2316de | `npm run verify` + `gh run list --json headSha` |
-| `awaiting_review` | `completed` | 2026-09-15 01:52 UTC | Lead Engineer | Maintainer review approved; CI re-confirmed green on 928bcf5 (run 34852013278) | #2 closed |
+
+| Previous State    | New State         | Timestamp            | Actor                | Reason                                                                                                                                                        | Supporting Evidence                               |
+| ----------------- | ----------------- | -------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| —                 | `planned`         | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv)                                                                                           | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
+| `planned`         | `ready`           | 2026-09-15 01:35 UTC | Lead Engineer        | MS-1 completed → dependency satisfied; GO-MS2 issued                                                                                                          | #1 closed                                         |
+| `ready`           | `in_progress`     | 2026-09-15 01:35 UTC | DSH agent            | Pointer claimed (transition recorded; pointer field corrected to match in this commit — earlier replace silently missed due to missing backticks in template) | this record                                       |
+| `in_progress`     | `awaiting_review` | 2026-09-15 01:46 UTC | DSH agent            | AC-1…AC-4 PASS; CI 34851150797 success on c2316de                                                                                                             | `npm run verify` + `gh run list --json headSha`   |
+| `awaiting_review` | `completed`       | 2026-09-15 01:52 UTC | Lead Engineer        | Maintainer review approved; CI re-confirmed green on 928bcf5 (run 34852013278)                                                                                | #2 closed                                         |
 
 ## 6. Evidence and Completion Gate
+
 - **Changed Files**:
   - `schemas/{route,task,task-state-file,done,event}.schema.json` — draft-07 contracts
   - `src/shared/{result,errors,fs,clock,schema}.ts` — kernel; ajv confined to schema.ts (ADR-003 seam)
@@ -94,6 +101,7 @@
 - **Blocker and Resume Condition**: `None — awaiting maintainer review (#2)`
 
 ### Completion Gate
+
 - **Completion State**: `completed`
 - **Acceptance Results**: `AC-1 PASS · AC-2 PASS · AC-3 PASS · AC-4 PASS`
 - **Changed-File Summary**: 5 schemas, 5 kernel modules, 3 test files; no engine logic — exactly milestone scope

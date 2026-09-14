@@ -30,7 +30,7 @@ In Boldash, the LLM proposes a structured route. Boldash validates it. The decis
 - **Replayable.** The proposal is recorded in the event log.
 - **Correctable.** Invalid proposals return structured errors.
 
-The agent still decides *what it wants to do*. Boldash decides whether that decision is valid.
+The agent still decides _what it wants to do_. Boldash decides whether that decision is valid.
 
 ---
 
@@ -52,8 +52,16 @@ File: `schemas/route.schema.json`
       "required": ["type", "risk", "scope"],
       "properties": {
         "type": {
-          "enum": ["bugfix", "feature", "refactor", "migration",
-                   "security", "architecture", "docs", "chore"]
+          "enum": [
+            "bugfix",
+            "feature",
+            "refactor",
+            "migration",
+            "security",
+            "architecture",
+            "docs",
+            "chore"
+          ]
         },
         "risk": {
           "enum": ["trivial", "low", "medium", "high", "critical"]
@@ -62,7 +70,7 @@ File: `schemas/route.schema.json`
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "files":   { "type": "array", "items": { "type": "string" } },
+            "files": { "type": "array", "items": { "type": "string" } },
             "systems": { "type": "array", "items": { "type": "string" } }
           }
         },
@@ -75,16 +83,16 @@ File: `schemas/route.schema.json`
       "required": ["workflow", "level"],
       "properties": {
         "workflow": { "type": "string" },
-        "level":    { "type": "integer", "minimum": 0, "maximum": 3 },
+        "level": { "type": "integer", "minimum": 0, "maximum": 3 },
         "requirements": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "task_record":     { "type": "boolean" },
-            "specification":   { "type": "boolean" },
-            "tests":           { "type": "boolean" },
-            "review":          { "type": "boolean" },
-            "human_approval":  { "type": "boolean" }
+            "task_record": { "type": "boolean" },
+            "specification": { "type": "boolean" },
+            "tests": { "type": "boolean" },
+            "review": { "type": "boolean" },
+            "human_approval": { "type": "boolean" }
           }
         }
       }
@@ -95,15 +103,15 @@ File: `schemas/route.schema.json`
 
 ### Field reference
 
-| Field | Required | Description |
-|---|---|---|
-| `task.type` | Yes | Category of work. Determines available workflows. |
-| `task.risk` | Yes | Impact if the work goes wrong. Determines ceremony. |
-| `task.scope` | Yes | Files and systems affected. |
-| `task.summary` | No | One-line human description. Max 200 chars. |
-| `route.workflow` | Yes | Name of a workflow in the registry. |
-| `route.level` | Yes | Ceremony level 0–3. Must match risk. |
-| `route.requirements` | No | Overrides for the workflow's default requirements. |
+| Field                | Required | Description                                         |
+| -------------------- | -------- | --------------------------------------------------- |
+| `task.type`          | Yes      | Category of work. Determines available workflows.   |
+| `task.risk`          | Yes      | Impact if the work goes wrong. Determines ceremony. |
+| `task.scope`         | Yes      | Files and systems affected.                         |
+| `task.summary`       | No       | One-line human description. Max 200 chars.          |
+| `route.workflow`     | Yes      | Name of a workflow in the registry.                 |
+| `route.level`        | Yes      | Ceremony level 0–3. Must match risk.                |
+| `route.requirements` | No       | Overrides for the workflow's default requirements.  |
 
 ---
 
@@ -137,14 +145,14 @@ Every step returns either `{ ok: true, data }` or `{ ok: false, error }`. No exc
 
 ## Error Codes
 
-| Code | Exit | When | Agent action |
-|---|---|---|---|
-| `SCHEMA_PARSE` | 2 | Invalid JSON | Fix syntax. |
-| `SCHEMA_VALIDATION` | 2 | Schema violation | Fix field named in `field`. |
-| `WORKFLOW_NOT_FOUND` | 2 | Unknown workflow | Choose from `workflows_enabled`. |
-| `LEVEL_RISK_MISMATCH` | 2 | Level does not match risk | Raise level or lower risk. |
-| `CAPABILITY_MISSING` | 3 | Host lacks required capability | Change workflow, or use a host with the capability. |
-| `SCOPE_FILE_NOT_FOUND` | 0 | Scope path missing | Warning only. Logged, not blocking. |
+| Code                   | Exit | When                           | Agent action                                        |
+| ---------------------- | ---- | ------------------------------ | --------------------------------------------------- |
+| `SCHEMA_PARSE`         | 2    | Invalid JSON                   | Fix syntax.                                         |
+| `SCHEMA_VALIDATION`    | 2    | Schema violation               | Fix field named in `field`.                         |
+| `WORKFLOW_NOT_FOUND`   | 2    | Unknown workflow               | Choose from `workflows_enabled`.                    |
+| `LEVEL_RISK_MISMATCH`  | 2    | Level does not match risk      | Raise level or lower risk.                          |
+| `CAPABILITY_MISSING`   | 3    | Host lacks required capability | Change workflow, or use a host with the capability. |
+| `SCOPE_FILE_NOT_FOUND` | 0    | Scope path missing             | Warning only. Logged, not blocking.                 |
 
 See [`docs/errors.md`](./errors.md) for the full catalog.
 
@@ -244,13 +252,13 @@ On a host without `subagents`:
 
 Level determines ceremony. Risk determines level. This mapping is enforced.
 
-| Risk | Required level | Meaning |
-|---|---|---|
-| `trivial` | 0 | No record. No spec. No review. |
-| `low` | 1 | Task record only. |
-| `medium` | 2 | Task record + specification + tests. |
-| `high` | 3 | Task record + specification + tests + review. |
-| `critical` | 3 + human approval | Full ceremony + explicit human sign-off. |
+| Risk       | Required level     | Meaning                                       |
+| ---------- | ------------------ | --------------------------------------------- |
+| `trivial`  | 0                  | No record. No spec. No review.                |
+| `low`      | 1                  | Task record only.                             |
+| `medium`   | 2                  | Task record + specification + tests.          |
+| `high`     | 3                  | Task record + specification + tests + review. |
+| `critical` | 3 + human approval | Full ceremony + explicit human sign-off.      |
 
 A proposal may set a **higher** level than risk requires (more ceremony). It may not set a **lower** level.
 

@@ -47,21 +47,27 @@ When a release is cut, move entries from `[Unreleased]` into a new version secti
 ## [0.1.0] - YYYY-MM-DD
 
 ### Added
+
 - Initial release.
 
 ### Changed
+
 -
 
 ### Deprecated
+
 -
 
 ### Removed
+
 -
 
 ### Fixed
+
 -
 
 ### Security
+
 -
 ```
 

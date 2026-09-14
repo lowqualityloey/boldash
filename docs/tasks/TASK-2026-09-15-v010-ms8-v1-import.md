@@ -3,6 +3,7 @@
 <a id="TASK-2026-09-15-v010-ms8-v1-import"></a>
 
 ## 1. Identity and Authority
+
 - **Record Type**: `Task Record`
 - **Task ID**: `TASK-2026-09-15-v010-ms8-v1-import`
 - **Work Type**: `Code Work`
@@ -14,6 +15,7 @@
 - **Created**: `2026-09-15 00:40 UTC`
 
 ## 2. Objective and Boundaries
+
 - **Objective**: core/workflow/importer: v1 Markdown → packs {manifest.yaml, protocol.md verbatim, done.schema.json STUB (zero executable checks, TODO markers), import-report.md}. NEVER synthesizes runnable command checks from prose.
 - **In Scope**: see Objective; files named therein.
 - **Explicit Non-Goals**:
@@ -24,6 +26,7 @@
 - **Verification Condition**: `npm run verify green; import round-trip vs real v1 submodule`
 
 ## 3. Acceptance Criteria
+
 - [ ] **AC-1**: `Import of .promptkit/workflows/ succeeds for all 23; every pack passes workflow validate.`
   - **Result**: Pending
   - **Evidence**: Pending
@@ -38,6 +41,7 @@
   - **Evidence**: Pending
 
 ## 4. Execution Policy
+
 - **Mode**: `Gated Mode`
 - **TDD Enforcement Mode**: `disabled`
 - **Batch Authorization**: `N/A`
@@ -48,6 +52,7 @@
 - **Host Timer Capability**: `None observed in DSH harness — checkpoints enforced by convention only`
 
 ## 5. State and Active Ownership
+
 - **Execution State**: `planned`
 - **Mapped `pk:tasks` Status**: `To Do`
 - **Active Task Pointer**: None
@@ -56,11 +61,13 @@
 - **Next Action**: `Wait for predecessor completion; begin only after maintainer go signal`
 
 ### Transition History
-| Previous State | New State | Timestamp | Actor | Reason | Supporting Evidence |
-|---|---|---|---|---|---|
-| — | `planned` | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
+
+| Previous State | New State | Timestamp            | Actor                | Reason                                                              | Supporting Evidence                               |
+| -------------- | --------- | -------------------- | -------------------- | ------------------------------------------------------------------- | ------------------------------------------------- |
+| —              | `planned` | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
 
 ## 6. Evidence and Completion Gate
+
 - **Changed Files**:
   - `[pending]`
 - **Scope Change Records**: `None`
@@ -79,6 +86,7 @@
 - **Blocker and Resume Condition**: Depends on MS-4; maintainer go signal
 
 ### Completion Gate
+
 - **Completion State**: `planned`
 - **Acceptance Results**: Pending
 - **Changed-File Summary**: Pending

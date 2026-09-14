@@ -3,6 +3,7 @@
 <a id="TASK-2026-09-15-v010-ms4-router"></a>
 
 ## 1. Identity and Authority
+
 - **Record Type**: `Task Record`
 - **Task ID**: `TASK-2026-09-15-v010-ms4-router`
 - **Work Type**: `Code Work`
@@ -14,6 +15,7 @@
 - **Created**: `2026-09-15 00:40 UTC`
 
 ## 2. Objective and Boundaries
+
 - **Objective**: 7-step pipeline per routing-contract.md; built-in registry packs feature/bugfix/docs/chore; enforced risk→level map (higher allowed, lower rejected); capability context (generic baseline).
 - **In Scope**: see Objective; files named therein.
 - **Explicit Non-Goals**:
@@ -24,6 +26,7 @@
 - **Verification Condition**: `npm run verify green; pipeline unit tests`
 
 ## 3. Acceptance Criteria
+
 - [x] **AC-1**: `All 4 routing-contract examples pass as tests (valid, trivial, LEVEL_RISK_MISMATCH, CAPABILITY_MISSING).`
   - **Result**: PASS
   - **Evidence**: pipeline.test.ts T-1…T-4 (+T-5): four §Examples payloads verbatim; T-1 deep-equals the success payload PARSED from routing-contract.md; T-3 message byte-matches; T-4 doc-shaped CAPABILITY_MISSING via injected migration pack (D-1); T-5 proves step-3-before-5
@@ -46,6 +49,7 @@
   - **Evidence**: Pending
 
 ## 4. Execution Policy
+
 - **Mode**: `Gated Mode`
 - **TDD Enforcement Mode**: `disabled`
 - **Batch Authorization**: `N/A`
@@ -56,6 +60,7 @@
 - **Host Timer Capability**: `None observed in DSH harness — checkpoints enforced by convention only`
 
 ## 5. State and Active Ownership
+
 - **Execution State**: `completed`
 - **Mapped `pk:tasks` Status**: `Done`
 - **Active Task Pointer**: `None` (released; MS-4 closed)
@@ -64,13 +69,14 @@
 - **Next Action**: `None — completed; #4 closed`
 
 ### Transition History
-| Previous State | New State | Timestamp | Actor | Reason | Supporting Evidence |
-|---|---|---|---|---|---|
-| — | `planned` | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
-| `planned` | `ready` | 2026-09-14 15:05 UTC | Lead Engineer | MS-3 approved + #3 closed (dependency satisfied); design gaps D-1…D-3 ruled | issue #3 CLOSED; `…ms4-router.plan-001.md` §12 |
-| `ready` | `in_progress` | 2026-09-14 15:05 UTC | DSH agent | GO-MS4 given **scoped to the first slice**; pointer claimed backticked per the MS-3 retry lesson | maintainer selection "GO — first slice only" |
-| `in_progress` | `awaiting_review` | 2026-09-14 | DSH agent | Slices 2–3 GO'd by maintainer batch ("Commit slice 2, continue steps 4–5" + final "Commit + push"); AC-1…4 PASS; 117/117 | this record + verify log |
-| `awaiting_review` | `completed` | 2026-09-14 | Lead Engineer | "okay" batch: approve #4, authorize push, GO-MS5, maintainer-identity ruling | #4 closed on GitHub |
+
+| Previous State    | New State         | Timestamp            | Actor                | Reason                                                                                                                   | Supporting Evidence                               |
+| ----------------- | ----------------- | -------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------- |
+| —                 | `planned`         | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv)                                                      | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
+| `planned`         | `ready`           | 2026-09-14 15:05 UTC | Lead Engineer        | MS-3 approved + #3 closed (dependency satisfied); design gaps D-1…D-3 ruled                                              | issue #3 CLOSED; `…ms4-router.plan-001.md` §12    |
+| `ready`           | `in_progress`     | 2026-09-14 15:05 UTC | DSH agent            | GO-MS4 given **scoped to the first slice**; pointer claimed backticked per the MS-3 retry lesson                         | maintainer selection "GO — first slice only"      |
+| `in_progress`     | `awaiting_review` | 2026-09-14           | DSH agent            | Slices 2–3 GO'd by maintainer batch ("Commit slice 2, continue steps 4–5" + final "Commit + push"); AC-1…4 PASS; 117/117 | this record + verify log                          |
+| `awaiting_review` | `completed`       | 2026-09-14           | Lead Engineer        | "okay" batch: approve #4, authorize push, GO-MS5, maintainer-identity ruling                                             | #4 closed on GitHub                               |
 
 > **Authorization boundary (partial GO)**: only `src/core/router/types.ts`, `levels.ts` and
 > their unit tests are authorized. `registry.ts`, `capabilities.ts`, `scope.ts`,
@@ -79,6 +85,7 @@
 > (`docs/NOTES.md` §4, ref #11 — per-instance, silence is not authorization).
 
 ## 6. Evidence and Completion Gate
+
 - **Changed Files** (first slice only — see §5 authorization boundary):
   - `src/core/router/types.ts` — wire types; narrowing deliberately absent (schema is the seam)
   - `src/core/router/levels.ts` — risk→level map, one-way rule, requirement derivation, override guard
@@ -102,9 +109,9 @@
 - **Blocker and Resume Condition**: `None — completed`
 
 ### Completion Gate
+
 - **Completion State**: `completed`
 - **Acceptance Results**: `AC-1 PASS · AC-2 PASS · AC-3 PASS · AC-4 PASS`
 - **Changed-File Summary**: 6 router modules + index + doc-oracle harness + 66 router tests (117 total) + 1 contract paragraph; no CLI (MS-6), no state writes
 - **Completion Exception**: `None`
 - **Completion Decision and Timestamp**: `completed` — Lead Engineer ("okay" batch) 2026-09-14; GO-MS5 issued same batch
-

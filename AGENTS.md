@@ -13,6 +13,7 @@ Boldash is the deterministic control plane for AI coding agents. It sits between
 **Core rule:** The LLM proposes. Boldash validates, enforces, records, and verifies.
 
 **Read first:**
+
 1. `README.md` — what Boldash is
 2. `PROJECT_OVERVIEW.md` — scope, audience, status
 3. `ARCHITECTURE.md` — the full design
@@ -25,15 +26,15 @@ Do not start coding until you have read all three.
 
 **Pre-alpha. Design phase. Not installable.**
 
-| Component | Status |
-|---|---|
-| Architecture | Drafted |
-| Documentation | In progress |
-| JSON schemas | Not started |
+| Component          | Status      |
+| ------------------ | ----------- |
+| Architecture       | Drafted     |
+| Documentation      | In progress |
+| JSON schemas       | Not started |
 | CLI implementation | Not started |
-| Tests | Not started |
-| Host adapters | Not started |
-| Benchmark suite | Not started |
+| Tests              | Not started |
+| Host adapters      | Not started |
+| Benchmark suite    | Not started |
 
 Most work right now is **specification**, not implementation. Do not build features that the architecture has not defined.
 
@@ -61,16 +62,16 @@ Until then, this repository contains documentation and schemas only. There is no
 
 When implementation begins, these commands will exist. Use them; do not invent alternatives.
 
-| Command | Purpose |
-|---|---|
-| `npm run build` | Compile TypeScript to `dist/` |
-| `npm test` | Run the full test suite |
-| `npm run test:watch` | Watch mode |
-| `npm run lint` | ESLint |
-| `npm run typecheck` | `tsc --noEmit` |
-| `npm run format` | Prettier |
-| `npm run bench` | Run the benchmark suite |
-| `npm run verify` | Lint + typecheck + test (the release gate) |
+| Command              | Purpose                                    |
+| -------------------- | ------------------------------------------ |
+| `npm run build`      | Compile TypeScript to `dist/`              |
+| `npm test`           | Run the full test suite                    |
+| `npm run test:watch` | Watch mode                                 |
+| `npm run lint`       | ESLint                                     |
+| `npm run typecheck`  | `tsc --noEmit`                             |
+| `npm run format`     | Prettier                                   |
+| `npm run bench`      | Run the benchmark suite                    |
+| `npm run verify`     | Lint + typecheck + test (the release gate) |
 
 **Before you propose any change is complete, run `npm run verify`.** If it fails, you are not done.
 
@@ -181,15 +182,15 @@ boldash/
 
 Every change requires tests. No exceptions.
 
-| Change type | Required tests |
-|---|---|
+| Change type | Required tests                                |
+| ----------- | --------------------------------------------- |
 | New command | Integration test against a fixture repository |
-| New schema | Schema validation tests + fixtures |
-| New engine | Unit tests for every branch |
-| New adapter | Contract test suite (shared across adapters) |
-| Bug fix | Regression test that fails before the fix |
-| Refactor | Existing tests must pass unchanged |
-| Docs | No tests required |
+| New schema  | Schema validation tests + fixtures            |
+| New engine  | Unit tests for every branch                   |
+| New adapter | Contract test suite (shared across adapters)  |
+| Bug fix     | Regression test that fails before the fix     |
+| Refactor    | Existing tests must pass unchanged            |
+| Docs        | No tests required                             |
 
 **Do not mark a task complete because tests pass.** Tests are evidence, not proof. If your change affects a verification gate, you must also verify the gate actually blocks on failure.
 
@@ -372,11 +373,15 @@ Every decision you make in this repository should be traceable to that sentence.
 - **Discussions:** https://github.com/lowqualityloey/boldash/discussions
 
 <!-- PROMPTKIT_START -->
+
 ## PromptKit OS: Engineering Operating System
+
 PromptKit OS is active in this workspace (`./.promptkit`). Follow these protocols, workflows, and quality gates during pair-programming, design, code generation, and review:
 
 ### Fast Shorthand Triggers (Collision-Free)
+
 Activate workflows anytime with these namespaced triggers:
+
 - `pk:route`: Engineering lifecycle router and workflow decision matrix.
 - `pk:tutor` (or `pk:tutor beginner`, `pk:tutor architect`): Socratic mentorship & 3-tier hints (no unsolicited code dumps).
 - `pk:grill`: Intensive Staff Engineer architecture interview and defense drill.
@@ -403,7 +408,9 @@ Activate workflows anytime with these namespaced triggers:
 - `pk:profile`: Switch Lite/Balanced/Turbo profile at runtime via the idempotent installer re-injection path.
 
 ### Smart Auto-Route & Guardrails (Triggers Are Optional)
+
 You do not need to memorize triggers. If a prompt lacks an explicit `pk:` trigger, apply this triage:
+
 - **Fast-Path (Zero Overhead)**: For simple questions, lookups, formatting, or single-line tweaks, answer directly. No heavy ceremony. **Risk-before-size**: 1-line security or data edits escalate immediately.
 - **Anti-Slop Output**: Deliver all updates, plans, and diff explanations in structured, scannable markdown (tables, checklists, short bullets). Never output conversational essay walls.
 - **Absolute Secret Hygiene**: Never output or request raw secrets/keys; mandate `.env.example` templates and local `.env`.
@@ -435,7 +442,9 @@ You do not need to memorize triggers. If a prompt lacks an explicit `pk:` trigge
   - Deployments, env validation, releases -> `pk:ship`
 
 ### Workflows & Protocols Reference
+
 Load lazily by convention — never preload:
+
 - Workflow: `.promptkit/workflows/<trigger>.md` (e.g. `pk:plan` -> `workflows/plan.md`, `pk:design` -> `workflows/design-system.md`)
 - Trigger-to-file exceptions (the convention alone would misresolve these): `pk:spike` -> `research.md`, `pk:retro` -> `reflect.md`, `pk:grill` -> `tutor.md`, `pk:design` -> `design-system.md`; all other triggers match their file name.
 - Protocols: `.promptkit/protocols/{setup,context-sync,code-quality-gate,subagent-delegation}.md`
@@ -443,7 +452,9 @@ Load lazily by convention — never preload:
 - Project files: `./PROMPTKIT.md`, `./DESIGN.md`, `./docs/STATE.md` (if present)
 
 ### Task Ceremony Levels (classify here — do not load route.md to decide)
+
 Declare on line 1 of Turn 1: `[PromptKit OS: Level <0-3> (<Name>) — <1-line reason>]`
+
 - **L0 Direct**: questions, lookups, doc typos, formatting, non-risky 1-line edits. `understand -> change -> verify`. No task record. Risk-before-size: 1-line security/data edits escalate.
 - **L1 Standard**: localized bug fix, small self-contained feature, no schema/auth/breaking contract. Inline planning; no Task Record file.
 - **L2 Controlled**: schema/migrations, auth, permissions, public contracts, multi-component. Requires `docs/tasks/<task-id>.md` + spec before implementation.
@@ -451,7 +462,9 @@ Declare on line 1 of Turn 1: `[PromptKit OS: Level <0-3> (<Name>) — <1-line re
 - **Escalate** immediately if scope grows into persistent data, auth, public contracts, or multiple components. **Ties take the higher level.** Downgrades must be announced with a one-line reason; silent downgrade is a protocol violation. `workflows/route.md` remains the canonical authority for these rules and for downgrade guardrails.
 
 ### Project Artifact Output Paths
+
 All generated project documentation must be saved to the host project:
+
 - State Tracker: docs/STATE.md
 - ADRs: docs/adrs/
 - Technical Specs: docs/specs/
@@ -467,4 +480,5 @@ All generated project documentation must be saved to the host project:
 - Performance Audits: docs/perf/
 - Releases: docs/releases/
 - CI Triage Evidence: docs/releases/ci-triage/
+
 <!-- PROMPTKIT_END -->

@@ -4,9 +4,9 @@
 
 Boldash is pre-alpha. No stable release exists yet.
 
-| Version | Supported |
-|---------|-----------|
-| `main` branch | ✅ |
+| Version         | Supported           |
+| --------------- | ------------------- |
+| `main` branch   | ✅                  |
 | Tagged releases | ❌ (none exist yet) |
 
 Once `v0.1.0` ships, the latest minor release will be supported. Older minors receive security fixes for 90 days after a new minor is released.
@@ -17,7 +17,7 @@ Once `v0.1.0` ships, the latest minor release will be supported. Older minors re
 
 **Preferred:** [GitHub Security Advisories](https://github.com/lowqualityloey/boldash/security/advisories/new)
 
-**Fallback email:** `security@example.com` *(replace before publishing)*
+**Fallback email:** `security@example.com` _(replace before publishing)_
 
 Please include:
 
@@ -29,11 +29,11 @@ Please include:
 
 ## Response Timeline
 
-| Stage | Target |
-|-------|--------|
-| Acknowledgment | 72 hours |
-| Initial triage | 7 days |
-| Fix or mitigation plan | 30 days |
+| Stage                  | Target               |
+| ---------------------- | -------------------- |
+| Acknowledgment         | 72 hours             |
+| Initial triage         | 7 days               |
+| Fix or mitigation plan | 30 days              |
 | Coordinated disclosure | 90 days after report |
 
 These are targets, not guarantees. As a solo-maintained project, timelines may slip. You will be kept informed at every stage.

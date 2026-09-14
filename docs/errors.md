@@ -39,13 +39,13 @@ Every error is a JSON object.
 }
 ```
 
-| Field | Required | Description |
-|---|---|---|
-| `code` | Yes | Stable identifier. Never localized. |
-| `message` | Yes | Human-readable. May change between versions. |
-| `field` | No | JSON path to the offending field, when applicable. |
-| `suggestion` | No | Remediation hint. Not guaranteed to be correct. |
-| `context` | No | Additional structured data specific to the code. |
+| Field        | Required | Description                                        |
+| ------------ | -------- | -------------------------------------------------- |
+| `code`       | Yes      | Stable identifier. Never localized.                |
+| `message`    | Yes      | Human-readable. May change between versions.       |
+| `field`      | No       | JSON path to the offending field, when applicable. |
+| `suggestion` | No       | Remediation hint. Not guaranteed to be correct.    |
+| `context`    | No       | Additional structured data specific to the code.   |
 
 **Rules:**
 
@@ -57,16 +57,16 @@ Every error is a JSON object.
 
 ## Exit Codes
 
-| Code | Meaning |
-|---|---|
-| 0 | Success |
-| 1 | Verification failed / policy blocked |
-| 2 | Invalid input / schema error |
-| 3 | Missing capability / host incompatibility |
-| 4 | Concurrency conflict |
-| 10 | Internal error |
-| 11 | Unexpected I/O error |
-| 12 | Timeout |
+| Code | Meaning                                   |
+| ---- | ----------------------------------------- |
+| 0    | Success                                   |
+| 1    | Verification failed / policy blocked      |
+| 2    | Invalid input / schema error              |
+| 3    | Missing capability / host incompatibility |
+| 4    | Concurrency conflict                      |
+| 10   | Internal error                            |
+| 11   | Unexpected I/O error                      |
+| 12   | Timeout                                   |
 
 Every error code maps to one of these. The mapping is in the table below.
 

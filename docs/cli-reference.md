@@ -7,16 +7,16 @@
 
 ## Global Flags
 
-| Flag | Description |
-|---|---|
-| `--format human\|json` | Output format. Default: `human`. |
-| `--quiet` | Suppress non-error output. |
-| `--verbose` | Include debug output. |
-| `--cwd <path>` | Working directory. Default: current directory. |
-| `--config <path>` | Path to `.boldash/config.yaml`. Default: `<cwd>/.boldash/config.yaml`. |
-| `--no-color` | Disable ANSI colors. |
-| `--version` | Print version. |
-| `--help` | Print help. |
+| Flag                   | Description                                                            |
+| ---------------------- | ---------------------------------------------------------------------- |
+| `--format human\|json` | Output format. Default: `human`.                                       |
+| `--quiet`              | Suppress non-error output.                                             |
+| `--verbose`            | Include debug output.                                                  |
+| `--cwd <path>`         | Working directory. Default: current directory.                         |
+| `--config <path>`      | Path to `.boldash/config.yaml`. Default: `<cwd>/.boldash/config.yaml`. |
+| `--no-color`           | Disable ANSI colors.                                                   |
+| `--version`            | Print version.                                                         |
+| `--help`               | Print help.                                                            |
 
 ---
 
@@ -46,14 +46,14 @@ Every command supports `--format json`.
 
 Exit codes:
 
-| Code | Meaning |
-|---|---|
-| 0 | Success |
-| 1 | Verification failed / policy blocked |
-| 2 | Invalid input / schema error |
-| 3 | Missing capability / host incompatibility |
-| 4 | Concurrency conflict |
-| 10+ | Internal error |
+| Code | Meaning                                   |
+| ---- | ----------------------------------------- |
+| 0    | Success                                   |
+| 1    | Verification failed / policy blocked      |
+| 2    | Invalid input / schema error              |
+| 3    | Missing capability / host incompatibility |
+| 4    | Concurrency conflict                      |
+| 10+  | Internal error                            |
 
 ---
 
@@ -78,11 +78,11 @@ boldash init [--profile lite|balanced|strict|accelerated] [--host <name>] [--for
 
 **Flags:**
 
-| Flag | Description |
-|---|---|
+| Flag               | Description                                                       |
+| ------------------ | ----------------------------------------------------------------- |
 | `--profile <name>` | `lite`, `balanced`, `strict`, `accelerated`. Default: `balanced`. |
-| `--host <name>` | Force a specific adapter. Default: auto-detect. |
-| `--force` | Overwrite an existing `.boldash/` (destructive). |
+| `--host <name>`    | Force a specific adapter. Default: auto-detect.                   |
+| `--force`          | Overwrite an existing `.boldash/` (destructive).                  |
 
 **Exit codes:** 0, 2.
 
@@ -133,8 +133,8 @@ READY WITH WARNINGS
 
 **Flags:**
 
-| Flag | Description |
-|---|---|
+| Flag    | Description                                                                       |
+| ------- | --------------------------------------------------------------------------------- |
 | `--fix` | Attempt to repair common issues (regenerate projections, re-detect capabilities). |
 
 **Exit codes:** 0, 2, 3.
@@ -186,11 +186,11 @@ echo '<json>' | boldash route
 
 **Flags:**
 
-| Flag | Description |
-|---|---|
-| `--input <path>` | Read proposal from a file. |
-| `--json <string>` | Inline JSON proposal. |
-| `--create` | Create a task from the validated route. |
+| Flag              | Description                             |
+| ----------------- | --------------------------------------- |
+| `--input <path>`  | Read proposal from a file.              |
+| `--json <string>` | Inline JSON proposal.                   |
+| `--create`        | Create a task from the validated route. |
 
 **Exit codes:** 0, 2, 3.
 
@@ -222,13 +222,13 @@ boldash state list --owner agent-01
 
 **Flags:**
 
-| Flag | Description |
-|---|---|
-| `--status <s>` | Filter by status. |
-| `--risk <r>` | Filter by risk. |
-| `--type <t>` | Filter by type. |
-| `--owner <o>` | Filter by owner. |
-| `--limit <n>` | Max results. Default: 50. |
+| Flag           | Description               |
+| -------------- | ------------------------- |
+| `--status <s>` | Filter by status.         |
+| `--risk <r>`   | Filter by risk.           |
+| `--type <t>`   | Filter by type.           |
+| `--owner <o>`  | Filter by owner.          |
+| `--limit <n>`  | Max results. Default: 50. |
 
 **Exit codes:** 0, 2.
 
@@ -297,10 +297,10 @@ STATUS: BLOCKED
 
 **Flags:**
 
-| Flag | Description |
-|---|---|
-| `--all` | Verify all tasks in `verifying` state. |
-| `--json` | Machine-readable output. |
+| Flag         | Description                               |
+| ------------ | ----------------------------------------- |
+| `--all`      | Verify all tasks in `verifying` state.    |
+| `--json`     | Machine-readable output.                  |
 | `--no-cache` | Re-run all checks, ignore cached results. |
 
 **Exit codes:** 0, 1, 2.
@@ -475,14 +475,14 @@ boldash worktree remove TASK-001
 
 ## Environment Variables
 
-| Variable | Purpose |
-|---|---|
-| `BOLDASH_HOME` | Override default `.boldash/` location. |
-| `BOLDASH_PROFILE` | Override profile. |
-| `BOLDASH_HOST` | Override host detection. |
-| `BOLDASH_FORMAT` | Default output format. |
-| `BOLDASH_LOG_LEVEL` | `debug`, `info`, `warn`, `error`. |
-| `BOLDASH_NO_COLOR` | Disable ANSI colors. |
+| Variable            | Purpose                                |
+| ------------------- | -------------------------------------- |
+| `BOLDASH_HOME`      | Override default `.boldash/` location. |
+| `BOLDASH_PROFILE`   | Override profile.                      |
+| `BOLDASH_HOST`      | Override host detection.               |
+| `BOLDASH_FORMAT`    | Default output format.                 |
+| `BOLDASH_LOG_LEVEL` | `debug`, `info`, `warn`, `error`.      |
+| `BOLDASH_NO_COLOR`  | Disable ANSI colors.                   |
 
 ---
 
