@@ -48,17 +48,19 @@
 - **Host Timer Capability**: `None observed in DSH harness — checkpoints enforced by convention only`
 
 ## 5. State and Active Ownership
-- **Execution State**: `planned`
-- **Mapped `pk:tasks` Status**: `To Do`
+- **Execution State**: `in_progress`
+- **Mapped `pk:tasks` Status**: `In Progress`
 - **Active Task Pointer**: None
-- **Start Time**: `N/A`
-- **Current Actor**: `Lead Engineer @lowqualityloey`
-- **Next Action**: `Wait for predecessor completion; begin only after maintainer go signal`
+- **Start Time**: `2026-09-15 01:35 UTC`
+- **Current Actor**: `DSH agent (executing under maintainer GO-MS2, 2026-09-15)`
+- **Next Action**: `Deliver 4 schemas + shared kernel (Result, errors catalog, atomic fs, clock, ajv seam) with fixture tests; prove npm run verify`
 
 ### Transition History
 | Previous State | New State | Timestamp | Actor | Reason | Supporting Evidence |
 |---|---|---|---|---|---|
 | — | `planned` | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
+| `planned` | `ready` | 2026-09-15 01:35 UTC | Lead Engineer | MS-1 completed → dependency satisfied; GO-MS2 issued | #1 closed |
+| `ready` | `in_progress` | 2026-09-15 01:35 UTC | DSH agent | Pointer claimed | this record |
 
 ## 6. Evidence and Completion Gate
 - `[pending]`
