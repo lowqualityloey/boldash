@@ -51,17 +51,19 @@
 - **Host Timer Capability**: `None observed in DSH harness — checkpoints enforced by convention only`
 
 ## 5. State and Active Ownership
-- **Execution State**: `planned`
-- **Mapped `pk:tasks` Status**: `To Do`
-- **Active Task Pointer**: None
+- **Execution State**: `in_progress`
+- **Mapped `pk:tasks` Status**: `In Progress`
+- **Active Task Pointer**: `TASK-2026-09-15-v010-ms5-verification`
 - **Start Time**: `N/A`
-- **Current Actor**: `Lead Engineer @lowqualityloey`
-- **Next Action**: `Wait for predecessor completion; begin only after maintainer go signal`
+- **Current Actor**: `DSH agent (executing under maintainer GO-MS5, 2026-09-14)`
+- **Next Action**: `Design note (plan-001): evidence layout, state_check grammar, timeout/redaction mechanics; then implement with PASS+BLOCK tests per check type`
 
 ### Transition History
 | Previous State | New State | Timestamp | Actor | Reason | Supporting Evidence |
 |---|---|---|---|---|---|
 | — | `planned` | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
+| `planned` | `ready` | 2026-09-14 | Lead Engineer | MS-4 completed → dependency satisfied; GO-MS5 in "okay" batch | #4 closed |
+| `ready` | `in_progress` | 2026-09-14 | DSH agent | Pointer claimed (backticked, MS-3 lesson applied) | this record |
 
 ## 6. Evidence and Completion Gate
 - **Changed Files**:

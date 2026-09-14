@@ -57,6 +57,8 @@ Source: `ARCHITECTURE.md` §2 (P1–P10) + Appendix B.
 
 ## 4. Open Items
 
+- [x] **Maintainer-identity ruling (2026-09-14, "okay" batch)**: the human driving this chat session *is* the maintainer. Their explicit in-chat GO — including "okay" to a decision presented to them — is the per-milestone sign-off, and "commit"/"push" language in that GO is the per-instance push authorization the #11 ruling requires. **Silence, absence, tool defaults, and my own inference never constitute authorization.** Recorded here; `AGENTS.md`'s "Do not force-push to main. Ever." remains absolute.
+
 ### Governance rulings (adopted — canonical copy; the 9 Task Records link here)
 
 - [x] **Push-boundary conflict — resolved 2026-09-14 15:00 UTC, tracked as #11.** All 9 Task Records claimed `Human-only: … pushes …`, while `AGENTS.md` forbids only force-pushes and every completed milestone had in fact been pushed by the agent. The literal rule and the established pattern contradicted each other, so which file an agent happened to read first decided whether it asked or just pushed. Adopted:

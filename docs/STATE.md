@@ -25,12 +25,12 @@
 - [x] `GO-MS1` — **GIVEN**; MS-1 executed & **maintainer-approved** → `completed`; #1 closed
 - [x] `GO-MS2` — **GIVEN**; MS-2 executed & **maintainer-approved** → `completed`; #2 closed
 - [x] `GO-MS3` — **GIVEN**; MS-3 executed: TaskStore + transition matrix + optimistic locking + events; 42/42 tests; **schema minItems design correction** (structure permits, lifecycle enforces); CI 34854360256 green; **maintainer-approved 2026-09-14 14:31 UTC → `completed`; #3 closed**
-- [x] `GO-MS4` — GIVEN in slices (first-slice GO 2026-09-14 15:05 UTC; slice 2/3 GO + push authorization in the maintainer batch this session). MS-4 executed: plan-001 §10 sequence honored; 117/117; record → `awaiting_review` on #4
-- [ ] `GO-MS5`: unlocked on your MS-4 review (#4) — verification engine (pass AND block per check type)
+- [x] `GO-MS4` — GIVEN in slices; MS-4 executed and **maintainer-approved ("okay" batch 2026-09-14)** → `completed`; #4 closed on GitHub
+- [/] `GO-MS5` — **GIVEN** same batch; MS-5 `in_progress`: verification engine — PASS *and* BLOCK per check type, declared-commands-only, timeouts, redaction
 
 ## 3. Active Working Set
 - **Active RFC / Spec**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`
-- **Active Task Pointer**: `None` (MS-4 review-parked; MS-5 not claimed)
+- **Active Task Pointer**: `TASK-2026-09-15-v010-ms5-verification` (in_progress)
 - **Key Source Files in Flight**: the v0.1.0 surface corpus (`docs/cli-reference.md`, `docs/routing-contract.md`, `docs/verification-guide.md`, `docs/errors.md`, `docs/getting-started.md`, `docs/faq.md`, `AGENTS.md`, `CONTRIBUTING.md`) — authority map in `docs/NOTES.md` §2
 - **Verification Commands (Scoped)**: `npm run verify` = THE gate (live since MS-1, 2026-09-15). CI: `verify` workflow, node 20/22/24 on push+PR.
 

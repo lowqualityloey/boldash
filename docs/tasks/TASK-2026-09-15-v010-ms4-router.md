@@ -56,12 +56,12 @@
 - **Host Timer Capability**: `None observed in DSH harness — checkpoints enforced by convention only`
 
 ## 5. State and Active Ownership
-- **Execution State**: `awaiting_review`
-- **Mapped `pk:tasks` Status**: `In Review`
-- **Active Task Pointer**: `None` (review-parked; held throughout slices 1–3)
+- **Execution State**: `completed`
+- **Mapped `pk:tasks` Status**: `Done`
+- **Active Task Pointer**: `None` (released; MS-4 closed)
 - **Start Time**: `2026-09-14 15:05 UTC`
 - **Current Actor**: `DSH agent (executing under maintainer GO-MS4 — first slice only)`
-- **Next Action**: `Maintainer review (#4); MS-5 unlocks on approval`
+- **Next Action**: `None — completed; #4 closed`
 
 ### Transition History
 | Previous State | New State | Timestamp | Actor | Reason | Supporting Evidence |
@@ -70,6 +70,7 @@
 | `planned` | `ready` | 2026-09-14 15:05 UTC | Lead Engineer | MS-3 approved + #3 closed (dependency satisfied); design gaps D-1…D-3 ruled | issue #3 CLOSED; `…ms4-router.plan-001.md` §12 |
 | `ready` | `in_progress` | 2026-09-14 15:05 UTC | DSH agent | GO-MS4 given **scoped to the first slice**; pointer claimed backticked per the MS-3 retry lesson | maintainer selection "GO — first slice only" |
 | `in_progress` | `awaiting_review` | 2026-09-14 | DSH agent | Slices 2–3 GO'd by maintainer batch ("Commit slice 2, continue steps 4–5" + final "Commit + push"); AC-1…4 PASS; 117/117 | this record + verify log |
+| `awaiting_review` | `completed` | 2026-09-14 | Lead Engineer | "okay" batch: approve #4, authorize push, GO-MS5, maintainer-identity ruling | #4 closed on GitHub |
 
 > **Authorization boundary (partial GO)**: only `src/core/router/types.ts`, `levels.ts` and
 > their unit tests are authorized. `registry.ts`, `capabilities.ts`, `scope.ts`,
@@ -94,16 +95,16 @@
 - **TDD Execution Evidence**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Exception Verification**: `N/A - Code Work`
 - **CI Evidence**: headSha-matched runs recorded at push (slice-3 commit); prior slices green: 34854360256 pattern established
-- **Review Evidence**: slices signed off sequentially in-session (plan-001 §10 respected); final review pending on #4
+- **Review Evidence**: slices signed off sequentially in-session (plan-001 §10); final maintainer approval "okay" 2026-09-14, #4 closed on GitHub
 - **Commit Evidence**: `a20c9ed` (slice 1 levels) · `c158620` (slice 2 registry/capabilities/oracle) · slice-3 scope+pipeline+docs (this commit)
 - **Pull Request Evidence**: `N/A before PR`
 - **Release Evidence**: `N/A`
-- **Blocker and Resume Condition**: `None — slices 2–3 GO'd and push authorized per #11 ruling (2026-09-14 maintainer batch)`
+- **Blocker and Resume Condition**: `None — completed`
 
 ### Completion Gate
-- **Completion State**: `awaiting_review`
+- **Completion State**: `completed`
 - **Acceptance Results**: `AC-1 PASS · AC-2 PASS · AC-3 PASS · AC-4 PASS`
 - **Changed-File Summary**: 6 router modules + index + doc-oracle harness + 66 router tests (117 total) + 1 contract paragraph; no CLI (MS-6), no state writes
 - **Completion Exception**: `None`
-- **Completion Decision and Timestamp**: `in_progress` by DSH agent 2026-09-14 15:13 UTC
+- **Completion Decision and Timestamp**: `completed` — Lead Engineer ("okay" batch) 2026-09-14; GO-MS5 issued same batch
 
