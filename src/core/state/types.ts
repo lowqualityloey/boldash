@@ -3,10 +3,11 @@
  *
  * Schemas are the source of truth (AGENTS.md §Directory Layout rules); these
  * types are hand-written for v0.1.0 because the runtime dep budget is spent on
- * ajv (ADR 0003). `tests/unit/schema-types.test.ts` (MS-2 handoff) proves the
- * shape agreement between these types and the schemas, so drift is a test
- * failure, not a runtime surprise. Regeneration is a Phase 2 concern (ADR 0003
- * consequence note).
+ * ajv (ADR 0003). Shape agreement is currently protected only by
+ * `tests/unit/schemas.test.ts` validating the schemas themselves — the promised
+ * type⇄schema drift test was NEVER written (this comment previously claimed it
+ * existed; corrected 2026-09-14). Added to MS-9's docs/test debt list.
+ * Regeneration remains a Phase 2 concern (ADR 0003 consequence note).
  */
 
 export type TaskType =
