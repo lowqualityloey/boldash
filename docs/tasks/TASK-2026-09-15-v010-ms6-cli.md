@@ -61,7 +61,8 @@
 | — | `planned` | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
 
 ## 6. Evidence and Completion Gate
-- `[pending]`
+- **Changed Files**:
+  - `[pending]`
 - **Scope Change Records**: `None`
 - **Checkpoint Records**: `None`
 - **Handoff Records**: `None`

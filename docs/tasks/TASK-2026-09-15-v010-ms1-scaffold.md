@@ -49,12 +49,12 @@
 - **Host Timer Capability**: `None observed in DSH harness — checkpoints enforced by convention only`
 
 ## 5. State and Active Ownership
-- **Execution State**: `awaiting_review`
-- **Mapped `pk:tasks` Status**: `In Review`
-- **Active Task Pointer**: `TASK-2026-09-15-v010-ms1-scaffold`
+- **Execution State**: `completed`
+- **Mapped `pk:tasks` Status**: `Done`
+- **Active Task Pointer**: `None`
 - **Start Time**: `2026-09-15 00:58 UTC`
 - **Current Actor**: `DSH agent (executing under maintainer GO, 2026-09-15)`
-- **Next Action**: `Maintainer review (issue #1); then GO-MS2`
+- **Next Action**: `None — completed; issue #1 closed`
 
 ### Transition History
 | Previous State | New State | Timestamp | Actor | Reason | Supporting Evidence |
@@ -80,15 +80,15 @@
 - **TDD Execution Evidence**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Exception Verification**: `N/A - Code Work`
 - **CI Evidence**: GitHub Actions run `34848611604`, workflow CI, main, 2026-09-15T13:20Z — **success (20s)**
-- **Review Evidence**: `N/A`
+- **Review Evidence**: Maintainer approval 2026-09-15 01:35 UTC (ask_user_question batch: 'Approve MS-1, GO MS-2'); #1 closed
 - **Commit Evidence**: `6e47c59` (scaffold) + `ddf2ffb` (records sync); follow-up fix commit restores this record
 - **Pull Request Evidence**: `N/A before PR`
 - **Release Evidence**: `N/A`
 - **Blocker and Resume Condition**: None — awaiting maintainer review
 
 ### Completion Gate
-- **Completion State**: `awaiting_review`
+- **Completion State**: `completed`
 - **Acceptance Results**: AC-1 PASS; AC-2 PASS; AC-3 PASS; AC-4 PASS
 - **Changed-File Summary**: scaffold only — engines correctly deferred to MS-2+
 - **Completion Exception**: `None`
-- **Completion Decision and Timestamp**: in_progress→awaiting_review 2026-09-15 01:22 UTC by DSH agent; maintainer decision pending
+- **Completion Decision and Timestamp**: `completed` — Lead Engineer, 2026-09-15 01:35 UTC
