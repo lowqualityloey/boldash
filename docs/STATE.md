@@ -25,11 +25,12 @@
 - [x] `GO-MS1` — **GIVEN**; MS-1 executed & **maintainer-approved** → `completed`; #1 closed
 - [x] `GO-MS2` — **GIVEN**; MS-2 executed & **maintainer-approved** → `completed`; #2 closed
 - [x] `GO-MS3` — **GIVEN**; MS-3 executed: TaskStore + transition matrix + optimistic locking + events; 42/42 tests; **schema minItems design correction** (structure permits, lifecycle enforces); CI 34854360256 green; **maintainer-approved 2026-09-14 14:31 UTC → `completed`; #3 closed**
-- [ ] `GO-MS4`: **dependency satisfied, GO NOT YET GIVEN.** Router proposal prepared; MS-4 starts only on explicit maintainer GO (#4)
+- [x] `GO-MS4` — GIVEN in slices (first-slice GO 2026-09-14 15:05 UTC; slice 2/3 GO + push authorization in the maintainer batch this session). MS-4 executed: plan-001 §10 sequence honored; 117/117; record → `awaiting_review` on #4
+- [ ] `GO-MS5`: unlocked on your MS-4 review (#4) — verification engine (pass AND block per check type)
 
 ## 3. Active Working Set
 - **Active RFC / Spec**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`
-- **Active Task Pointer**: `None` (MS-3 completed; MS-4 not yet claimed — awaiting GO)
+- **Active Task Pointer**: `None` (MS-4 review-parked; MS-5 not claimed)
 - **Key Source Files in Flight**: the v0.1.0 surface corpus (`docs/cli-reference.md`, `docs/routing-contract.md`, `docs/verification-guide.md`, `docs/errors.md`, `docs/getting-started.md`, `docs/faq.md`, `AGENTS.md`, `CONTRIBUTING.md`) — authority map in `docs/NOTES.md` §2
 - **Verification Commands (Scoped)**: `npm run verify` = THE gate (live since MS-1, 2026-09-15). CI: `verify` workflow, node 20/22/24 on push+PR.
 
@@ -40,7 +41,7 @@
 P1–P10 + tie-breaker, verbatim in `docs/NOTES.md` §3. Pending additions on RFC approval: DECISION-v010-001 (single `tasks.json`, `schema_version: 1`, Expand-Contract evolution per RFC §3.3), 002–005 (toolchain & scope trims).
 
 ## 5. Known Blockers, Risks & Open Questions
-- **Blockers**: None mechanical. **Gate: `GO-MS4`** (maintainer) before any MS-4 code. MAINT-01 (RFC approval) is **resolved** — ADRs 0001–0005 accepted. Minor: `SECURITY.md` placeholder email (NOTES §4).
+- **Blockers**: None mechanical. Gates closed so far: MAINT-01 ✓ · GO-MS1–4 ✓. Current gate: **maintainer review of MS-4 (#4)** before MS-5 code. Minor: `SECURITY.md` placeholder email (NOTES §4); `adr/` vs `adrs/` naming (MS-9).
 - **Environment hazard (recorded 2026-09-14)**: default-cache `npm ci` fails `EACCES` here though no root-owned files exist; use `npm ci --cache /tmp/boldash-npm-cache`. An empty `node_modules` makes `npm run lint` silently run system ESLint 6.4.0 (cannot read flat config). Never read the gate from piped output — pipes mask the exit code.
 - **ARCHITECTURE §18**: Q1 **resolved** by RFC §3.2 (corpus-grounded). Q2–Q7 are Phase 2–4 scoped — not blocking v0.1.0.
 - **Risks carried**: briefing-file append collision (PromptKit markers vs future Boldash briefing in `AGENTS.md`) — see RFC §8; importer over-promising — mitigated by conservative stubs (FMEA row 8).
@@ -54,10 +55,10 @@ P1–P10 + tie-breaker, verbatim in `docs/NOTES.md` §3. Pending additions on RF
 | 2026-09-15 | Hand-rolled argv kernel | CLI surface is a tested contract; deps are liabilities | `docs/adrs/0004-handrolled-argv.md` |
 | 2026-09-15 | Scope trims: no `claim`, no `--no-cache` in v0.1.0 | Leases/caching deferred to Phase 3 substrate | `docs/adrs/0005-v010-scope-trims.md` |
 
-## 7. Next Immediate Actions (single lane, per handoff)
-1. **Maintainer**: issue `GO-MS4`. MS-3 is closed; checkpoint-001's "exactly one prioritized next action" is **consumed** (record completed, #3 closed at 2026-09-14 14:31 UTC).
-2. **Next session**: on GO, patch `TASK-2026-09-15-v010-ms4-router` → `ready` → `in_progress`, claim the pointer, then implement the 7-step router pipeline per `docs/routing-contract.md` §The Validation Pipeline with its 4 catalog errors. Do not start without GO (Gated Mode).
-3. **MS-4 plan ACCEPTED — rulings given 2026-09-14 14:53 UTC** (recorded in `docs/tasks/TASK-2026-09-15-v010-ms4-router.plan-001.md` §12): **D-1** injectable registry + injected `migration` fixture pack, the RFC's 4 built-ins unchanged, example 4 tested both ways (`CAPABILITY_MISSING` and `WORKFLOW_NOT_FOUND`); **D-2** built-in packs as typed TS constants — no YAML parser, ajv-only invariant intact, pack file format deferred to MS-8 **under its own ADR**; **D-3** optional non-empty `warnings` field plus one added line in `routing-contract.md`, router stays stateless. **GO-MS4 to write `src/core/router/` is still NOT given.** No `src/` changes were made while planning.
+## 7. Next Immediate Actions (single lane)
+1. **Maintainer**: review MS-4 on #4 (record `awaiting_review`; slices `a20c9ed`→`3c2641b`, CI headSha-verified 34881694555).
+2. **Then**: on approval, complete MS-4 record, close #4, issue `GO-MS5`; MS-5 builds the verification engine — every check type tested PASS *and* BLOCK (AGENTS rule), declared-commands-only, 300 s default timeout, exit 0/1/2/12.
+3. Governance settled this session: #11 push ruling adopted (per-instance authorization; canonical in the 9 records + NOTES §4); #12 pack-set ruling adopted (4 built-ins v0.1.0, 8 §10.3 packs → MS-8 ADR, `cli-reference:125` line joins MS-9 docs audit).
 
 ## 8. Session Continuity Log
 | Date | Engineer / Agent | Focus | Artifacts |
