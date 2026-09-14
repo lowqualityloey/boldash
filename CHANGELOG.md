@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Agent contract (`AGENTS.md`), contribution guide (`CONTRIBUTING.md`), and the v0.1.0 surface specification corpus (`docs/cli-reference.md`, `docs/routing-contract.md`, `docs/verification-guide.md`, `docs/errors.md`, `docs/getting-started.md`, `docs/faq.md`).
+- Approved v0.1.0 Foundation RFC (`docs/specs/2026-09-15-spec-v0.1.0-foundation.md`) with FMEA and 9-milestone split; canonical Task Records `docs/tasks/TASK-2026-09-15-v010-ms*` linked to GitHub issues #1–#9; ADRs 0001–0005.
 - Initial design-phase corpus: `README.md`, `ARCHITECTURE.md`, `PROJECT OVERVIEW.md`, `SECURITY.md`, `CHANGELOG.md`, MIT `LICENSE`.
 - Working-state notes with milestone roadmap, document-authority map, and locked invariants (`docs/NOTES.md`).
 - Boldash-native GitHub templates (PR evidence table, task issues with verification seams).

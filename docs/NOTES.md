@@ -20,11 +20,24 @@
 
 | Question about… | Authority |
 |---|---|
+| Agent contract & hard rules | `AGENTS.md` (root) |
 | Product intent, audience, success metric, failure modes | `PROJECT OVERVIEW.md` |
 | System design, engines, schemas, roadmap, testing | `ARCHITECTURE.md` |
 | Public pitch & comparison | `README.md` |
+| Contribution process, ADR rules, doc style | `CONTRIBUTING.md` |
+| v0.1.0 surface: commands, flags, exit codes | `docs/cli-reference.md` |
+| Route contract: schema, validation pipeline, risk→level map | `docs/routing-contract.md` |
+| Verification: `done.schema.json`, check types, FACT/CLAIM typing | `docs/verification-guide.md` |
+| Error catalog: stable codes → exit codes | `docs/errors.md` |
+| User onboarding: 10-minute first task | `docs/getting-started.md` |
+| Positioning Q&A / objections | `docs/faq.md` |
 | Threat model & reporting | `SECURITY.md` |
-| Working state & invariants | this file (until Boldash's own state engine replaces it) |
+| Working state & invariants | this file |
+
+> The v1 engine is intentionally reinstalled (submodule + injected block between
+> `PROMPTKIT_START/END` in `AGENTS.md`, lines 374–470). Its `docs/STATE.md` is a fresh
+> unfilled template; this file remains the human working record until Boldash's own
+> state engine replaces both.
 
 ## 3. Locked Invariants (Do Not Undo)
 
@@ -49,6 +62,17 @@ Source: `ARCHITECTURE.md` §2 (P1–P10) + Appendix B.
 - [ ] Resolve `ARCHITECTURE.md` §18 Open Questions that touch Phase 1 (during the v0.1.0 spec).
 - [ ] First ADRs in `docs/adrs/`: runtime/tooling choice, state format, adapter contract.
 
+### Doc-review findings (spec corpus read 2026-09-15 — for maintainer decision, not yet fixed)
+
+- [ ] `faq.md` (×3) & `CONTRIBUTING.md` (×2) link to `PROJECT_OVERVIEW.md` (underscore); actual file is `PROJECT OVERVIEW.md` (space). Resolve by renaming the file or the links.
+- [ ] `CONTRIBUTING.md` License section links `./LICENSE.md` — actual file is `LICENSE`.
+- [ ] ADR directory drift: `CONTRIBUTING.md`/`AGENTS.md` say `docs/adr/` + `ADR-NNN-*.md`; existing scaffold is `docs/adrs/`. Pick one.
+- [ ] Exit-code ambiguity: `VERIFY_COMMAND_TIMEOUT` is exit 12 (`errors.md`), but `verify` is documented as exiting only 0/1/2 (`cli-reference.md`, `verification-guide.md`). Decide: check-timeout ⇒ BLOCKED(1) or 12.
+- [ ] `verification-guide.md` Rule 4 uses `timeout_ms` in checks, but the contract schema's check properties omit it — add the field.
+- [ ] `errors.md` suggests `boldash state requirement add`, which `cli-reference.md` doesn't list — add or rename.
+- [ ] `getting-started.md` init tree lists 2 state files; `cli-reference.md` init creates 4 (`project`, `tasks`, `decisions`, `evidence` JSON). Align.
+- [ ] Forward links to `docs/state-model.md` and `docs/migration-from-v1.md` — planned, not yet written (expected; write during M2).
+
 ## 5. Known Risks
 
 - `README.md` layout + `SECURITY.md` scope describe planned artifacts (`src/`, `schemas/`, …) that don't exist yet — acceptable only while clearly labeled "Planned".
@@ -61,3 +85,5 @@ Source: `ARCHITECTURE.md` §2 (P1–P10) + Appendix B.
 | 2026-09-14 | Lineage intake: Boldash confirmed as v2 successor to PromptKit OS v1 (different layer, not rewrite). |
 | 2026-09-14 | Anomaly sweep: SECURITY filename typo, MIT license declaration, template placeholders populated. |
 | 2026-09-14 | v1 engine (`.promptkit` submodule + directives) used briefly to dogfood the repo, then **fully removed in a history reset** — repo reborn as a pure Boldash design corpus (single initial commit, force-pushed). |
+| 2026-09-15 | Lead Engineer intentionally reinstalled v1 (`submodule add + init.sh`, @v1.5.1-26) alongside new native `AGENTS.md`; authored the 7-doc v0.1.0 surface-spec corpus. |
+| 2026-09-15 | `pk:plan` (L2/Full): v0.1.0 Foundation RFC — 9 milestones, 6 decision records, FMEA; §18-Q1 resolved (single `tasks.json`). Awaiting maintainer approval. |
