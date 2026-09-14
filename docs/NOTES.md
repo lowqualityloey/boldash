@@ -70,6 +70,7 @@ Source: `ARCHITECTURE.md` §2 (P1–P10) + Appendix B.
 - [ ] `PROJECT OVERVIEW.md`: filename contains a space — consider `PROJECT-OVERVIEW.md` for link/CLI ergonomics.
 - [ ] Resolve `ARCHITECTURE.md` §18 Open Questions that touch Phase 1 (during the v0.1.0 spec).
 - [ ] First ADRs in `docs/adrs/`: runtime/tooling choice, state format, adapter contract.
+- [ ] **Built-in workflow pack set conflicts three ways — #12.** RFC §5/MS-4 say 4 (`feature, bugfix, docs, chore`); `ARCHITECTURE.md` §10.3 says 8 (`+ refactor, migration, test, review, commit, release`, and no `docs`/`chore`); `ARCHITECTURE.md` §12 + `cli-reference.md:125` print 5 (`feature, bugfix, refactor, test, review`). Must settle before MS-6, whose golden tests assert that documented `init` output line. MS-4 implements the RFC's 4 and absorbs the discrepancy through D-1's injectable registry; `src/core/router/registry.ts`'s header records the compromise at the point of use.
 
 ### Doc-review findings (spec corpus read 2026-09-15 — for maintainer decision, not yet fixed)
 

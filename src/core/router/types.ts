@@ -30,6 +30,29 @@ export type Risk = 'trivial' | 'low' | 'medium' | 'high' | 'critical';
  */
 export type CeremonyLevel = 0 | 1 | 2 | 3;
 
+/**
+ * Lifecycle stage a workflow belongs to (`ARCHITECTURE.md` §16 glossary:
+ * "A grouping of workflows: DISCOVER, PLAN, BUILD, VERIFY, SHIP, LEARN").
+ * Carried by a pack for reporting; the router does not branch on it.
+ */
+export type LifecycleStage = 'DISCOVER' | 'PLAN' | 'BUILD' | 'VERIFY' | 'SHIP' | 'LEARN';
+
+/**
+ * What the active host can actually do, as probed by an adapter.
+ *
+ * Core code never learns about hosts (AGENTS.md architecture rule 8); it receives
+ * this value. `capabilities` is a set of names, not booleans per known key, so an
+ * unknown requirement is reported missing rather than silently satisfied —
+ * matching `ARCHITECTURE.md` §5.4: "Capability probe inconclusive ⇒ assume the
+ * capability is unavailable."
+ */
+export interface CapabilityContext {
+  /** Host identifier for error context (`docs/errors.md` CAPABILITY_MISSING). */
+  host: string;
+  /** Capability names the host provides. Absent means unavailable. */
+  capabilities: ReadonlySet<string>;
+}
+
 /** Declared scope. Advisory only: scope warns, it never blocks (§Scope). */
 export interface RouteScope {
   /** Glob patterns relative to project root. */
