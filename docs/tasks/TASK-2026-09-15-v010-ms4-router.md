@@ -48,39 +48,53 @@
 - **Host Timer Capability**: `None observed in DSH harness — checkpoints enforced by convention only`
 
 ## 5. State and Active Ownership
-- **Execution State**: `planned`
-- **Mapped `pk:tasks` Status**: `To Do`
-- **Active Task Pointer**: None
-- **Start Time**: `N/A`
-- **Current Actor**: `Lead Engineer @lowqualityloey`
-- **Next Action**: `Wait for predecessor completion; begin only after maintainer go signal`
+- **Execution State**: `in_progress`
+- **Mapped `pk:tasks` Status**: `In Progress`
+- **Active Task Pointer**: `TASK-2026-09-15-v010-ms4-router` (claimed by DSH agent session)
+- **Start Time**: `2026-09-14 15:05 UTC`
+- **Current Actor**: `DSH agent (executing under maintainer GO-MS4 — first slice only)`
+- **Next Action**: `Implement types.ts + levels.ts + their tests; show diff for sign-off. Registry/capabilities/scope/pipeline NOT authorized yet.`
 
 ### Transition History
 | Previous State | New State | Timestamp | Actor | Reason | Supporting Evidence |
 |---|---|---|---|---|---|
 | — | `planned` | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
+| `planned` | `ready` | 2026-09-14 15:05 UTC | Lead Engineer | MS-3 approved + #3 closed (dependency satisfied); design gaps D-1…D-3 ruled | issue #3 CLOSED; `…ms4-router.plan-001.md` §12 |
+| `ready` | `in_progress` | 2026-09-14 15:05 UTC | DSH agent | GO-MS4 given **scoped to the first slice**; pointer claimed backticked per the MS-3 retry lesson | maintainer selection "GO — first slice only" |
+
+> **Authorization boundary (partial GO)**: only `src/core/router/types.ts`, `levels.ts` and
+> their unit tests are authorized. `registry.ts`, `capabilities.ts`, `scope.ts`,
+> `pipeline.ts`, `workflows/` packs, and the `docs/routing-contract.md` warnings line each
+> need a further explicit GO. So does pushing the resulting commit
+> (`docs/NOTES.md` §4, ref #11 — per-instance, silence is not authorization).
 
 ## 6. Evidence and Completion Gate
-- **Changed Files**:
-  - `[pending]`
-- **Scope Change Records**: `None`
+- **Changed Files** (first slice only — see §5 authorization boundary):
+  - `src/core/router/types.ts` — wire types; narrowing deliberately absent (schema is the seam)
+  - `src/core/router/levels.ts` — risk→level map, one-way rule, requirement derivation, override guard
+  - `tests/unit/router/levels.test.ts` — 18 tests, docs-as-oracle
+  - `docs/NOTES.md` §4, all 9 Task Records — push-boundary resolution (ref #11, shipped as `c6b328d`)
+  - Not yet written: `registry.ts`, `capabilities.ts`, `scope.ts`, `pipeline.ts`, `workflows/`
+- **Scope Change Records**: `None` (design rulings D-1…D-3 live in `…plan-001.md` §12)
 - **Checkpoint Records**: `None`
 - **Handoff Records**: `None`
-- **Verification Evidence**: Pending
+- **Verification Evidence**: `npm run verify` exit 0 — lint 0 · tsc 0 · **60/60** (was 42/42; +18) at 2026-09-14 15:13 UTC. Prettier clean. Architecture rule asserted: `src/core/router/` imports nothing outside `./types.js` and `src/shared/`.
+- **Gate BLOCK proof (mutation run)**: each of four injected defects was caught, then reverted — `medium→1` (3 failures) · level-2 `tests` dropped (6) · `>=` inverted to `<=` (4) · override removal silently honoured (3). Restored file passes 18/18.
 - **Behavior IDs**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Intent Register**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Execution Evidence**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Exception Verification**: `N/A - Code Work`
-- **CI Evidence**: N/A
-- **Review Evidence**: `N/A`
+- **CI Evidence**: N/A before commit
+- **Review Evidence**: `N/A - first-slice diff presented for maintainer sign-off before staging`
 - **Commit Evidence**: N/A before commit
 - **Pull Request Evidence**: `N/A before PR`
 - **Release Evidence**: `N/A`
-- **Blocker and Resume Condition**: Depends on MS-2; maintainer go signal
+- **Blocker and Resume Condition**: `None mechanical. Needs a further explicit GO for the registry/capabilities/scope/pipeline slice, and per-instance authorization to push.`
 
 ### Completion Gate
-- **Completion State**: `planned`
-- **Acceptance Results**: Pending
-- **Changed-File Summary**: Pending
+- **Completion State**: `in_progress`
+- **Acceptance Results**: `AC-1 Pending · AC-2 Pending · AC-3 Pending · AC-4 Pending — none is reachable without pipeline.ts; step 4 logic is landed and mutation-proven but the ACs name end-to-end outcomes.`
+- **Changed-File Summary**: 2 source + 1 test file, first slice only
 - **Completion Exception**: `None`
-- **Completion Decision and Timestamp**: Pending
+- **Completion Decision and Timestamp**: `in_progress` by DSH agent 2026-09-14 15:13 UTC
+
