@@ -4,8 +4,9 @@
 - **Specification**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` §5 (MS-4 row)
 - **Canonical surface doc**: `docs/routing-contract.md`
 - **Author**: DSH agent session · **Created**: 2026-09-14 14:48 UTC (`date -u`)
-- **Status**: **PROPOSAL — awaiting GO-MS4.** No `src/` file was created or modified while
-  writing this. MS-4 Execution State remains `planned`; the pointer is unclaimed.
+- **Status**: **PLAN ACCEPTED — D-1/D-2/D-3 ruled (see §12) · still awaiting GO-MS4 to write code.**
+  No `src/` file was created or modified while writing this. MS-4 Execution State remains
+  `planned`; the pointer is unclaimed.
 
 ## 0. Verification baseline at time of writing
 
@@ -134,7 +135,7 @@ approximation, not a gate — flagged for the MS-9 docs audit.)
 | AC-3 `SCOPE_FILE_NOT_FOUND` warning-only, exit 0 | T-10, T-11 |
 | AC-4 unknown workflow → `WORKFLOW_NOT_FOUND` with enabled list | T-5, T-8 |
 
-## 8. Three gaps requiring your ruling before code
+## 8. Three gaps requiring your ruling before code — **ALL RESOLVED, see §12**
 
 **D-1 — the CAPABILITY_MISSING example cannot be reached on the default registry.**
 Example 4 routes `workflow: "migration"`, but the RFC fixes the built-in registry at
@@ -197,3 +198,18 @@ no new dependency — low risk, as the record's Risk field says.
 - **ajv-only** — D-2 is surfaced instead of quietly consuming a dependency.
 - **PASS + BLOCK per gate** and **no mocked fs/clocks** in §6.
 - **Post-write read-back** on every record patch in step 1.
+
+## 12. Decision log — maintainer rulings (2026-09-14 14:53 UTC)
+
+Accepted in the DSH session that authored this plan; the recommended option was taken in
+all three cases. These bind implementation.
+
+| # | Ruling | Consequences for the code |
+|---|---|---|
+| **D-1** | Injectable registry + fixture pack. The RFC's 4 built-in packs stand. | `createRegistry(packs = WORKFLOW_PACKS)` is a required seam, not a nicety. The literal example-4 payload is tested **both ways**: T-4 (injected `migration` pack requiring `subagents`, generic context → `CAPABILITY_MISSING`, exit 3) and T-5 (default registry → `WORKFLOW_NOT_FOUND`, exit 2, `context.enabled` == the 4 built-ins). No Scope Change Record needed. |
+| **D-2** | Built-in packs ship as typed TS constants in `registry.ts`; pack **file** format deferred to MS-8 under its own ADR. | No YAML parser, no new runtime dependency — ajv-only invariant intact. `WorkflowPack` is still declared as a public type so MS-8's importer has a target shape, and `ARCHITECTURE.md` §5.3 stays untouched (deferral, not deviation). **Follow-up for MS-8: ADR required before any pack is loaded from disk.** |
+| **D-3** | Optional `warnings?: RoutingWarning[]`, present only when non-empty; one added line in `docs/routing-contract.md`. | `ResolvedRoute` remains `{workflow, level, requirements}` for the two valid examples — T-1/T-2 assert byte-identity against the doc. AC-2 (≤80 tokens) is measured **including** any warnings array, worst case. Router stays stateless: no events, no state writes; the CLI owns logging in MS-6. Docs and code land in the same commit. |
+
+Push authorisation for the plan commit and the closure commit was given in the same session
+(docs-only; `npm run verify` re-run green immediately before each push). **GO-MS4 to write
+`src/core/router/` remains a separate, explicit gate.**
