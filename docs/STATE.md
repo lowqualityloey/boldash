@@ -24,12 +24,12 @@
 - [x] `MAINT-02` — planning artifacts committed & pushed (`5b5e4f5…8c25fa7`)
 - [x] `GO-MS1` — **GIVEN**; MS-1 executed & **maintainer-approved** → `completed`; #1 closed
 - [x] `GO-MS2` — **GIVEN**; MS-2 executed & **maintainer-approved** → `completed`; #2 closed
-- [/] `GO-MS3` — **GIVEN 2026-09-15 01:52**; MS-3 in_progress (pointer held): state engine build started
-- [ ] `GO-MS4`: maintainer review of MS-3 unlocks MS-4 (router)
+- [x] `GO-MS3` — **GIVEN**; MS-3 executed: TaskStore + transition matrix + optimistic locking + events; 42/42 tests; **schema minItems design correction** (structure permits, lifecycle enforces); CI 34854360256 green → `awaiting_review`
+- [ ] `GO-MS4`: unlocked on your MS-3 review (#3)
 
 ## 3. Active Working Set
 - **Active RFC / Spec**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`
-- **Active Task Pointer**: `TASK-2026-09-15-v010-ms3-state` (in_progress)
+- **Active Task Pointer**: `None` (MS-3 review-parked)
 - **Key Source Files in Flight**: the v0.1.0 surface corpus (`docs/cli-reference.md`, `docs/routing-contract.md`, `docs/verification-guide.md`, `docs/errors.md`, `docs/getting-started.md`, `docs/faq.md`, `AGENTS.md`, `CONTRIBUTING.md`) — authority map in `docs/NOTES.md` §2
 - **Verification Commands (Scoped)**: `npm run verify` = THE gate (live since MS-1, 2026-09-15). CI: `verify` workflow, node 20/22/24 on push+PR.
 
