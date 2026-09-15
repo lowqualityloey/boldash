@@ -2,8 +2,8 @@
 
 - **Task ID**: `TASK-2026-09-15-v010-ms7-generic-adapter` (#7) · **Spec**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` §3.4 (init row), §5 MS-7, §8 briefing risk · **Plan**: `…ms7-generic-adapter.plan-001.md` (approved, R1–R9)
 - **Checkpoint type**: Session boundary (final slice: this instance received a fresh GO — `GO-S4 as planned`, incl. the two flagged honesty items, with push explicitly deferred to a separate per-instance GO)
-- **Branch / Revision**: `main` @ `765d6d0` (receiver baseline) + `31d7c61` (S4 docs) + this boundary commit — **local, unpushed**
-- **Timestamp**: 2026-09-15 12:40 UTC (`date -u`)
+- **Branch / Revision**: `main` @ `765d6d0` (receiver baseline) + `31d7c61` (S4 docs) + this boundary commit — **pushed 2026-09-15 12:50 UTC on a per-instance GO naming both shas; CI 34971224918 green headSha-asserted**
+- **Timestamp**: 2026-09-15 12:40 UTC (`date -u`) · push + CI evidence appended 2026-09-15 12:55 UTC
 
 ## State
 
@@ -38,8 +38,8 @@
 
 ## Blockers
 
-- None mechanical. **Open gate: maintainer sign-off of MS-7** (S1–S4 executed, no code open) → record `completed` → #7 closed → MS-8 (#8) opens with its own plan. The S4 commits are unpushed and need a **fresh per-instance GO naming the tip** — GO-S4 deliberately withheld push authorization.
+- None mechanical. **Open gate: maintainer sign-off of MS-7** (S1–S4 executed, no code open) → record `completed` → #7 closed → MS-8 (#8) opens with its own plan. The S4 commits were pushed 2026-09-15 12:50 UTC under a **separate per-instance GO naming `31d7c61` + `f51ee60`** (GO-S4 deliberately withheld push authorization); CI 34971224918 green headSha-asserted. Any further commit needs its own GO naming it.
 
 ## Exactly one prioritized next action
 
-**Maintainer sign-off** (`…ms7-generic-adapter.handoff-002.md`): re-run the gate on the boundary tip, run the sign-off checklist against §3 AC results, give the word (that closes MS-7), then either authorize the push of the S4 commits by name or leave them local. Do not treat sign-off as implicit, and do not start MS-8 code before #8 has its own plan.
+**Maintainer sign-off** (`…ms7-generic-adapter.handoff-002.md`): re-run the gate on the boundary tip, run the sign-off checklist against §3 AC results, give the word (that closes MS-7), then open MS-8 (#8) with its own plan. The push question is already settled — `31d7c61` + `f51ee60` went out 12:50 UTC under a named GO and CI is green. Do not treat sign-off as implicit, and do not start MS-8 code before #8 has its own plan.

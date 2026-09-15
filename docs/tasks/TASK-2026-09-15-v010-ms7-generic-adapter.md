@@ -85,12 +85,12 @@
 - **TDD Intent Register**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Execution Evidence**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Exception Verification**: `N/A - Code Work`
-- **CI Evidence**: `S1: run 34962033665 @ c047e52 — CI success ×3 matrices, headSha-asserted (watch exit 0). S2: run 34962735831 @ 61f6afa — CI success ×3 matrices, headSha-asserted. S3: run 34966807770 @ 29b2930 — CI success ×3 matrices, headSha-asserted (watch exit 0). S4: no CI run yet — docs-only commits `31d7c61` + this boundary are unpushed; per-instance push GO pending.`
+- **CI Evidence**: `S1: run 34962033665 @ c047e52 — CI success ×3 matrices, headSha-asserted (watch exit 0). S2: run 34962735831 @ 61f6afa — CI success ×3 matrices, headSha-asserted. S3: run 34966807770 @ 29b2930 — CI success ×3 matrices, headSha-asserted (watch exit 0). S4: run 34971224918 @ f51ee60 — CI success ×3 matrices (node 20/22/24), headSha-asserted via `gh run watch --exit-status` (exit 0); f51ee60 is the tip of the push 765d6d0..f51ee60, so the docs commit 31d7c61 travels inside this run's tree.`
 - **Review Evidence**: `N/A`
-- **Commit Evidence**: `S1 c047e52 · S2 61f6afa · S3 bf99c7e + 29b2930 + 2507e69 · boundary 838c44f + 765d6d0 (all pushed, CI green). S4: 31d7c61 docs(surface) doc truth pass + the boundary commit that follows it (local, unpushed — push awaits a per-instance GO)`
+- **Commit Evidence**: `S1 c047e52 · S2 61f6afa · S3 bf99c7e + 29b2930 + 2507e69 · boundary 838c44f + 765d6d0 (all pushed, CI green). S4: 31d7c61 docs(surface) doc truth pass + f51ee60 boundary records — pushed 2026-09-15 12:50 UTC (per-instance GO naming exactly those two shas), CI 34971224918 green headSha-asserted @ f51ee60`
 - **Pull Request Evidence**: `N/A before PR`
 - **Release Evidence**: `N/A`
-- **Blocker and Resume Condition**: `None mechanical. GO-MS7 given 2026-09-15 10:48 UTC; per-slice GOs S1–S3; GO-S4 given 2026-09-15 12:29 UTC (docs truth pass incl. the two flagged honesty items — doctor + pre-tool hook enforcement). Resume gate: maintainer sign-off of MS-7 → record completed → #7 closed → MS-8 (#8) plan. Push of the S4 commits needs a fresh per-instance GO naming the tip.`
+- **Blocker and Resume Condition**: `None mechanical. GO-MS7 given 2026-09-15 10:48 UTC; per-slice GOs S1–S3; GO-S4 given 2026-09-15 12:29 UTC (docs truth pass incl. the two flagged honesty items — doctor + pre-tool hook enforcement). Resume gate: maintainer sign-off of MS-7 → record completed → #7 closed → MS-8 (#8) plan. S4 commits are pushed and CI-green; any further commit needs its own per-instance GO naming it.`
 
 ### Completion Gate
 
