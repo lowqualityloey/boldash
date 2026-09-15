@@ -3,11 +3,11 @@
 ## 1. Executive Summary & Current Position
 
 - **Project Name**: Boldash — deterministic control plane for AI coding agents
-- **Current Milestone / Epic**: M2 — v0.1.0 Foundation · **RFC APPROVED · MS-1 ✅ MS-2 ✅ MS-3 ✅ MS-4 ✅ MS-5 ✅ · MS-6 ✅ · MS-7 `in_progress` (#7, S1 ✅ S2 ✅ pushed CI-green · S3 ✅ local `bf99c7e`, push pending GO · S4 pending GO)** _(364/364 gate @ `bf99c7e`; CI green headSha-asserted @ `61f6afa`, tip pushed `621b43b` docs-only)_
+- **Current Milestone / Epic**: M2 — v0.1.0 Foundation · **RFC APPROVED · MS-1 ✅ MS-2 ✅ MS-3 ✅ MS-4 ✅ MS-5 ✅ · MS-6 ✅ · MS-7 `in_progress` (#7, S1 ✅ S2 ✅ pushed CI-green · S3 ✅ pushed CI-green · S4 pending GO)** _(364/364 + CI 34966807770 green headSha-asserted @ `29b2930`)_
 - **Overall Status**: ACTIVE
 - **Target Release / Deadline**: v0.1.0 (no date committed)
 - **Current Working Branch**: `main`
-- **Last Updated**: 2026-09-15 12:00 UTC (`origin/main` = `621b43b` (docs-only tip after CI-green `61f6afa`; S2 evidence `cdcaa1d` + plan-001 correction); local `bf99c7e` = MS-7 S3, 364/364, push pending per-instance authorization; S4 pending GO) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
+- **Last Updated**: 2026-09-15 12:12 UTC (`origin/main` = `29b2930`, CI 34966807770 green headSha-asserted; tree clean; MS-7 S3 pushed, S4 pending GO) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
 
 ## 2. Milestone & Task Progress
 
@@ -36,7 +36,7 @@
 ## 3. Active Working Set
 
 - **Active RFC / Spec**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`
-- **Active Task Pointer**: `MS-7 Generic adapter + init UX (TASK-2026-09-15-v010-ms7-generic-adapter)` — `in_progress` · **S1 ✅ S2 ✅ (`61f6afa`, 353/353, CI green) · S3 ✅ local (`bf99c7e`, 364/364 gate green, push pending GO) · S4 open → GO-S4 needed (docs truth pass; no code before it)****
+- **Active Task Pointer**: `MS-7 Generic adapter + init UX (TASK-2026-09-15-v010-ms7-generic-adapter)` — `in_progress` · **S1 ✅ S2 ✅ (`61f6afa`, 353/353, CI green) · S3 ✅ (`29b2930`, 364/364, CI green) · S4 open → GO-S4 needed (docs truth pass; no code before it)****
 - **Key Source Files in Flight**: the v0.1.0 surface corpus (`docs/cli-reference.md`, `docs/routing-contract.md`, `docs/verification-guide.md`, `docs/errors.md`, `docs/getting-started.md`, `docs/faq.md`, `AGENTS.md`, `CONTRIBUTING.md`) — authority map in `docs/NOTES.md` §2
 - **Verification Commands (Scoped)**: `npm run verify` = THE gate (live since MS-1, 2026-09-15). CI: `verify` workflow, node 20/22/24 on push+PR.
 
@@ -67,10 +67,10 @@ P1–P10 + tie-breaker, verbatim in `docs/NOTES.md` §3. Pending additions on RF
 
 ## 7. Next Immediate Actions (single lane)
 
-1. **MS-6 ✅ completed; MS-7 S3 ✅ local (push pending).** Plan-001 approved S1–S4. S1 (`c047e52`, 342/342) + S2 (`61f6afa`, 353/353) CI-green headSha-asserted; S3 (`bf99c7e`, 364/364 gate) awaits push authorization. **Next: GO-S4 (docs truth pass) + per-instance push GO for `bf99c7e`.**
+1. **MS-6 ✅ completed; MS-7 S3 ✅ pushed CI-green.** Plan-001 approved S1–S4. S1 (`c047e52`, 342/342) + S2 (`61f6afa`, 353/353) CI-green headSha-asserted; S3 (`bf99c7e`→`29b2930`, 364/364) CI-green headSha-asserted. **Next: GO-S4 (docs truth pass).**
    | 2026-09-15 | DSH agent (MS-7 S1 session) | Plan approved + GO S1; built `src/adapters/` (types/generic/barrel) + contract suite under `tests/` (ADR-0002); 3 lint failures fixed (no-useless-assignment, unused hook params); gate 342/342; pushed `c047e52`, CI green headSha-asserted | `c047e52` on origin/main; CI 34962033665; record S1 evidence |
    | 2026-09-15 | DSH agent (MS-7 S2 session) | GO-S2; wired `runInit` (detect-first refusal, --host allowlist, probe→project.json, warnings envelope); scaffold `capabilities` input (plain strings, rule 8); 3 golden fixtures gain `.git`; gate 353/353; pushed `61f6afa`, CI green headSha-asserted | `61f6afa` on origin/main; CI 34962735831; record S2 evidence |
-   | 2026-09-15 | DSH agent (MS-7 S3 session) | GO-S3 (in-session); briefing append in `runInit` post-scaffold, failure → `ADAPTER_INIT_FAILED` exit 3 (catalogued, never swallowed); new `src/cli/probe-context.ts` seam wired into route + workflow validate/import (R6 provenance, rule 8 intact); `--force` idempotency + PromptKit coexistence + refusal-untouched goldens; AC-3 golden names adapter-probe source. Deviation disclosed: cli-route-state not extended (route registry built-ins-only ⇒ route exit-3 unreachable in v0.1.0; PASS goldens pin R6 equality) | `bf99c7e` local; gate 364/364 (lint+format+typecheck+test); push pending |
+   | 2026-09-15 | DSH agent (MS-7 S3 session) | GO-S3 (in-session); briefing append in `runInit` post-scaffold, failure → `ADAPTER_INIT_FAILED` exit 3 (catalogued, never swallowed); new `src/cli/probe-context.ts` seam wired into route + workflow validate/import (R6 provenance, rule 8 intact); `--force` idempotency + PromptKit coexistence + refusal-untouched goldens; AC-3 golden names adapter-probe source. Deviation disclosed: cli-route-state not extended (route registry built-ins-only ⇒ route exit-3 unreachable in v0.1.0; PASS goldens pin R6 equality) | `bf99c7e`+`29b2930` on origin/main; CI 34966807770 green headSha-asserted; gate 364/364 |
 2. Inherited open items: exit-code ambiguity for `VERIFY_COMMAND_TIMEOUT` (NOTES §4 doc-review), SECURITY email → #15 (maintainer), adr/adrs naming, `docs/state-model.md` + migration-from-v1 (#13).
 
 ## 8. Session Continuity Log
