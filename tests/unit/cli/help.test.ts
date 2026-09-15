@@ -5,6 +5,12 @@
 import { describe, expect, it } from 'vitest';
 import { commandHelp, rootHelp, tokenCount } from '../../../src/cli/help.js';
 import { REGISTRY } from '../../../src/cli/commands/index.js';
+import type { CommandSpec } from '../../../src/cli/types.js';
+
+/** Every registered spec, subcommands included (registry grows per slice). */
+function walk(specs: readonly CommandSpec[]): CommandSpec[] {
+  return specs.flatMap((s) => [s, ...(s.subcommands ? walk(s.subcommands) : [])]);
+}
 
 describe('help budgets (AC-3)', () => {
   it('root help stays within the 200-token budget', () => {
@@ -14,7 +20,7 @@ describe('help budgets (AC-3)', () => {
   });
 
   it('every registered command help stays within 40 tokens', () => {
-    for (const spec of REGISTRY) {
+    for (const spec of walk(REGISTRY)) {
       expect(tokenCount(commandHelp(spec)), spec.name).toBeLessThanOrEqual(40);
       expect(commandHelp(spec)).toContain(`boldash ${spec.name}`);
     }
@@ -22,8 +28,11 @@ describe('help budgets (AC-3)', () => {
 
   it('root help advertises only registered commands (no unwired surface)', () => {
     const text = rootHelp(REGISTRY, '0.0.1');
-    for (const unbuilt of ['route', 'verify', 'workflow', 'state']) {
+    for (const unbuilt of ['route', 'verify']) {
       expect(text).not.toContain(`  ${unbuilt} `);
     }
+    // S2 wired these families — they must appear now (honesty, both ways).
+    expect(text).toContain('  state ');
+    expect(text).toContain('  workflow ');
   });
 });

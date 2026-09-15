@@ -7,11 +7,7 @@
 import { existsSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { systemClock } from '../../shared/clock.js';
-import {
-  scaffoldProjectState,
-  PROFILES,
-  type Profile,
-} from '../../core/state/scaffold.js';
+import { scaffoldProjectState, PROFILES, type Profile } from '../../core/state/index.js';
 import type { Envelope, RunContext } from '../types.js';
 import type { ErrorInfo } from '../../shared/result.js';
 
