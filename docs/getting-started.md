@@ -109,15 +109,20 @@ Boldash is ready. Next: `boldash state list`
 
 ```
 .boldash/
-├── config.yaml              # Your configuration
+├── config.yaml              # Your configuration (template; core never parses YAML)
 ├── state/
 │   ├── project.json         # Project metadata
-│   └── tasks.json           # Task list (empty)
+│   ├── tasks.json           # Task list (empty)
+│   ├── decisions.json       # Decision log (empty)
+│   └── evidence.json        # Evidence index (empty)
 ├── evidence/                # Evidence store (empty)
 └── events.jsonl             # Event log (empty)
 ```
 
-These files travel with your repository. Commit them.
+`init` is scaffold-only: no workflow packs (pack format lands in MS-8;
+`.boldash/workflows/` appears on first `workflow import`) and no host
+briefing file (adapters land in MS-7). These files travel
+with your repository. Commit them.
 
 ### What was installed into your repo
 
@@ -340,6 +345,7 @@ Do not edit these by hand. They are generated.
 | `Exit code: 2`     | Invalid input.                                    |
 | `Exit code: 3`     | Missing capability.                               |
 | `Exit code: 4`     | Concurrency conflict.                             |
+| `Exit code: 12`    | Verification command timed out.                   |
 
 Full exit code reference: [`docs/errors.md`](./errors.md).
 

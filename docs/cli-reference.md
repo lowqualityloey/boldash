@@ -1,6 +1,10 @@
 # CLI Reference
 
-> **Status:** Specification for v0.1.0. Commands are not yet implemented.
+> **Status:** v0.1.0 reference. Implemented in v0.1.0: `init`, `route`,
+> `state get|list|transition|requirement add|evidence add`, `verify`,
+> `workflow list|validate|import` (see [RFC §3.4](../docs/specs/2026-09-15-spec-v0.1.0-foundation.md)).
+> `doctor`, `explain`, `policy check`, `checkpoint`, `diff`, `evidence`,
+> `worktree`, and `state claim` are specified below but deferred past v0.1.0.
 > **Audience:** Users, workflow authors, agents consuming CLI output.
 
 ---
@@ -59,7 +63,9 @@ Exit codes:
 
 ## `boldash init`
 
-Initialize Boldash in the current repository.
+Initialize Boldash in the current repository. Scaffold-only in v0.1.0:
+no workflow packs (pack format lands in MS-8) and no host briefing
+file (host adapters land in MS-7).
 
 ```bash
 boldash init [--profile lite|balanced|strict|accelerated] [--host <name>] [--force]
@@ -67,14 +73,13 @@ boldash init [--profile lite|balanced|strict|accelerated] [--host <name>] [--for
 
 **Creates:**
 
-- `.boldash/config.yaml`
+- `.boldash/config.yaml` (literal template; the core never parses YAML)
 - `.boldash/state/project.json`
 - `.boldash/state/tasks.json`
 - `.boldash/state/decisions.json`
 - `.boldash/state/evidence.json`
 - `.boldash/evidence/`
 - `.boldash/events.jsonl`
-- Host briefing file (e.g. `CLAUDE.md`)
 
 **Flags:**
 
@@ -122,7 +127,7 @@ Project
 
 Configuration
 ✓ profile: balanced
-✓ workflows: feature, bugfix, refactor, test, review
+✓ workflows: feature, bugfix, docs, chore
 
 Warnings
 ⚠ GitHub integration unavailable (gh CLI not found)
@@ -205,7 +210,6 @@ Read and modify canonical state.
 ```bash
 boldash state get TASK-001
 boldash state get TASK-001 --format json
-boldash state get TASK-001 --format md
 ```
 
 **Exit codes:** 0, 2.
@@ -242,6 +246,9 @@ boldash state transition TASK-001 implementing
 
 ### `boldash state claim <task-id>`
 
+> Deferred past v0.1.0 (leases arrive with later milestone scope).
+> Documented here so the shape is stable when it lands.
+
 Claim a task with a lease.
 
 ```bash
@@ -249,6 +256,16 @@ boldash state claim TASK-001 --owner agent-01 --ttl 30m
 ```
 
 **Exit codes:** 0, 2, 4.
+
+### `boldash state requirement add <task-id> <text>`
+
+Add a requirement to a task (requirement ids are auto-assigned `R1`, `R2`, …).
+
+```bash
+boldash state requirement add TASK-001 "Handle error responses"
+```
+
+**Exit codes:** 0, 2.
 
 ### `boldash state evidence add <task-id>`
 
@@ -264,7 +281,12 @@ boldash state evidence add TASK-001 --type test-run --ref evt_9381
 
 ## `boldash verify`
 
-Run verification gates against a task.
+Run verification gates against a task. The contract is discovered by the
+S3 binding: `.boldash/workflows/<task.workflow>/done.schema.json`. A task
+with no workflow, or a missing/malformed contract, fails with
+`VERIFY_CONTRACT_INVALID` (exit 2) — never a silent skip. Verification
+logs a `verify.run` event but does not transition the task; move
+`verifying → complete` explicitly with `state transition`.
 
 ```bash
 boldash verify TASK-001
@@ -297,13 +319,15 @@ STATUS: BLOCKED
 
 **Flags:**
 
-| Flag         | Description                               |
-| ------------ | ----------------------------------------- |
-| `--all`      | Verify all tasks in `verifying` state.    |
-| `--json`     | Machine-readable output.                  |
-| `--no-cache` | Re-run all checks, ignore cached results. |
+| Flag    | Description                            |
+| ------- | -------------------------------------- |
+| `--all` | Verify all tasks in `verifying` state. |
 
-**Exit codes:** 0, 1, 2.
+With `--all` and zero `verifying` tasks, verification succeeds with an
+empty report (exit 0).
+
+**Exit codes:** 0, 1, 2, 12. Exit 12 is a command timeout
+(`VERIFY_COMMAND_TIMEOUT` wins over `BLOCKED`).
 
 ---
 
@@ -442,10 +466,20 @@ Lists enabled workflows and their requirements.
 ### `boldash workflow import <path>`
 
 ```bash
-boldash workflow import ../promptkit-os/workflows/
+boldash workflow import ./my-pack.json
+boldash workflow import ./my-pack/
 ```
 
-Imports v1-style Markdown workflows as Boldash packs.
+Imports a JSON workflow pack (a file, or a directory containing
+`done.schema.json` plus an optional `pack.json`/`manifest.json`) and
+writes a **conservative stub contract** to
+`.boldash/workflows/<name>/done.schema.json` (plus `manifest.json`).
+Runnable `command` / `command_fails` checks are never copied; only
+side-effect-free checks travel, and the skipped count is reported.
+Importing v1-style Markdown workflows lands in MS-8 — this command only
+reads JSON.
+
+**Exit codes:** 0, 2, 3.
 
 ### `boldash workflow validate <name>`
 
@@ -453,7 +487,10 @@ Imports v1-style Markdown workflows as Boldash packs.
 boldash workflow validate feature
 ```
 
-Validates a workflow's `manifest.yaml` and `done.schema.json`.
+Validates a workflow's registry entry: structural integrity, then
+mandatory-capability satisfiability on the generic host. On-disk pack
+files are validated at import; the registry stays the typed built-ins
+until MS-8.
 
 **Exit codes:** 0, 2, 3.
 

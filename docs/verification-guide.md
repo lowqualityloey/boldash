@@ -316,11 +316,15 @@ Good: `{ "type": "command", "name": "OAuth callback integration test", ... }`
 
 `boldash verify <task>` exits:
 
-| Code | Meaning       | When                                           |
-| ---- | ------------- | ---------------------------------------------- |
-| 0    | VERIFIED      | All `must_pass` passed. All `must_not` passed. |
-| 1    | BLOCKED       | At least one check failed.                     |
-| 2    | Invalid input | Task not found, contract malformed.            |
+| Code | Meaning       | When                                                                                   |
+| ---- | ------------- | -------------------------------------------------------------------------------------- |
+| 0    | VERIFIED      | All `must_pass` passed. All `must_not` passed.                                         |
+| 1    | BLOCKED       | At least one check failed.                                                             |
+| 2    | Invalid input | Task not found, contract malformed, or contract missing.                               |
+| 12   | Timeout       | A `command` check exceeded its timeout (`VERIFY_COMMAND_TIMEOUT` wins over `BLOCKED`). |
+
+Command checks time out after 300 seconds by default; set `timeout_ms`
+(min 1000, max 3600000) per check when a command may run longer.
 
 ### Host integration
 

@@ -3,11 +3,11 @@
 ## 1. Executive Summary & Current Position
 
 - **Project Name**: Boldash — deterministic control plane for AI coding agents
-- **Current Milestone / Epic**: M2 — v0.1.0 Foundation · **RFC APPROVED · MS-1 ✅ MS-2 ✅ MS-3 ✅ MS-4 ✅ MS-5 ✅ · MS-6 IN PROGRESS (#6 claimed)** _(row was stale at "MS-4 awaiting GO"; corrected with MS-6 claim 2026-09-15)_
+- **Current Milestone / Epic**: M2 — v0.1.0 Foundation · **RFC APPROVED · MS-1 ✅ MS-2 ✅ MS-3 ✅ MS-4 ✅ MS-5 ✅ · MS-6 S1–S5 COMPLETE, sign-off pending (#6)** _(S4 feat `f357584` pushed + CI green; S5 doc-sync + boundary 004 written 2026-09-15)_
 - **Overall Status**: ACTIVE
 - **Target Release / Deadline**: v0.1.0 (no date committed)
 - **Current Working Branch**: `main`
-- **Last Updated**: 2026-09-15 04:26 UTC (MS-6 S3 committed @ `c539c56`; checkpoint-003 + handoff-003 boundary written — push + headSha CI watch at this tip) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
+- **Last Updated**: 2026-09-15 09:26 UTC (S4+S5 boundary written — push + headSha CI watch pending at this tip) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
 
 ## 2. Milestone & Task Progress
 
@@ -35,7 +35,7 @@
 ## 3. Active Working Set
 
 - **Active RFC / Spec**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`
-- **Active Task Pointer**: `MS-6 CLI surface (TASK-2026-09-15-v010-ms6-cli)` — `in_progress`, claimed DSH agent, GO per NOTES §4 maintainer-identity ruling; execution sequence = `…ms6-cli.plan-001.md` S1–S5 · **S1 ✅ · S2 ✅ · S3 ✅ (`c539c56`) → S4 next session per `…ms6-cli.handoff-003.md`**
+- **Active Task Pointer**: `MS-6 CLI surface (TASK-2026-09-15-v010-ms6-cli)` — `in_progress`, S1–S5 complete, **awaiting maintainer sign-off**; execution sequence = `…ms6-cli.plan-001.md` S1–S5 · **S1 ✅ · S2 ✅ · S3 ✅ (`c539c56`) · S4 ✅ (`f357584`, CI 34952209416 green) · S5 ✅ (doc-sync, this boundary) → sign-off per `…ms6-cli.handoff-004.md`**
 - **Key Source Files in Flight**: the v0.1.0 surface corpus (`docs/cli-reference.md`, `docs/routing-contract.md`, `docs/verification-guide.md`, `docs/errors.md`, `docs/getting-started.md`, `docs/faq.md`, `AGENTS.md`, `CONTRIBUTING.md`) — authority map in `docs/NOTES.md` §2
 - **Verification Commands (Scoped)**: `npm run verify` = THE gate (live since MS-1, 2026-09-15). CI: `verify` workflow, node 20/22/24 on push+PR.
 
@@ -66,9 +66,8 @@ P1–P10 + tie-breaker, verbatim in `docs/NOTES.md` §3. Pending additions on RF
 
 ## 7. Next Immediate Actions (single lane)
 
-1. **S3 done** (`route` 3 sources + `--create` planned-task, `state transition`/`requirement add`/`evidence add`, AC-8 file-baseline capture consumer-proven — 301/301 four-stage green 04:20 UTC; contract-binding + capture-order rulings in record §Scope Change; kernel touches: stdin seam + public `logEvent`). **Next: S4** (`verify TASK|--all` exits 0/1/2/12 + `workflow import`) in a fresh session; receiver checklist in `…ms6-cli.handoff-003.md`.
-2. **File-baseline obligation lands in S3**: `route --create` captures path + sha256 `file-baseline` evidence for every bound `must_not` path at `planned→implementing` (NOTES §4; MS-5 handoff).
-3. Inherited open items: exit-code ambiguity for `VERIFY_COMMAND_TIMEOUT` (NOTES §4 doc-review), SECURITY email → #15 (maintainer), adr/adrs naming, `docs/state-model.md` + migration-from-v1 (#13).
+1. **S4 ✅ S5 ✅ — sign-off pending.** S4 feat `f357584` pushed, CI 34952209416 green ×3 (headSha-asserted). S5 doc-sync done (AC-6 pile-up cleared; errors.md unchanged). Boundary checkpoint-004 + handoff-004 written. **Next: maintainer sign-off** (AC-1…AC-8 per handoff-004 §Scope) → record `completed` + close #6 → MS-7 (#7).
+2. Inherited open items: exit-code ambiguity for `VERIFY_COMMAND_TIMEOUT` (NOTES §4 doc-review), SECURITY email → #15 (maintainer), adr/adrs naming, `docs/state-model.md` + migration-from-v1 (#13).
 
 ## 8. Session Continuity Log
 
@@ -84,3 +83,5 @@ P1–P10 + tie-breaker, verbatim in `docs/NOTES.md` §3. Pending additions on RF
 | 2026-09-15 | DSH agent (MS-6 S1 session)         | GO executed: rulings landed, four-stage gate folded, plan-001, S1 built + pushed CI-green                                                                                                                 | `07191ca` feat(cli) S1; checkpoint-001 + handoff-001; 229/229; #12/#14 closed, #15 open                                                                                                                                        |
 | 2026-09-15 | DSH agent (MS-6 S2 session)         | GO-S2 executed: stale-briefing disclosure; state get/list + workflow list/validate; validate semantics resolved; barrel + family runners; PASS+BLOCK per check                                            | `01c1154` feat(cli) S2; checkpoint-002 + handoff-002; 271/271 four-stage; no new error codes                                                                                                                                   |
 | 2026-09-15 | DSH agent (MS-6 S3 session)         | GO-S3 executed: route (+stdin seam, P9 budgets real-serializer-measured) + state writes + AC-8 capture (binding ruled, capture-before-transition, cross-verified vs consumer); every guard PASS-and-BLOCK | `c539c56` feat(cli) S3; checkpoint-003 + handoff-003; 301/301 four-stage; no new error codes                                                                                                                                   |
+| 2026-09-15 | DSH agent (MS-6 S4 session)         | GO-S4 executed: verify (0/1/2/12, real timeout, log-only, --all-empty 0) + workflow import (JSON stub, commands counted-not-copied); async dispatch; PASS-and-BLOCK per gate via built bin                | `f357584` feat(cli) S4; 319/319 four-stage; CI 34952209416 green; no new error codes                                                                                                                                           |
+| 2026-09-15 | DSH agent (MS-6 S5 session)         | S5 doc-sync: AC-6 pile-up cleared (claim/md/:125/exit-12) + import/validate rewritten; checkpoint-004 + handoff-004; record/STATE refresh; sign-off pending                                               | boundary commit (this tip); 319/319; errors.md unchanged                                                                                                                                                                       |
