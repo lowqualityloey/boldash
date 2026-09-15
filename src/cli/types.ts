@@ -46,6 +46,10 @@ export interface RunContext {
   flags: Record<string, string | boolean>;
   positionals: string[];
   sub?: CommandSpec;
+  /** Memoized stdin text; provided only when the matched spec declares `readsStdin`. */
+  stdin?: () => string;
+  /** True when stdin is an interactive terminal (stdin must not be read). */
+  stdinIsTty?: boolean;
 }
 
 /** A command's entry point. Runners must not throw; they return envelopes. */
@@ -71,4 +75,6 @@ export interface CommandSpec {
   subcommands?: CommandSpec[];
   /** Absent = command defined but not yet wired (never registered in S1+). */
   run?: CommandRunner;
+  /** Command may consume piped stdin when no explicit input flag is given. */
+  readsStdin?: boolean;
 }

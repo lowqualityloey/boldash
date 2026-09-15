@@ -342,6 +342,30 @@ export class TaskStore {
     return ok(events);
   }
 
+  /**
+   * Public event-logging seam (MS-6 S3): the router and gate are stateless by
+   * ruling D-3 — the CLI owns audit logging, and every state write must be
+   * recorded as an event (AGENTS §State mutations). This is the ONE sanctioned
+   * way for a caller to append events without mutating a task (e.g. pairing
+   * an EvidenceStore write, per evidence.ts §"callers pair"). The event is
+   * built and validated by the same private pipeline every mutation uses.
+   */
+  logEvent(
+    action: EventAction,
+    taskId: string | null,
+    actor: string,
+    payload: Record<string, unknown> = {},
+  ): StoreResult<true> {
+    try {
+      this.emit(action, taskId, actor, payload);
+    } catch (cause) {
+      // emit throws only on internally invalid events — a bug, surfaced as a
+      // value at this boundary, never swallowed (AGENTS §Error handling).
+      return err(einfo('INTERNAL_ERROR', String(cause), { field: 'event' }));
+    }
+    return ok(true);
+  }
+
   // ---------- internals ----------
 
   /** Load, locate task, and enforce the optimistic version guard in one step. */

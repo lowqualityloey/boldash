@@ -96,11 +96,22 @@ export function run(argv: readonly string[], io: IoStreams = processStreams()): 
   }
   let envelope: Envelope;
   try {
+    const spec = sub ?? command;
+    let stdinText: string | undefined;
     envelope = runner({
       globals,
       flags: parsed.data.flags,
       positionals: parsed.data.positionals,
       ...(sub ? { sub } : {}),
+      ...(spec?.readsStdin
+        ? {
+            stdin: () => {
+              if (stdinText === undefined) stdinText = readFileSync(0, 'utf8');
+              return stdinText;
+            },
+            stdinIsTty: process.stdin.isTTY === true,
+          }
+        : {}),
     });
   } catch (cause) {
     // A thrown runner is a bug, not user input: never leak a stack trace as

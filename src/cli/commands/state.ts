@@ -38,15 +38,15 @@ export const TYPE_VALUES = [
 /** `state list --limit` default (docs/cli-reference.md §state list). */
 export const DEFAULT_LIMIT = 50;
 
-function fail(error: ErrorInfo): Envelope {
+export function fail(error: ErrorInfo): Envelope {
   return { ok: false, error };
 }
 
-function usage(message: string, field: string, suggestion: string): Envelope {
+export function usage(message: string, field: string, suggestion: string): Envelope {
   return fail({ code: 'CLI_USAGE', message, field, suggestion });
 }
 
-function precondition(cwd: string): Envelope {
+export function precondition(cwd: string): Envelope {
   return fail({
     code: 'CLI_PRECONDITION_FAILED',
     message: 'This repository is not initialized (.boldash/ not found).',
@@ -56,7 +56,7 @@ function precondition(cwd: string): Envelope {
   });
 }
 
-function storeIn(cwd: string): TaskStore {
+export function storeIn(cwd: string): TaskStore {
   const boldashDir = join(cwd, '.boldash');
   return new TaskStore(
     {
