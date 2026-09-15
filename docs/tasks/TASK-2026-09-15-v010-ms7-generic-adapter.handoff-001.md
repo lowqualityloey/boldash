@@ -2,7 +2,7 @@
 
 - **Task ID**: `TASK-2026-09-15-v010-ms7-generic-adapter` (#7, `in_progress`) · **Slices done**: S1 ✅ S2 ✅ S3 ✅ per plan-001 §3
 - **Spec**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` §3.4 · **Checkpoint**: `…ms7-generic-adapter.checkpoint-001.md`
-- **Revision to validate against**: `origin/main` = `2507e69` (S3 tip: `bf99c7e` feat + `29b2930` state + `2507e69` evidence); boundary records (this + checkpoint-001) push pending
+- **Revision to validate against**: `origin/main` = boundary records `838c44f` (CI 34968546729 green) atop S3 tip `2507e69` (`bf99c7e` feat + `29b2930` state + `2507e69` evidence; CI 34966807770 green)
 
 ## Receiver validation checklist (complete BEFORE any edit)
 

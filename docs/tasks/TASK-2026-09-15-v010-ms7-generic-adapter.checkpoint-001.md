@@ -3,7 +3,7 @@
 - **Task ID**: `TASK-2026-09-15-v010-ms7-generic-adapter` (#7) · **Spec**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` §3.4 (init row), §5 MS-7, §8 briefing risk · **Plan**: `…ms7-generic-adapter.plan-001.md` (approved, R1–R9)
 - **Checkpoint type**: Session boundary (slice-scoped GO: this instance received GO-S3 + a per-instance push GO naming `bf99c7e`/`29b2930` + evidence `2507e69`)
 - **Branch / Revision**: `main` @ `2507e69` (= S3 feat `bf99c7e` + state `29b2930` + evidence `2507e69`), all pushed
-- **Timestamp**: 2026-09-15 12:14 UTC (`date -u`)
+- **Timestamp**: 2026-09-15 12:14 UTC (`date -u`) · records pushed post-boundary: `838c44f`, CI 34968546729 green headSha-asserted
 
 ## State
 
@@ -36,7 +36,7 @@
 
 ## Blockers
 
-- None mechanical. Open gate: **GO-S4** (docs truth pass) — plan-001 §S4 scope; per-instance push authorization for this boundary's records
+- None mechanical. Open gate: **GO-S4** (docs truth pass) — plan-001 §S4 scope; none — boundary records pushed `838c44f` (CI 34968546729 green)
 
 ## Exactly one prioritized next action
 

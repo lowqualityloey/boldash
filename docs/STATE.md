@@ -7,7 +7,7 @@
 - **Overall Status**: ACTIVE
 - **Target Release / Deadline**: v0.1.0 (no date committed)
 - **Current Working Branch**: `main`
-- **Last Updated**: 2026-09-15 12:14 UTC (`origin/main` = `2507e69`, CI 34966807770 green headSha-asserted; tree clean at S3 close; pk:checkpoint records local, push pending per-instance; S4 pending GO) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
+- **Last Updated**: 2026-09-15 12:24 UTC (`origin/main` = `838c44f` boundary records pushed, CI 34968546729 green headSha-asserted; S3 tip CI: 34966807770 @ `29b2930`; S4 pending GO — fresh session recommended) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
 
 ## 2. Milestone & Task Progress
 
