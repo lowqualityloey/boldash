@@ -149,14 +149,15 @@ describe('workflow validate <name> (S2)', () => {
 });
 
 describe('registry honesty (S2)', () => {
-  it('only wired subcommands are registered — import lands in S4', () => {
+  it('only wired subcommands are registered — import landed in S4', async () => {
     const workflow = REGISTRY.find((c) => c.name === 'workflow');
     expect((workflow?.subcommands ?? []).map((s) => s.name)).toEqual([
       'list',
       'validate',
+      'import',
     ]);
     const err = envError(
-      workflow?.run?.(ctx()) ?? ({ ok: true, data: null } as Envelope),
+      (await workflow?.run?.(ctx())) ?? ({ ok: true, data: null } as Envelope),
     );
     expect(err.code).toBe('CLI_USAGE');
   });

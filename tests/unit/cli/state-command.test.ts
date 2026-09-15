@@ -216,12 +216,14 @@ describe('registry drift guards (S2)', () => {
     );
   });
 
-  it('bare family runner is a usage error naming the wired subcommands', () => {
+  it('bare family runner is a usage error naming the wired subcommands', async () => {
     const state = REGISTRY.find((c) => c.name === 'state');
     expect(state?.run).toBeDefined();
-    const err = envError(state?.run?.(ctx()) ?? ({ ok: true, data: null } as Envelope));
+    const err = envError(
+      (await state?.run?.(ctx())) ?? ({ ok: true, data: null } as Envelope),
+    );
     expect(err.code).toBe('CLI_USAGE');
-    const envelope = state?.run?.(ctx());
+    const envelope = await state?.run?.(ctx());
     if (envelope && !envelope.ok) {
       expect(envelope.error.suggestion).toContain('get, list');
     }

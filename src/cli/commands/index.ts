@@ -27,7 +27,8 @@ import {
   runStateRequirement,
   runStateTransition,
 } from './state-writes.js';
-import { runWorkflowList, runWorkflowValidate } from './workflow.js';
+import { runWorkflowImport, runWorkflowList, runWorkflowValidate } from './workflow.js';
+import { runVerify } from './verify.js';
 import { PROFILES } from '../../core/state/index.js';
 
 /** A command family whose subcommands all require selection (`state`, `workflow`). */
@@ -145,10 +146,16 @@ export const REGISTRY: CommandSpec[] = [
     ],
   },
   {
+    name: 'verify',
+    summary: 'Run verification gates for a task.',
+    flags: [{ name: 'all', takesValue: false, help: 'Verify all verifying tasks.' }],
+    run: runVerify,
+  },
+  {
     name: 'workflow',
     summary: 'Inspect workflow packs.',
     flags: [],
-    run: familyUsage('workflow', ['list', 'validate']),
+    run: familyUsage('workflow', ['list', 'validate', 'import']),
     subcommands: [
       {
         name: 'list',
@@ -161,6 +168,12 @@ export const REGISTRY: CommandSpec[] = [
         summary: 'Validate one workflow pack.',
         flags: [],
         run: runWorkflowValidate,
+      },
+      {
+        name: 'import',
+        summary: 'Import a pack as a stub contract.',
+        flags: [],
+        run: runWorkflowImport,
       },
     ],
   },

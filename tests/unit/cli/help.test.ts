@@ -28,11 +28,11 @@ describe('help budgets (AC-3)', () => {
 
   it('root help advertises only registered commands (no unwired surface)', () => {
     const text = rootHelp(REGISTRY, '0.0.1');
-    for (const unbuilt of ['verify']) {
-      expect(text).not.toContain(`  ${unbuilt} `);
-    }
+    // S4 wired verify + workflow import; nothing in the v0.1.0 set stays unwired
+    // except future (non-registry) commands.
+    expect(text).toContain('  verify ');
     // Wired families must appear (honesty, both ways): state/workflow since
-    // S2, route/state-writes since S3.
+    // S2, route/state-writes since S3, verify/workflow-import since S4.
     expect(text).toContain('  state ');
     expect(text).toContain('  workflow ');
     expect(text).toContain('  route ');

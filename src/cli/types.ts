@@ -53,7 +53,7 @@ export interface RunContext {
 }
 
 /** A command's entry point. Runners must not throw; they return envelopes. */
-export type CommandRunner = (ctx: RunContext) => Envelope;
+export type CommandRunner = (ctx: RunContext) => Envelope | Promise<Envelope>;
 
 /** Declarative flag spec used by both the parser and the help generator. */
 export interface FlagSpec {

@@ -261,12 +261,12 @@ describe('golden: workflow list|validate (S2)', () => {
     });
   });
 
-  it('unwired subcommand is refused honestly (import lands in S4)', () => {
+  it('import is wired since S4: unknown path is a contract error, not CLI_USAGE', () => {
     const run = boldash(['workflow', 'import', 'x', '--cwd', repo, '--format', 'json']);
     expect(run.status).toBe(2);
     expect(envelope(run.stdout)).toMatchObject({
       ok: false,
-      error: { code: 'CLI_USAGE' },
+      error: { code: 'VERIFY_CONTRACT_INVALID' },
     });
   });
 

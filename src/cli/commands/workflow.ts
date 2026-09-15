@@ -14,12 +14,15 @@
  * S5. Exit contract (plan-001 §3 S2): 0 valid · 2 unknown/structurally
  * broken · 3 required capability the host does not provide.
  */
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { basename, join, resolve } from 'node:path';
 import {
   createRegistry,
   genericContext,
   missingCapabilities,
 } from '../../core/router/index.js';
 import type { LifecycleStage, WorkflowPack } from '../../core/router/index.js';
+import { getValidator, firstError } from '../../shared/schema.js';
 import type { ErrorInfo } from '../../shared/result.js';
 import type { Envelope, RunContext } from '../types.js';
 
@@ -189,4 +192,246 @@ export function runWorkflowValidate(ctx: RunContext): Envelope {
   const validated = validateWorkflowPack(pack);
   if (!validated.ok) return fail(validated.error);
   return { ok: true, data: { valid: true, workflow: validated.data } };
+}
+
+const ANY_TEMPLATE = /\{\{\s*(?!task_id\s*\}\})[^{}]*\}\}/;
+
+function templateError(field: string): ErrorInfo {
+  return {
+    code: 'VERIFY_CONTRACT_INVALID',
+    message: `unsupported template in ${field}: only {{task_id}} is legal (D1).`,
+    field,
+  };
+}
+
+function hasBadTemplate(value: unknown, field: string): ErrorInfo | null {
+  if (typeof value === 'string' && ANY_TEMPLATE.test(value)) return templateError(field);
+  return null;
+}
+
+/**
+ * Runner for `boldash workflow import <path>` (MS-6 S4).
+ *
+ * S4 scope (plan-001 §3, checkpoint-003): schema-validated pack import,
+ * exits 0/2/3. Core never parses YAML, and the v1 Markdown importer is
+ * MS-8 — so `<path>` is a JSON file (pack definition and/or done contract)
+ * or a directory containing `done.schema.json` plus an optional
+ * `pack.json`/`manifest.json`. The importer emits a CONSERVATIVE STUB
+ * contract: `command` / `command_fails` checks are never copied (they would
+ * execute arbitrary commands); only side-effect-free checks travel, and an
+ * import with no safe checks still ships a single `evidence_exists` stub so
+ * the file satisfies the meta-schema (≥1 must_pass). The count of skipped
+ * runnable checks is reported — never silently expanded.
+ *
+ * `workflow list` is unchanged (packs stay typed constants until MS-8);
+ * the import surface is the written files.
+ */
+export function runWorkflowImport(ctx: RunContext): Envelope {
+  const [source, extra] = ctx.positionals;
+  if (!source) {
+    return usage(
+      'workflow import requires a path.',
+      'workflow',
+      'Usage: boldash workflow import <path>.',
+    );
+  }
+  if (extra !== undefined) {
+    return usage(
+      `Unexpected argument '${extra}'.`,
+      'workflow',
+      'Usage: boldash workflow import <path>.',
+    );
+  }
+  const cwd = ctx.globals.cwd;
+  if (!existsSync(join(cwd, '.boldash'))) {
+    return fail({
+      code: 'CLI_PRECONDITION_FAILED',
+      message: 'This repository is not initialized (.boldash/ not found).',
+      field: '.boldash',
+      suggestion: 'Run `boldash init` first.',
+      context: { cwd },
+    });
+  }
+  const abs = resolve(cwd, source);
+  let isDir: boolean;
+  try {
+    isDir = statSync(abs).isDirectory();
+  } catch {
+    return fail({
+      code: 'VERIFY_CONTRACT_INVALID',
+      message: `Import path '${source}' does not exist.`,
+      field: 'path',
+      suggestion: 'Point at a JSON pack file or a directory with done.schema.json.',
+    });
+  }
+
+  let packRaw: unknown = null;
+  let contractRaw: unknown = null;
+  try {
+    if (isDir) {
+      const manifestPath = join(abs, 'pack.json');
+      const altManifest = join(abs, 'manifest.json');
+      if (existsSync(manifestPath)) {
+        packRaw = JSON.parse(readFileSync(manifestPath, 'utf8')) as unknown;
+      } else if (existsSync(altManifest)) {
+        packRaw = JSON.parse(readFileSync(altManifest, 'utf8')) as unknown;
+      }
+      const contractOrigin = join(abs, 'done.schema.json');
+      if (!existsSync(contractOrigin)) {
+        return fail({
+          code: 'VERIFY_CONTRACT_INVALID',
+          message: `Directory '${source}' has no done.schema.json.`,
+          field: 'path',
+          suggestion: 'Add done.schema.json, or point at a pack JSON file.',
+        });
+      }
+      contractRaw = JSON.parse(readFileSync(contractOrigin, 'utf8')) as unknown;
+    } else {
+      const parsed = JSON.parse(readFileSync(abs, 'utf8')) as Record<string, unknown>;
+      if (Array.isArray((parsed as { must_pass?: unknown }).must_pass)) {
+        contractRaw = parsed;
+      } else {
+        packRaw = parsed;
+        if (parsed['contract'] !== undefined) contractRaw = parsed['contract'];
+      }
+    }
+  } catch (cause) {
+    return fail({
+      code: 'SCHEMA_PARSE',
+      message: `Import source is not valid JSON: ${String(cause)}`,
+      field: 'path',
+    });
+  }
+
+  const fallbackName = basename(abs, '.json') || 'imported';
+  const packObj = (packRaw ?? {}) as Record<string, unknown>;
+  const rawName = packObj['name'];
+  const name =
+    typeof rawName === 'string' && rawName.trim().length > 0
+      ? rawName.trim()
+      : fallbackName;
+  if (name.includes('/') || name.includes('\\') || name.trim().length === 0) {
+    return fail({
+      code: 'SCHEMA_VALIDATION',
+      message: `Pack name '${name}' is not a valid workflow name.`,
+      field: 'name',
+      suggestion: 'Use a short kebab-case name (e.g. my-workflow).',
+    });
+  }
+
+  const pack: WorkflowPack = {
+    name,
+    version: typeof packObj['version'] === 'number' ? (packObj['version'] as number) : 1,
+    lifecycle: (packObj['lifecycle'] as LifecycleStage) ?? 'BUILD',
+    requires: Array.isArray(packObj['requires'])
+      ? (packObj['requires'] as string[])
+      : ['filesystem.read', 'filesystem.write'],
+    optional: Array.isArray(packObj['optional']) ? (packObj['optional'] as string[]) : [],
+    description:
+      typeof packObj['description'] === 'string' &&
+      (packObj['description'] as string).length > 0
+        ? (packObj['description'] as string)
+        : `Imported workflow ${name}.`,
+  };
+  const checked = validateWorkflowPack(pack);
+  if (!checked.ok) return fail(checked.error);
+
+  let skippedCommands = 0;
+  let stub: { task_id: string; must_pass: unknown[]; must_not?: unknown[] };
+  if (contractRaw !== null) {
+    const validate = getValidator('doneContract');
+    if (!validate(contractRaw)) {
+      return fail({
+        code: 'VERIFY_CONTRACT_INVALID',
+        message: firstError('doneContract', validate),
+        field: 'contract_path',
+        suggestion: 'Fix against schemas/done.schema.json (the meta-schema).',
+      });
+    }
+    const contract = contractRaw as {
+      task_id: unknown;
+      must_pass: Array<Record<string, unknown>>;
+      must_not?: Array<Record<string, unknown>>;
+    };
+    const badTask = hasBadTemplate(contract.task_id, 'task_id');
+    if (badTask) return fail(badTask);
+    const safePass: Array<Record<string, unknown>> = [];
+    for (const [i, check] of contract.must_pass.entries()) {
+      for (const f of ['run', 'path', 'pattern', 'check'] as const) {
+        const bad =
+          check[f] !== undefined
+            ? hasBadTemplate(check[f], `must_pass[${i}].${f}`)
+            : null;
+        if (bad) return fail(bad);
+      }
+      if (check['type'] === 'command') {
+        skippedCommands += 1;
+        continue;
+      }
+      safePass.push(check);
+    }
+    const safeNeg: Array<Record<string, unknown>> = [];
+    for (const [i, check] of (contract.must_not ?? []).entries()) {
+      for (const f of ['run', 'path'] as const) {
+        const bad =
+          check[f] !== undefined ? hasBadTemplate(check[f], `must_not[${i}].${f}`) : null;
+        if (bad) return fail(bad);
+      }
+      if (check['type'] === 'command_fails') {
+        skippedCommands += 1;
+        continue;
+      }
+      safeNeg.push(check);
+    }
+    stub =
+      safePass.length > 0
+        ? {
+            task_id: '{{task_id}}',
+            must_pass: safePass,
+            ...(safeNeg.length > 0 ? { must_not: safeNeg } : {}),
+          }
+        : {
+            task_id: '{{task_id}}',
+            must_pass: [
+              {
+                type: 'evidence_exists',
+                name: `import recorded for ${name}`,
+                path: 'import',
+              },
+            ],
+          };
+    if (safePass.length === 0) skippedCommands = contract.must_pass.length - 0;
+  } else {
+    stub = {
+      task_id: '{{task_id}}',
+      must_pass: [
+        { type: 'evidence_exists', name: `import recorded for ${name}`, path: 'import' },
+      ],
+    };
+  }
+
+  const destDir = join(cwd, '.boldash', 'workflows', name);
+  const destContract = join(destDir, 'done.schema.json');
+  const destManifest = join(destDir, 'manifest.json');
+  const overwrote = existsSync(destContract) || existsSync(destManifest);
+  mkdirSync(destDir, { recursive: true });
+  writeFileSync(destContract, `${JSON.stringify(stub, null, 2)}\n`, 'utf8');
+  writeFileSync(
+    destManifest,
+    `${JSON.stringify({ name: pack.name, version: pack.version, lifecycle: pack.lifecycle, requires: pack.requires, optional: pack.optional, description: pack.description }, null, 2)}\n`,
+    'utf8',
+  );
+  return {
+    ok: true,
+    data: {
+      imported: true,
+      workflow: name,
+      dir: destDir,
+      contract: destContract,
+      stubbed: true,
+      skipped_commands: skippedCommands,
+      overwrote,
+      note: 'Conservative stub: runnable command checks are never imported. `workflow list` still shows the 4 built-ins until MS-8.',
+    },
+  };
 }

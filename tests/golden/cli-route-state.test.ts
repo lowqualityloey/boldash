@@ -306,10 +306,12 @@ describe('golden: state writes + AC-8 capture (S3)', () => {
     });
   });
 
-  it('registry honesty holds at S3: verify stays unwired until S4', () => {
+  it('registry honesty holds at S4: verify is wired (precondition without init)', () => {
     const dir = fixtureRepo();
     const v = boldash(['verify', '--all', '--cwd', dir, '--format', 'json']);
     expect(v.status).toBe(2);
-    expect(envelope(v.stdout)).toMatchObject({ error: { code: 'CLI_USAGE' } });
+    expect(envelope(v.stdout)).toMatchObject({
+      error: { code: 'CLI_PRECONDITION_FAILED' },
+    });
   });
 });

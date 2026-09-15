@@ -64,8 +64,12 @@ function usageError(message: string, suggestion: string): Envelope {
 /**
  * Parse, dispatch, render. Returns the process exit code (docs/errors.md map).
  * Never throws: a runner bug surfaces as INTERNAL_ERROR + exit 10.
+ * Async: `verify` awaits the verification engine (declared commands).
  */
-export function run(argv: readonly string[], io: IoStreams = processStreams()): number {
+export async function run(
+  argv: readonly string[],
+  io: IoStreams = processStreams(),
+): Promise<number> {
   const parsed = parseArgs(argv, REGISTRY);
   if (!parsed.ok) {
     return render({ ok: false, error: parsed.error }, detectFormat(argv), io);
@@ -98,7 +102,7 @@ export function run(argv: readonly string[], io: IoStreams = processStreams()): 
   try {
     const spec = sub ?? command;
     let stdinText: string | undefined;
-    envelope = runner({
+    envelope = await runner({
       globals,
       flags: parsed.data.flags,
       positionals: parsed.data.positionals,
@@ -128,5 +132,5 @@ export function run(argv: readonly string[], io: IoStreams = processStreams()): 
 }
 
 if (import.meta.url === `file://${process.argv[1] ?? ''}`) {
-  process.exitCode = run(process.argv.slice(2));
+  process.exitCode = await run(process.argv.slice(2));
 }
