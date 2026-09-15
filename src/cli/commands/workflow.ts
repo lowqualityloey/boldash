@@ -9,19 +9,21 @@
  * *file* format (manifest.yaml) to MS-8, and `schemas/workflow.schema.json`
  * does not exist — so the honest validation surface is the registry entry
  * itself: structural integrity of the {@link WorkflowPack}, then capability
- * satisfiability against the generic-host floor (MS-7 replaces the floor with
- * probed hosts). cli-reference's manifest/done-schema wording is patched in
- * S5. Exit contract (plan-001 §3 S2): 0 valid · 2 unknown/structurally
- * broken · 3 required capability the host does not provide.
+ * satisfiability against the adapter probe (MS-7 S3, ruling R6 — `probeContext()`
+ * feeds the host column; core stays host-agnostic). cli-reference's
+ * manifest/done-schema wording is patched in S5. Exit contract (plan-001 §3 S2):
+ * 0 valid · 2 unknown/structurally broken · 3 required capability the host does
+ * not provide.
  */
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
-import {
-  createRegistry,
-  genericContext,
-  missingCapabilities,
+import { createRegistry, missingCapabilities } from '../../core/router/index.js';
+import { probeContext } from '../probe-context.js';
+import type {
+  CapabilityContext,
+  LifecycleStage,
+  WorkflowPack,
 } from '../../core/router/index.js';
-import type { LifecycleStage, WorkflowPack } from '../../core/router/index.js';
 import { getValidator, firstError } from '../../shared/schema.js';
 import type { ErrorInfo } from '../../shared/result.js';
 import type { Envelope, RunContext } from '../types.js';
@@ -60,10 +62,14 @@ function nonEmptyStrings(values: readonly string[]): string | undefined {
 
 /**
  * Validate one workflow pack definition: structure first (exit-2 codes),
- * then mandatory-capability satisfiability on the generic host (exit 3).
+ * then mandatory-capability satisfiability against the host context the
+ * caller supplies — the CLI passes the adapter probe (MS-7 S3, R6).
  * Pure and deterministic — returns the pack unchanged when it passes.
  */
-export function validateWorkflowPack(pack: WorkflowPack):
+export function validateWorkflowPack(
+  pack: WorkflowPack,
+  context: CapabilityContext,
+):
   | {
       ok: true;
       data: WorkflowPack;
@@ -107,10 +113,10 @@ export function validateWorkflowPack(pack: WorkflowPack):
     );
   }
 
-  // Capability floor check — host unknown until MS-7, so the honest context
-  // is genericContext(). An unprobed capability is assumed unavailable
+  // Capability check against the caller-supplied host context (adapter probe,
+  // MS-7 S3). An unprobed capability is assumed unavailable
   // (router/capabilities.ts §5.4): fail-closed, matching route step 5.
-  const missing = missingCapabilities(pack.requires, genericContext());
+  const missing = missingCapabilities(pack.requires, context);
   if (missing.length > 0) {
     return {
       ok: false,
@@ -118,8 +124,8 @@ export function validateWorkflowPack(pack: WorkflowPack):
         code: 'CAPABILITY_MISSING',
         message: `Workflow '${name}' requires '${missing[0]}', which this host does not provide.`,
         field: 'workflow.requires',
-        context: { missing, host: 'generic' },
-        suggestion: `The generic host floor provides: ${[...genericContext().capabilities].join(', ')}.`,
+        context: { missing, host: context.host },
+        suggestion: `The '${context.host}' adapter probe provides: ${[...context.capabilities].join(', ')}.`,
       },
     };
   }
@@ -189,7 +195,7 @@ export function runWorkflowValidate(ctx: RunContext): Envelope {
       suggestion: 'Choose from the enabled workflows (`boldash workflow list`).',
     });
   }
-  const validated = validateWorkflowPack(pack);
+  const validated = validateWorkflowPack(pack, probeContext());
   if (!validated.ok) return fail(validated.error);
   return { ok: true, data: { valid: true, workflow: validated.data } };
 }
@@ -333,7 +339,7 @@ export function runWorkflowImport(ctx: RunContext): Envelope {
         ? (packObj['description'] as string)
         : `Imported workflow ${name}.`,
   };
-  const checked = validateWorkflowPack(pack);
+  const checked = validateWorkflowPack(pack, probeContext());
   if (!checked.ok) return fail(checked.error);
 
   let skippedCommands = 0;

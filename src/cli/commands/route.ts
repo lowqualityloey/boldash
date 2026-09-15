@@ -21,11 +21,8 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import {
-  genericContext,
-  parseProposal,
-  routeValidated,
-} from '../../core/router/index.js';
+import { parseProposal, routeValidated } from '../../core/router/index.js';
+import { probeContext } from '../probe-context.js';
 import type { ResolvedRoute, RouteProposal } from '../../core/router/index.js';
 import type { TaskStore } from '../../core/state/index.js';
 import { precondition, storeIn, usage, fail } from './state.js';
@@ -156,7 +153,9 @@ export function runRoute(ctx: RunContext): Envelope {
   const parsed = parseProposal(source.data);
   if (!parsed.ok) return fail(parsed.error);
   const cwd = ctx.globals.cwd;
-  const routed = routeValidated(parsed.data, { context: genericContext(), cwd });
+  // MS-7 S3 (R6): step 5 sees the adapter probe, not core's static floor —
+  // values equal today, provenance is what moved (docs/routing-contract).
+  const routed = routeValidated(parsed.data, { context: probeContext(), cwd });
   if (!routed.ok) return fail(routed.error);
   const resolved = routed.data;
 

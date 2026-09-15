@@ -13,6 +13,7 @@ import {
 } from '../../../src/cli/commands/workflow.js';
 import { REGISTRY } from '../../../src/cli/commands/index.js';
 import { WORKFLOW_PACKS } from '../../../src/core/router/index.js';
+import { probeContext } from '../../../src/cli/probe-context.js';
 import type { WorkflowPack } from '../../../src/core/router/index.js';
 import { exitCodeFor } from '../../../src/shared/errors.js';
 import type { Envelope, RunContext } from '../../../src/cli/types.js';
@@ -61,7 +62,7 @@ describe('validateWorkflowPack — PASS side', () => {
   it('all four built-ins validate cleanly (exit-0 path)', () => {
     expect(WORKFLOW_PACKS).toHaveLength(4);
     for (const pack of WORKFLOW_PACKS) {
-      const res = validateWorkflowPack(pack);
+      const res = validateWorkflowPack(pack, probeContext());
       expect(res.ok, pack.name).toBe(true);
     }
   });
@@ -84,7 +85,7 @@ describe('validateWorkflowPack — BLOCK side', () => {
   ];
   for (const [label, pack] of structural) {
     it(`${label} → SCHEMA_VALIDATION (exit 2)`, () => {
-      const res = validateWorkflowPack(pack);
+      const res = validateWorkflowPack(pack, probeContext());
       if (res.ok) throw new Error(`${label}: validation should have blocked`);
       expect(res.error.code).toBe('SCHEMA_VALIDATION');
       expect(exitCodeFor(res.error.code)).toBe(2);
@@ -98,6 +99,7 @@ describe('validateWorkflowPack — BLOCK side', () => {
     // by the overlap case above — so this fixture must clear it.
     const res = validateWorkflowPack(
       broken({ requires: ['filesystem.read', 'subagents'], optional: ['git.commit'] }),
+      probeContext(),
     );
     if (res.ok) throw new Error('capability check should have blocked');
     expect(res.error.code).toBe('CAPABILITY_MISSING');
@@ -106,7 +108,7 @@ describe('validateWorkflowPack — BLOCK side', () => {
   });
 
   it('optional beyond the floor stays advisory — never a precondition', () => {
-    const res = validateWorkflowPack(broken({ optional: ['github'] }));
+    const res = validateWorkflowPack(broken({ optional: ['github'] }), probeContext());
     expect(res.ok).toBe(true);
   });
 });

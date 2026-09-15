@@ -8,6 +8,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:f
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { BRIEFING_END, BRIEFING_START } from '../../../src/adapters/index.js';
 import { exitCodeFor } from '../../../src/shared/errors.js';
 import type { Envelope, RunContext } from '../../../src/cli/types.js';
 import { ADVISORY_MODE_NOTE, runInit } from '../../../src/cli/commands/init.js';
@@ -98,5 +99,33 @@ describe('runInit host wiring (MS-7 S2)', () => {
     ]);
     const config = readFileSync(join(dir, '.boldash', 'config.yaml'), 'utf8');
     expect(config).toContain('profile: lite');
+  });
+});
+
+describe('runInit briefing append (MS-7 S3 — AC-1)', () => {
+  it('appends exactly one marker block and reports it in the envelope', () => {
+    const data = dataOf(runInit(ctx({}, gitRepo())));
+    expect(data['briefing']).toEqual({ path: join(dir, 'AGENTS.md'), skipped: false });
+    const text = readFileSync(join(dir, 'AGENTS.md'), 'utf8');
+    expect(text.split(BRIEFING_START).length - 1).toBe(1);
+    expect(text.split(BRIEFING_END).length - 1).toBe(1);
+  });
+
+  it('re-init --force skips cleanly — the block is never duplicated', () => {
+    dataOf(runInit(ctx({}, gitRepo())));
+    const data = dataOf(runInit(ctx({ force: true }, dir)));
+    expect(data['briefing']).toMatchObject({ skipped: true });
+    const text = readFileSync(join(dir, 'AGENTS.md'), 'utf8');
+    expect(text.split(BRIEFING_START).length - 1).toBe(1);
+  });
+
+  it('an unwritable briefing file → ADAPTER_INIT_FAILED exit 3, never swallowed (AC-2 docs)', () => {
+    // Directory in the file's place: readFileSync throws EISDIR.
+    mkdirSync(join(gitRepo(), 'AGENTS.md'));
+    const e = runInit(ctx());
+    expect(errOf(e)).toMatchObject({ code: 'ADAPTER_INIT_FAILED', field: 'adapter' });
+    expect(exitCodeFor('ADAPTER_INIT_FAILED')).toBe(3);
+    // Honest failure: the scaffold happened, the briefing did not.
+    expect(existsSync(join(dir, '.boldash', 'state', 'tasks.json'))).toBe(true);
   });
 });

@@ -1,13 +1,22 @@
 /**
- * `boldash init` (MS-6 S1 scaffold-only, ruled NOTES §4 R3; MS-7 S2 host wiring).
- * Creates the `.boldash/` tree through the State Engine scaffold, detects the
- * host through the generic adapter, and records the probed capabilities in
- * `project.json`. Writes NO pack files (format deferred to MS-8); the host
- * briefing lands in S3. config.yaml stays a literal template (ADR-0003).
+ * `boldash init` (MS-6 S1 scaffold-only, ruled NOTES §4 R3; MS-7 S2 host
+ * wiring; MS-7 S3 briefing append). Creates the `.boldash/` tree through the
+ * State Engine scaffold, detects the host through the generic adapter,
+ * records the probed capabilities in `project.json`, and appends the
+ * idempotent Boldash briefing block to `AGENTS.md` (marker-guarded — other
+ * tools' blocks in the same file are preserved byte-for-byte). Writes NO
+ * pack files (format deferred to MS-8); config.yaml stays a literal
+ * template (ADR-0003).
  */
 import { existsSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
-import { KNOWN_ADAPTERS, detectHost, probeCapabilities } from '../../adapters/index.js';
+import {
+  GENERIC_BRIEFING_FILE,
+  KNOWN_ADAPTERS,
+  appendBriefing,
+  detectHost,
+  probeCapabilities,
+} from '../../adapters/index.js';
 import { systemClock } from '../../shared/clock.js';
 import { scaffoldProjectState, PROFILES, type Profile } from '../../core/state/index.js';
 import type { Envelope, RunContext } from '../types.js';
@@ -95,6 +104,19 @@ export function runInit(ctx: RunContext): Envelope {
   if (!scaffold.ok) {
     return fail(scaffold.error);
   }
+  // The briefing lands last (AC-1): every refusal above mutates nothing, and
+  // a failed append surfaces as the catalogued adapter-init error — never a
+  // swallowed warning. `appendBriefing` is idempotent (markers present →
+  // skipped), so re-runs and `--force` re-inits never duplicate the block.
+  const briefing = appendBriefing(cwd);
+  if (!briefing.ok) {
+    return fail({
+      code: 'ADAPTER_INIT_FAILED',
+      message: `Cannot update the ${GENERIC_BRIEFING_FILE} briefing: ${briefing.error.message}`,
+      field: 'adapter',
+      suggestion: `Check ${GENERIC_BRIEFING_FILE} permissions, then re-run \`boldash init --force\`.`,
+    });
+  }
   // A forced host means the operator already chose: no HOST_UNKNOWN warning.
   // Advisory mode is unconditional on generic — enforcement cannot block.
   const warnings =
@@ -112,6 +134,7 @@ export function runInit(ctx: RunContext): Envelope {
       capabilities,
       warnings,
       created: scaffold.data.created,
+      briefing: { path: briefing.data.path, skipped: briefing.data.skipped },
     },
   };
 }

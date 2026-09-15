@@ -49,7 +49,7 @@ export const REGISTRY: CommandSpec[] = [
     name: 'init',
     summary: 'Initialize Boldash in the current repository.',
     description:
-      'Creates .boldash/ (state files, evidence dir, events log, config template). Scaffold-only in v0.1.0: no packs, no briefing (MS-7).',
+      'Creates .boldash/ (state files, evidence dir, events log, config template) and appends the idempotent Boldash briefing block to AGENTS.md. Packs land in MS-8.',
     flags: [
       {
         name: 'profile',

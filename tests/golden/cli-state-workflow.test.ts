@@ -4,7 +4,7 @@
  * process-level proof of exit codes, envelopes, and honest help.
  */
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -269,6 +269,44 @@ describe('golden: workflow list|validate (S2)', () => {
       ok: false,
       error: { code: 'VERIFY_CONTRACT_INVALID' },
     });
+  });
+
+  it('MS-7 S3 (AC-3): import gated by the adapter probe — host named, nothing written', () => {
+    const packPath = join(repo, 'needy.json');
+    writeFileSync(
+      packPath,
+      JSON.stringify({
+        name: 'needy',
+        requires: ['filesystem.read', 'subagents'],
+        optional: [],
+        description: 'Needs a capability the generic probe does not list',
+        lifecycle: 'BUILD',
+      }),
+      'utf8',
+    );
+    const run = boldash([
+      'workflow',
+      'import',
+      'needy.json',
+      '--cwd',
+      repo,
+      '--format',
+      'json',
+    ]);
+    expect(run.status, run.stderr).toBe(3);
+    const env = envelope(run.stdout);
+    expect(env).toMatchObject({
+      ok: false,
+      error: {
+        code: 'CAPABILITY_MISSING',
+        context: { missing: ['subagents'], host: 'generic' },
+      },
+    });
+    const error = env.error as Json;
+    expect(error.message).toContain('does not provide');
+    // Provenance is explicit: the refusal names the adapter probe as source.
+    expect(error.suggestion).toContain("'generic' adapter probe");
+    expect(existsSync(join(repo, '.boldash', 'workflows', 'needy'))).toBe(false);
   });
 
   it('family help is honest and inside budget; root lists the wired families', () => {
