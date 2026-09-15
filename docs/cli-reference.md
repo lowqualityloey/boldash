@@ -63,9 +63,11 @@ Exit codes:
 
 ## `boldash init`
 
-Initialize Boldash in the current repository. Scaffold-only in v0.1.0:
-no workflow packs (pack format lands in MS-8) and no host briefing
-file (host adapters land in MS-7).
+Initialize Boldash in the current repository. Requires a git working tree:
+outside one, `init` refuses with `CLI_PRECONDITION_FAILED` (exit 2) and
+writes nothing. It scaffolds the `.boldash/` tree, records the probed host
+capabilities in `project.json`, and appends the Boldash briefing block to
+`AGENTS.md`.
 
 ```bash
 boldash init [--profile lite|balanced|strict|accelerated] [--host <name>] [--force]
@@ -80,16 +82,70 @@ boldash init [--profile lite|balanced|strict|accelerated] [--host <name>] [--for
 - `.boldash/state/evidence.json`
 - `.boldash/evidence/`
 - `.boldash/events.jsonl`
+- `AGENTS.md` — the Boldash briefing block, created or appended (see §Briefing)
+
+No workflow packs are written in v0.1.0: the pack file format lands in MS-8,
+and `.boldash/workflows/` appears on first `workflow import`. `config.yaml`
+stays a literal template that the core never parses (ADR-0003).
 
 **Flags:**
 
-| Flag               | Description                                                       |
-| ------------------ | ----------------------------------------------------------------- |
-| `--profile <name>` | `lite`, `balanced`, `strict`, `accelerated`. Default: `balanced`. |
-| `--host <name>`    | Force a specific adapter. Default: auto-detect.                   |
-| `--force`          | Overwrite an existing `.boldash/` (destructive).                  |
+| Flag               | Description                                                                                                                                                                     |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--profile <name>` | `lite`, `balanced`, `strict`, `accelerated`. Default: `balanced`.                                                                                                               |
+| `--host <name>`    | Force an adapter. v0.1.0 ships one adapter, so `generic` is the only accepted value; any other value is `CLI_USAGE` (exit 2). Default: auto-detect (always resolves `generic`). |
+| `--force`          | Overwrite an existing `.boldash/` (destructive).                                                                                                                                |
 
-**Exit codes:** 0, 2.
+**Envelope (`--format json`):**
+
+```json
+{
+  "ok": true,
+  "data": {
+    "initialized": true,
+    "path": "/repo/.boldash",
+    "profile": "balanced",
+    "adapter": "generic",
+    "capabilities": [
+      "filesystem.read",
+      "filesystem.write",
+      "shell.execute",
+      "git.read",
+      "human_approval"
+    ],
+    "warnings": ["ADVISORY_MODE"],
+    "created": ["state/tasks.json", "events.jsonl", "…"],
+    "briefing": { "path": "/repo/AGENTS.md", "skipped": false }
+  }
+}
+```
+
+`warnings` always includes `ADVISORY_MODE`, plus `HOST_UNKNOWN` when
+auto-detection recognized no host. A generic host provides no
+`pre_tool_hooks`, so Boldash can warn, log, and report but cannot block
+(`ARCHITECTURE.md` §5.3).
+
+### Briefing
+
+`init` appends the Boldash briefing block to `AGENTS.md`, delimited by
+`<!-- BOLDASH_START -->` / `<!-- BOLDASH_END -->`:
+
+- no `AGENTS.md` → the file is created with the block
+- existing `AGENTS.md` → preserved byte-for-byte, the block is appended after
+  it (other tools' marker blocks, such as PromptKit's, are left untouched)
+- block already present → nothing is written and `briefing.skipped` is `true`
+
+Only `AGENTS.md` receives a block in v0.1.0. `CLAUDE.md`,
+`.cursor/rules/boldash.mdc`, and `.antigravity/rules/boldash.md` are deferred
+along with the host adapters.
+
+If the briefing write fails — the path is not writable, or `AGENTS.md` exists
+as a directory — `init` answers `ADAPTER_INIT_FAILED` (exit 3), never a
+swallowed warning. The `.boldash/` tree is scaffolded by then, so that state
+is half-complete by design: fix the permission problem and re-run
+`boldash init --force`.
+
+**Exit codes:** 0, 2, 3.
 
 ---
 
