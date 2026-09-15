@@ -42,7 +42,7 @@ Host-specific adapters (Claude/Cursor/…) stay Phase 2/3 per RFC §1.3 and reco
 
 - `src/adapters/adapter-types.ts`: `HostAdapter` (ARCH §5.2 verbatim), `CapabilityName` (13 literals from the §5.3 matrix), `CapabilitySet`, `DetectResult` (`adapter`, `detectedName?`, `gitRepo`, `warnings`), `BriefingResult`.
 - `src/adapters/generic.ts`: `detectHost(cwd)` (env markers → name hint; `.git` presence; always resolves `generic`), `probeCapabilities()` (exact §5.3 Generic column), `appendBriefing(projectRoot)` (`AGENTS.md`, `BOLDASH_START/END` markers, create-or-append, markers-present → no-op, PromptKit coexistence by construction — markers never match `PROMPTKIT_` lines), `install`/`diagnose`/hook no-ops per §5.4.
-- `src/adapters/index.ts` barrel; `src/adapters/contract-suite.ts` shared suite (AGENTS.md requirement) — every adapter must pass it; generic is its first subject.
+- `src/adapters/index.ts` barrel; `tests/unit/adapters/contract-suite.ts` shared suite (AGENTS.md requirement; lives under `tests/` so runtime keeps zero test-runner coupling per ADR-0002) — every adapter must pass it; generic is its first subject.
 - Tests: unit (detect × cases, probe oracle vs parsed matrix, append/create/no-op-duplicate/coexistence fixture, inconclusive→false) + contract suite green. Full gate green; no CLI changes, so all 319 existing tests untouched.
 
 ### S2 — init wiring (AC-2, AC-4)
