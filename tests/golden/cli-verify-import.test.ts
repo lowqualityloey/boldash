@@ -36,6 +36,7 @@ const repos: string[] = [];
 function fixtureRepo(): string {
   const dir = mkdtempSync(join(tmpdir(), 'boldash-golden-s4-'));
   repos.push(dir);
+  mkdirSync(join(dir, '.git'));
   return dir;
 }
 

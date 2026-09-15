@@ -72,11 +72,13 @@
 - **Changed Files**:
   - `[pending]`
   - `S1 (2026-09-15): src/adapters/{adapter-types,generic,index}.ts (new; ARCH §5.2 verbatim interface, §5.3 Generic column single-sourced from GENERIC_BASELINE, briefing markers, best-effort detect, advisory hook no-ops), tests/unit/adapters/{generic,contract}.test.ts + tests/unit/adapters/contract-suite.ts (new; shared suite per AGENTS.md, matrix oracle via doc-oracle)`
+  - `S2 (2026-09-15): src/cli/commands/init.ts (detect-first, AC-2 git refusal, R2 --host rule, probe→project.json, warnings + adapter/capabilities envelope), src/core/state/scaffold.ts (capabilities input, plain strings — rule 8), tests/unit/cli/init-command.test.ts (new matrix), tests/golden/cli-init.test.ts (+5 host-wiring; fixture gains .git), other 3 golden fixtures gain .git (AC-2 compat)`
 - **Scope Change Records**: `None`
 - **Checkpoint Records**: `plan-001: docs/tasks/TASK-2026-09-15-v010-ms7-generic-adapter.plan-001.md (S1–S4 + R1–R9, pending approval 2026-09-15)`
 - **Handoff Records**: `None`
 - **Verification Evidence**: Pending
 - **S1 Evidence (2026-09-15)**: four-stage gate green — lint 0, format:check 0, typecheck 0, 342/342 (23 new: 15 generic unit + 8 contract). Probe oracle parses the §5.3 matrix (no drift); briefing idempotency + PromptKit coexistence pinned; no CLI changes (319 pre-existing untouched).
+- **S2 Evidence (2026-09-15)**: four-stage gate green — 353/353 (11 new: 6 init unit + 5 init golden). AC-2 refusal + R2 host rule proven through the built bin; AC-4 persist locked (config.yaml line + project.json set); no new error codes (CLI_USAGE/CLI_PRECONDITION_FAILED reuse).
 - **Behavior IDs**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Intent Register**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Execution Evidence**: `N/A - TDD Enforcement Mode disabled`

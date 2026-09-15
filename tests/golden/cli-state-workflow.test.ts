@@ -4,7 +4,7 @@
  * process-level proof of exit codes, envelopes, and honest help.
  */
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -44,6 +44,7 @@ const repos: string[] = [];
 function fixtureRepo(): string {
   const dir = mkdtempSync(join(tmpdir(), 'boldash-golden-s2-'));
   repos.push(dir);
+  mkdirSync(join(dir, '.git'));
   return dir;
 }
 

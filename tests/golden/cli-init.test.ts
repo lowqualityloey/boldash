@@ -5,7 +5,7 @@
  * codes + envelope against a real process — not an in-process mock.
  */
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,7 +28,11 @@ function boldash(args: string[], cwd?: string): Run {
 }
 
 function fixtureRepo(): string {
-  return mkdtempSync(join(tmpdir(), 'boldash-golden-'));
+  // MS-7 S2: init requires a git working tree (AC-2), so every fixture is
+  // one. The bare-temp-dir case is covered explicitly by the refusal test.
+  const dir = mkdtempSync(join(tmpdir(), 'boldash-golden-'));
+  mkdirSync(join(dir, '.git'));
+  return dir;
 }
 
 function envelope(out: string): Record<string, never> {
@@ -101,6 +105,88 @@ describe('golden: boldash init (AC-1)', () => {
     expect(run.status, run.stderr).toBe(0);
     expect(envelope(run.stdout)).toMatchObject({ ok: true, data: { profile: 'strict' } });
     expect(existsSync(join(repo, '.boldash/marker.txt'))).toBe(false);
+  });
+});
+
+describe('golden: init host wiring (MS-7 S2 — AC-2, AC-4, R2)', () => {
+  it('outside a git repo → exit 2 CLI_PRECONDITION_FAILED, nothing created', () => {
+    const bare = mkdtempSync(join(tmpdir(), 'boldash-golden-bare-'));
+    const run = boldash(['init', '--cwd', bare, '--format', 'json']);
+    expect(run.status).toBe(2);
+    expect(envelope(run.stdout)).toMatchObject({
+      ok: false,
+      error: { code: 'CLI_PRECONDITION_FAILED', field: '.git' },
+    });
+    expect(existsSync(join(bare, '.boldash'))).toBe(false);
+  });
+
+  it('unknown --host → exit 2 CLI_USAGE naming supported adapters', () => {
+    const run = boldash([
+      'init',
+      '--host',
+      'claude',
+      '--cwd',
+      fixtureRepo(),
+      '--format',
+      'json',
+    ]);
+    expect(run.status).toBe(2);
+    expect(envelope(run.stdout)).toMatchObject({
+      ok: false,
+      error: { code: 'CLI_USAGE', field: '--host' },
+    });
+    expect(run.stdout).toContain('generic');
+  });
+
+  it('envelope carries adapter, probed capabilities, and warnings', () => {
+    const repo = fixtureRepo();
+    const run = boldash(['init', '--cwd', repo, '--format', 'json']);
+    expect(run.status, run.stderr).toBe(0);
+    const env = envelope(run.stdout);
+    expect(env['data']).toMatchObject({ adapter: 'generic' });
+    const data = env['data'] as unknown as {
+      capabilities: string[];
+      warnings: string[];
+    };
+    expect(data.capabilities).toEqual([
+      'filesystem.read',
+      'filesystem.write',
+      'shell.execute',
+      'git.read',
+      'human_approval',
+    ]);
+    expect(data.warnings).toContain('HOST_UNKNOWN');
+    expect(data.warnings).toContain('ADVISORY_MODE');
+  });
+
+  it('--host generic drops HOST_UNKNOWN but keeps advisory mode', () => {
+    const run = boldash([
+      'init',
+      '--host',
+      'generic',
+      '--cwd',
+      fixtureRepo(),
+      '--format',
+      'json',
+    ]);
+    expect(run.status, run.stderr).toBe(0);
+    const data = envelope(run.stdout)['data'] as unknown as { warnings: string[] };
+    expect(data.warnings).toEqual(['ADVISORY_MODE']);
+  });
+
+  it('--profile persists to config.yaml and project.json (AC-4)', () => {
+    const repo = fixtureRepo();
+    const run = boldash(['init', '--profile', 'lite', '--cwd', repo, '--format', 'json']);
+    expect(run.status, run.stderr).toBe(0);
+    expect(readFileSync(join(repo, '.boldash', 'config.yaml'), 'utf8')).toContain(
+      'profile: lite',
+    );
+    const project = JSON.parse(
+      readFileSync(join(repo, '.boldash', 'state', 'project.json'), 'utf8'),
+    ) as { profile: string; capabilities: string[] };
+    expect(project.profile).toBe('lite');
+    expect(project.capabilities).toContain('git.read');
+    expect(project.capabilities).not.toContain('subagents');
   });
 });
 

@@ -29,6 +29,12 @@ export interface ScaffoldInput {
   profile: Profile;
   /** Forced host adapter name; omitted = auto-detect, which is MS-7 scope. */
   host?: string;
+  /**
+   * Probed capability names written to `project.json` (MS-7 S2). Plain
+   * strings — never adapter types — so core keeps zero knowledge of
+   * `src/adapters/` (architecture rule 8). Omitted = unprobed floor.
+   */
+  capabilities?: readonly string[];
 }
 
 export interface ScaffoldResult {
@@ -96,7 +102,12 @@ export function scaffoldProjectState(
   const others: Array<[string, Record<string, unknown>]> = [
     [
       join(stateDir, 'project.json'),
-      { schema_version: 1, profile, capabilities: [], created_at: clock.nowIso() },
+      {
+        schema_version: 1,
+        profile,
+        capabilities: [...(input.capabilities ?? [])],
+        created_at: clock.nowIso(),
+      },
     ],
     [join(stateDir, 'decisions.json'), { schema_version: 1, decisions: [] }],
     [join(stateDir, 'evidence.json'), { schema_version: 1, entries: [] }],
