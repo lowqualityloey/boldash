@@ -65,13 +65,13 @@
 
 ### Transition History
 
-| Previous State | New State     | Timestamp            | Actor                | Reason                                                              | Supporting Evidence                               |
-| -------------- | ------------- | -------------------- | -------------------- | ------------------------------------------------------------------- | ------------------------------------------------- |
-| —              | `planned`     | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
-| `planned`      | `ready`       | 2026-09-14           | Lead Engineer        | MS-4 completed → dependency satisfied; GO-MS5 in "okay" batch       | #4 closed                                         |
-| `ready`        | `in_progress` | 2026-09-14           | DSH agent            | Pointer claimed (backticked, MS-3 lesson applied)                   | this record                                       |
-| `in_progress`  | `awaiting_review` | 2026-09-14 | DSH agent | AC-1…5 PASS; 187/187; CI ×3 headSha-green | verify log + runs cited |
-| `awaiting_review` | `completed` | 2026-09-14 | Lead Engineer | 'okay' checkpoint batch: approve #5 + pk:checkpoint | #5 closed |
+| Previous State    | New State         | Timestamp            | Actor                | Reason                                                              | Supporting Evidence                               |
+| ----------------- | ----------------- | -------------------- | -------------------- | ------------------------------------------------------------------- | ------------------------------------------------- |
+| —                 | `planned`         | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
+| `planned`         | `ready`           | 2026-09-14           | Lead Engineer        | MS-4 completed → dependency satisfied; GO-MS5 in "okay" batch       | #4 closed                                         |
+| `ready`           | `in_progress`     | 2026-09-14           | DSH agent            | Pointer claimed (backticked, MS-3 lesson applied)                   | this record                                       |
+| `in_progress`     | `awaiting_review` | 2026-09-14           | DSH agent            | AC-1…5 PASS; 187/187; CI ×3 headSha-green                           | verify log + runs cited                           |
+| `awaiting_review` | `completed`       | 2026-09-14           | Lead Engineer        | 'okay' checkpoint batch: approve #5 + pk:checkpoint                 | #5 closed                                         |
 
 ## 6. Evidence and Completion Gate
 
