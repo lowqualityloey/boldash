@@ -81,7 +81,7 @@
 - **TDD Intent Register**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Execution Evidence**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Exception Verification**: `N/A - Code Work`
-- **CI Evidence**: N/A
+- **CI Evidence**: `S1: run 34962033665 @ c047e52 — CI success ×3 matrices, headSha-asserted (watch exit 0).`
 - **Review Evidence**: `N/A`
 - **Commit Evidence**: N/A before commit
 - **Pull Request Evidence**: `N/A before PR`
