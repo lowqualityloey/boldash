@@ -71,10 +71,12 @@
 
 - **Changed Files**:
   - `[pending]`
+  - `S1 (2026-09-15): src/adapters/{adapter-types,generic,index}.ts (new; ARCH §5.2 verbatim interface, §5.3 Generic column single-sourced from GENERIC_BASELINE, briefing markers, best-effort detect, advisory hook no-ops), tests/unit/adapters/{generic,contract}.test.ts + tests/unit/adapters/contract-suite.ts (new; shared suite per AGENTS.md, matrix oracle via doc-oracle)`
 - **Scope Change Records**: `None`
 - **Checkpoint Records**: `plan-001: docs/tasks/TASK-2026-09-15-v010-ms7-generic-adapter.plan-001.md (S1–S4 + R1–R9, pending approval 2026-09-15)`
 - **Handoff Records**: `None`
 - **Verification Evidence**: Pending
+- **S1 Evidence (2026-09-15)**: four-stage gate green — lint 0, format:check 0, typecheck 0, 342/342 (23 new: 15 generic unit + 8 contract). Probe oracle parses the §5.3 matrix (no drift); briefing idempotency + PromptKit coexistence pinned; no CLI changes (319 pre-existing untouched).
 - **Behavior IDs**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Intent Register**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Execution Evidence**: `N/A - TDD Enforcement Mode disabled`
