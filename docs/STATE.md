@@ -7,7 +7,7 @@
 - **Overall Status**: ACTIVE
 - **Target Release / Deadline**: v0.1.0 (no date committed)
 - **Current Working Branch**: `main`
-- **Last Updated**: 2026-09-15 09:45 UTC (S4+S5 boundary `3b04801` pushed + CI 34954826061 green headSha-asserted; CI-evidence commit pending push) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
+- **Last Updated**: 2026-09-15 09:55 UTC (`origin/main` = `2b9eab3`, CI 34955181447 green headSha-asserted; tree clean; session checkpoint — sign-off still pending) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
 
 ## 2. Milestone & Task Progress
 
