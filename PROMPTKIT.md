@@ -7,11 +7,11 @@
 
 ## 0. PromptKit OS Profile
 
-- **Profile**: turbo · **Installed**: 2026-09-15 · **Engine**: `.promptkit` @ `v1.5.1-26`
+- **Profile**: balanced
 - **Note**: v1 engine intentionally reinstalled; its directive block is appended inside
   `AGENTS.md` between `PROMPTKIT_START/END` markers. Native AGENTS.md content wins on conflict.
 
-profile: turbo
+profile: balanced
 
 ## 1. Project Overview & Domain
 
@@ -54,3 +54,5 @@ v1 defaults (`docs/{specs,tasks,adrs,tests,rca,...}/`) — plus Boldash's own fu
 - **AGENTS.md rules bind agents here**: no `any`; gate tests must prove pass AND block; no undeclared commands; exact pins; no post-install scripts; human-only merge/force-push/tag.
 - **Docs–code ship together**: new error codes → `docs/errors.md`; new flags → `docs/cli-reference.md`.
 - **Session discipline**: STATE.md untrusted until read; telemetry numbers must trace to checks executed in-turn.
+
+tracking: github
