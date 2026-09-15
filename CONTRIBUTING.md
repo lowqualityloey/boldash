@@ -128,7 +128,7 @@ Before proposing a change is complete, run:
 npm run verify
 ```
 
-This runs lint, typecheck, and the full test suite. **If `verify` fails, you are not done.**
+This runs four stages — lint, `format:check`, typecheck, and the full test suite (maintainer ruling 2026-09-15, closing #14). **If `verify` fails, you are not done.**
 
 ---
 

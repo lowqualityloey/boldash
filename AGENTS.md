@@ -62,16 +62,16 @@ Until then, this repository contains documentation and schemas only. There is no
 
 When implementation begins, these commands will exist. Use them; do not invent alternatives.
 
-| Command              | Purpose                                    |
-| -------------------- | ------------------------------------------ |
-| `npm run build`      | Compile TypeScript to `dist/`              |
-| `npm test`           | Run the full test suite                    |
-| `npm run test:watch` | Watch mode                                 |
-| `npm run lint`       | ESLint                                     |
-| `npm run typecheck`  | `tsc --noEmit`                             |
-| `npm run format`     | Prettier                                   |
-| `npm run bench`      | Run the benchmark suite                    |
-| `npm run verify`     | Lint + typecheck + test (the release gate) |
+| Command              | Purpose                                                   |
+| -------------------- | --------------------------------------------------------- |
+| `npm run build`      | Compile TypeScript to `dist/`                             |
+| `npm test`           | Run the full test suite                                   |
+| `npm run test:watch` | Watch mode                                                |
+| `npm run lint`       | ESLint                                                    |
+| `npm run typecheck`  | `tsc --noEmit`                                            |
+| `npm run format`     | Prettier                                                  |
+| `npm run bench`      | Run the benchmark suite                                   |
+| `npm run verify`     | Lint + format check + typecheck + test (the release gate) |
 
 **Before you propose any change is complete, run `npm run verify`.** If it fails, you are not done.
 
