@@ -53,25 +53,26 @@
 
 ## 5. State and Active Ownership
 
-- **Execution State**: `planned`
-- **Mapped `pk:tasks` Status**: `To Do`
-- **Active Task Pointer**: None
-- **Start Time**: `N/A`
-- **Current Actor**: `Lead Engineer @lowqualityloey`
-- **Next Action**: `Wait for predecessor completion; begin only after maintainer go signal`
+- **Execution State**: `in_progress`
+- **Mapped `pk:tasks` Status**: `In Progress`
+- **Active Task Pointer**: `MS-7 Generic adapter + init UX (this record) — claimed 2026-09-15 10:48 UTC`
+- **Start Time**: `2026-09-15 10:48 UTC`
+- **Current Actor**: `DSH agent (executor) · Lead Engineer @lowqualityloey (approver)`
+- **Next Action**: `Plan-001 slice approval (R1–R9 + S1–S4) → S1 on GO`
 
 ### Transition History
 
-| Previous State | New State | Timestamp            | Actor                | Reason                                                              | Supporting Evidence                               |
-| -------------- | --------- | -------------------- | -------------------- | ------------------------------------------------------------------- | ------------------------------------------------- |
-| —              | `planned` | 2026-09-15 00:40 UTC | DSH agent (pk:tasks) | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv) | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md` |
+| Previous State | New State     | Timestamp            | Actor                                              | Reason                                                                     | Supporting Evidence                                                         |
+| -------------- | ------------- | -------------------- | -------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| —              | `planned`     | 2026-09-15 00:40 UTC | DSH agent (pk:tasks)                               | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv)        | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`                           |
+| `planned`      | `in_progress` | 2026-09-15 10:48 UTC | DSH agent (GO-MS7 receiver checklist 5/5; #7 open) | Maintainer "go"; MS-6 completed; plan-001 written, slices pending approval | receiver checklist (plan-001 §0); `gh issue view 7`; tree clean @ `5264d1a` |
 
 ## 6. Evidence and Completion Gate
 
 - **Changed Files**:
   - `[pending]`
 - **Scope Change Records**: `None`
-- **Checkpoint Records**: `None`
+- **Checkpoint Records**: `plan-001: docs/tasks/TASK-2026-09-15-v010-ms7-generic-adapter.plan-001.md (S1–S4 + R1–R9, pending approval 2026-09-15)`
 - **Handoff Records**: `None`
 - **Verification Evidence**: Pending
 - **Behavior IDs**: `N/A - TDD Enforcement Mode disabled`
@@ -83,7 +84,7 @@
 - **Commit Evidence**: N/A before commit
 - **Pull Request Evidence**: `N/A before PR`
 - **Release Evidence**: `N/A`
-- **Blocker and Resume Condition**: Depends on MS-6; maintainer go signal
+- **Blocker and Resume Condition**: MS-6 `completed` 2026-09-15; GO-MS7 given ("go" 2026-09-15 10:48 UTC); plan-001 pending slice approval — no code before it
 
 ### Completion Gate
 
