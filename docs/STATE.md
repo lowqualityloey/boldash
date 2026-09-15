@@ -3,11 +3,11 @@
 ## 1. Executive Summary & Current Position
 
 - **Project Name**: Boldash — deterministic control plane for AI coding agents
-- **Current Milestone / Epic**: M2 — v0.1.0 Foundation · **RFC APPROVED · MS-1 ✅ MS-2 ✅ MS-3 ✅ MS-4 ✅ MS-5 ✅ · MS-6 ✅ · MS-7 `in_progress` (#7, S1 ✅ pushed CI-green, S2 pending GO)** _(342/342 + CI green headSha-asserted @ `c047e52`)_
+- **Current Milestone / Epic**: M2 — v0.1.0 Foundation · **RFC APPROVED · MS-1 ✅ MS-2 ✅ MS-3 ✅ MS-4 ✅ MS-5 ✅ · MS-6 ✅ · MS-7 `in_progress` (#7, S1 ✅ S2 ✅ pushed CI-green, S3 pending GO)** _(353/353 + CI green headSha-asserted @ `61f6afa`)_
 - **Overall Status**: ACTIVE
 - **Target Release / Deadline**: v0.1.0 (no date committed)
 - **Current Working Branch**: `main`
-- **Last Updated**: 2026-09-15 11:13 UTC (`origin/main` = `c047e52`, CI 34962033665 green headSha-asserted; tree clean; MS-7 S1 pushed, S2 pending GO) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
+- **Last Updated**: 2026-09-15 11:21 UTC (`origin/main` = `61f6afa`, CI 34962735831 green headSha-asserted; tree clean; MS-7 S2 pushed, S3 pending GO) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
 
 ## 2. Milestone & Task Progress
 
@@ -36,7 +36,7 @@
 ## 3. Active Working Set
 
 - **Active RFC / Spec**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`
-- **Active Task Pointer**: `MS-7 Generic adapter + init UX (TASK-2026-09-15-v010-ms7-generic-adapter)` — `in_progress` · **S1 ✅ (`c047e52`, 342/342, CI green) · S2…S4 open → GO-S2 needed for init wiring (no code before it)****
+- **Active Task Pointer**: `MS-7 Generic adapter + init UX (TASK-2026-09-15-v010-ms7-generic-adapter)` — `in_progress` · **S1 ✅ S2 ✅ (`61f6afa`, 353/353, CI green) · S3+S4 open → GO-S3 needed (briefing e2e + route probe wiring; no code before it)****
 - **Key Source Files in Flight**: the v0.1.0 surface corpus (`docs/cli-reference.md`, `docs/routing-contract.md`, `docs/verification-guide.md`, `docs/errors.md`, `docs/getting-started.md`, `docs/faq.md`, `AGENTS.md`, `CONTRIBUTING.md`) — authority map in `docs/NOTES.md` §2
 - **Verification Commands (Scoped)**: `npm run verify` = THE gate (live since MS-1, 2026-09-15). CI: `verify` workflow, node 20/22/24 on push+PR.
 
@@ -67,8 +67,9 @@ P1–P10 + tie-breaker, verbatim in `docs/NOTES.md` §3. Pending additions on RF
 
 ## 7. Next Immediate Actions (single lane)
 
-1. **MS-6 ✅ completed; MS-7 S1 ✅ pushed CI-green.** Sign-off tip chain landed (`5264d1a`). Plan-001 approved S1–S4 + GO S1. S1 (`c047e52`, 342/342) CI 34962033665 green headSha-asserted. **Next: GO-S2 for init wiring (AC-2/AC-4).**
+1. **MS-6 ✅ completed; MS-7 S2 ✅ pushed CI-green.** Plan-001 approved S1–S4. S1 (`c047e52`, 342/342) + S2 (`61f6afa`, 353/353) both CI-green headSha-asserted. **Next: GO-S3 (briefing e2e AC-1 + route probe wiring AC-3).**
    | 2026-09-15 | DSH agent (MS-7 S1 session) | Plan approved + GO S1; built `src/adapters/` (types/generic/barrel) + contract suite under `tests/` (ADR-0002); 3 lint failures fixed (no-useless-assignment, unused hook params); gate 342/342; pushed `c047e52`, CI green headSha-asserted | `c047e52` on origin/main; CI 34962033665; record S1 evidence |
+   | 2026-09-15 | DSH agent (MS-7 S2 session) | GO-S2; wired `runInit` (detect-first refusal, --host allowlist, probe→project.json, warnings envelope); scaffold `capabilities` input (plain strings, rule 8); 3 golden fixtures gain `.git`; gate 353/353; pushed `61f6afa`, CI green headSha-asserted | `61f6afa` on origin/main; CI 34962735831; record S2 evidence |
 2. Inherited open items: exit-code ambiguity for `VERIFY_COMMAND_TIMEOUT` (NOTES §4 doc-review), SECURITY email → #15 (maintainer), adr/adrs naming, `docs/state-model.md` + migration-from-v1 (#13).
 
 ## 8. Session Continuity Log
