@@ -7,7 +7,7 @@
 - **Overall Status**: ACTIVE
 - **Target Release / Deadline**: v0.1.0 (no date committed)
 - **Current Working Branch**: `main`
-- **Last Updated**: 2026-09-15 10:25 UTC (`origin/main` = `c549a7b`, CI 34957674680 green headSha-asserted; tree clean; MS-6 signed off → `completed`, #6 closed) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
+- **Last Updated**: 2026-09-15 10:40 UTC (`origin/main` = `8900cfd`, CI 34959156089 green headSha-asserted; tree clean; MS-6 signed off → `completed`, #6 closed) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
 
 ## 2. Milestone & Task Progress
 
