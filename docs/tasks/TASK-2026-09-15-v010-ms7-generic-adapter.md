@@ -27,18 +27,18 @@
 
 ## 3. Acceptance Criteria
 
-- [ ] **AC-1**: `init creates exact RFC §3 layout; re-run idempotent — no duplicate blocks, state untouched.`
-  - **Result**: Pending
-  - **Evidence**: Pending
-- [ ] **AC-2**: `init outside git repo → structured refusal (exit 2).`
-  - **Result**: Pending
-  - **Evidence**: Pending
-- [ ] **AC-3**: `probe feeds route: 'subagents' → CAPABILITY_MISSING on generic host.`
-  - **Result**: Pending
-  - **Evidence**: Pending
-- [ ] **AC-4**: `--profile persists to .boldash/config.yaml; invalid → exit 2.`
-  - **Result**: Pending
-  - **Evidence**: Pending
+- [x] **AC-1**: `init creates exact RFC §3 layout; re-run idempotent — no duplicate blocks, state untouched.`
+  - **Result**: Satisfied (maintainer sign-off pending)
+  - **Evidence**: `tests/golden/cli-init.test.ts` (scaffold tree + envelope); `tests/golden/cli-init-briefing.test.ts` (fresh repo → exactly one block · double `--force` coalesces, second skips · PromptKit prefix byte-stable · re-run without `--force` refuses exit 2 and changes nothing); `tests/unit/cli/init-command.test.ts`; four-stage gate 364/364 exit 0 @ `31d7c61` tree
+- [x] **AC-2**: `init outside git repo → structured refusal (exit 2).`
+  - **Result**: Satisfied (maintainer sign-off pending)
+  - **Evidence**: `tests/golden/cli-init.test.ts` — bare temp dir (no `.git`) → `CLI_PRECONDITION_FAILED` exit 2, nothing written; detection runs before any mutation (`src/cli/commands/init.ts`); code reuse per R3, no new error code
+- [x] **AC-3**: `probe feeds route: 'subagents' → CAPABILITY_MISSING on generic host.`
+  - **Result**: Satisfied via the adapter-sourced context (maintainer sign-off pending)
+  - **Evidence**: `tests/golden/cli-state-workflow.test.ts` — `subagents`-requiring pack through `workflow import` → `CAPABILITY_MISSING` exit 3, `context: { missing, host: 'generic' }`, suggestion names the adapter probe, nothing written; R6 provenance + value-equality in `tests/unit/cli/probe-context.test.ts`. **Disclosed deviation**: route-level exit-3 is unreachable through the CLI in v0.1.0 (route registry is built-ins-only, R6); R6 equality is pinned by the existing route PASS goldens instead of a faked route-level block
+- [x] **AC-4**: `--profile persists to .boldash/config.yaml; invalid → exit 2.`
+  - **Result**: Satisfied (maintainer sign-off pending)
+  - **Evidence**: `tests/golden/cli-init.test.ts` — `profile: lite` line in `config.yaml` + `profile` in `project.json`; invalid `--profile` → `CLI_USAGE` exit 2 (existing behavior, pinned per R5)
 
 ## 4. Execution Policy
 
@@ -58,7 +58,7 @@
 - **Active Task Pointer**: `MS-7 Generic adapter + init UX (this record) — claimed 2026-09-15 10:48 UTC`
 - **Start Time**: `2026-09-15 10:48 UTC`
 - **Current Actor**: `DSH agent (executor) · Lead Engineer @lowqualityloey (approver)`
-- **Next Action**: `Plan-001 slice approval (R1–R9 + S1–S4) → S1 on GO`
+- **Next Action**: `Maintainer sign-off of MS-7 (S1–S4 executed, no code open) → record completed → close #7 → MS-8 (#8) opens with its own plan`
 
 ### Transition History
 
@@ -71,29 +71,31 @@
 
 - **Changed Files**:
   - `[pending]`
+  - `S3 (2026-09-15): src/cli/commands/init.ts (briefing append post-scaffold, ADAPTER_INIT_FAILED exit 3), src/cli/probe-context.ts (new; R6 seam), src/cli/commands/{route,workflow}.ts (probe-sourced context; validateWorkflowPack two-arg), tests/golden/cli-init-briefing.test.ts + tests/unit/cli/probe-context.test.ts (new), extensions in cli-state-workflow + init-command tests`
+  - `S4 (2026-09-15, docs only — no code): docs/cli-reference.md (§init: git-tree precondition, AGENTS.md briefing + marker idempotency, --host R2 rule, probe/warning envelope, exit 0/2/3 + ADAPTER_INIT_FAILED path), docs/getting-started.md (real envelope renders for init + verify replacing the fictional output — handoff-004 gap; generic-only briefing truth per R9; doctor / pre-tool hooks / per-host briefings marked deferred), docs/errors.md unchanged (ADAPTER_INIT_FAILED already catalogued — finding, not omission)`
   - `S1 (2026-09-15): src/adapters/{adapter-types,generic,index}.ts (new; ARCH §5.2 verbatim interface, §5.3 Generic column single-sourced from GENERIC_BASELINE, briefing markers, best-effort detect, advisory hook no-ops), tests/unit/adapters/{generic,contract}.test.ts + tests/unit/adapters/contract-suite.ts (new; shared suite per AGENTS.md, matrix oracle via doc-oracle)`
   - `S2 (2026-09-15): src/cli/commands/init.ts (detect-first, AC-2 git refusal, R2 --host rule, probe→project.json, warnings + adapter/capabilities envelope), src/core/state/scaffold.ts (capabilities input, plain strings — rule 8), tests/unit/cli/init-command.test.ts (new matrix), tests/golden/cli-init.test.ts (+5 host-wiring; fixture gains .git), other 3 golden fixtures gain .git (AC-2 compat)`
 - **Scope Change Records**: `None`
-- **Checkpoint Records**: `plan-001: docs/tasks/TASK-2026-09-15-v010-ms7-generic-adapter.plan-001.md (S1–S4 + R1–R9, pending approval 2026-09-15)`
-- **Handoff Records**: `None`
-- **Verification Evidence**: Pending
+- **Checkpoint Records**: `plan-001: docs/tasks/TASK-2026-09-15-v010-ms7-generic-adapter.plan-001.md (S1–S4 + R1–R9, approved 2026-09-15); checkpoint-001 (S3 boundary, 2026-09-15 12:14 UTC); checkpoint-002 (S4 boundary, 2026-09-15 12:40 UTC)`
+- **Handoff Records**: `handoff-001 (S3 → GO-S4, received + validated 5/5 this session); handoff-002 (S4 → maintainer sign-off)`
+- **Verification Evidence**: `S1: gate 342/342. S2: gate 353/353. S3: gate 364/364 + CI 34966807770 @ 29b2930 headSha-asserted. S4: four-stage gate re-run on the docs commit — lint 0, format:check 0, typecheck 0, test 34 files / 364/364, exit 0 (docs-only change; run anyway per handoff-001). Every doc claim in S4 was traced to a shipped behavior re-verified this session: init renders captured from the built bin (fresh git repo), verify success/blocked renders captured from a replicated golden fixture (exit 0 / exit 1), ADAPTER_INIT_FAILED → exit 3 confirmed in src/shared/errors.ts:43 and docs/errors.md:580`
 - **S1 Evidence (2026-09-15)**: four-stage gate green — lint 0, format:check 0, typecheck 0, 342/342 (23 new: 15 generic unit + 8 contract). Probe oracle parses the §5.3 matrix (no drift); briefing idempotency + PromptKit coexistence pinned; no CLI changes (319 pre-existing untouched).
 - **S2 Evidence (2026-09-15)**: four-stage gate green — 353/353 (11 new: 6 init unit + 5 init golden). AC-2 refusal + R2 host rule proven through the built bin; AC-4 persist locked (config.yaml line + project.json set); no new error codes (CLI_USAGE/CLI_PRECONDITION_FAILED reuse).
 - **Behavior IDs**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Intent Register**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Execution Evidence**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Exception Verification**: `N/A - Code Work`
-- **CI Evidence**: `S1: run 34962033665 @ c047e52 — CI success ×3 matrices, headSha-asserted (watch exit 0). S2: run 34962735831 @ 61f6afa — CI success ×3 matrices, headSha-asserted. S3: run 34966807770 @ 29b2930 — CI success ×3 matrices, headSha-asserted (watch exit 0).`
+- **CI Evidence**: `S1: run 34962033665 @ c047e52 — CI success ×3 matrices, headSha-asserted (watch exit 0). S2: run 34962735831 @ 61f6afa — CI success ×3 matrices, headSha-asserted. S3: run 34966807770 @ 29b2930 — CI success ×3 matrices, headSha-asserted (watch exit 0). S4: no CI run yet — docs-only commits `31d7c61` + this boundary are unpushed; per-instance push GO pending.`
 - **Review Evidence**: `N/A`
-- **Commit Evidence**: N/A before commit
+- **Commit Evidence**: `S1 c047e52 · S2 61f6afa · S3 bf99c7e + 29b2930 + 2507e69 · boundary 838c44f + 765d6d0 (all pushed, CI green). S4: 31d7c61 docs(surface) doc truth pass + the boundary commit that follows it (local, unpushed — push awaits a per-instance GO)`
 - **Pull Request Evidence**: `N/A before PR`
 - **Release Evidence**: `N/A`
-- **Blocker and Resume Condition**: MS-6 `completed` 2026-09-15; GO-MS7 given ("go" 2026-09-15 10:48 UTC); plan-001 pending slice approval — no code before it
+- **Blocker and Resume Condition**: `None mechanical. GO-MS7 given 2026-09-15 10:48 UTC; per-slice GOs S1–S3; GO-S4 given 2026-09-15 12:29 UTC (docs truth pass incl. the two flagged honesty items — doctor + pre-tool hook enforcement). Resume gate: maintainer sign-off of MS-7 → record completed → #7 closed → MS-8 (#8) plan. Push of the S4 commits needs a fresh per-instance GO naming the tip.`
 
 ### Completion Gate
 
-- **Completion State**: `planned`
-- **Acceptance Results**: Pending
-- **Changed-File Summary**: Pending
+- **Completion State**: `in_progress` (sign-off pending)
+- **Acceptance Results**: AC-1…AC-4 Satisfied — self-verified with evidence in §3; the maintainer's explicit sign-off is still outstanding
+- **Changed-File Summary**: S1–S3 code + S4 docs per §6 Changed Files; no new error codes (R7 catalog reuse verified); suite 364/364
 - **Completion Exception**: `None`
-- **Completion Decision and Timestamp**: Pending
+- **Completion Decision and Timestamp**: Pending — tests are evidence, not proof; requires the maintainer's word (silence is not authorization)
