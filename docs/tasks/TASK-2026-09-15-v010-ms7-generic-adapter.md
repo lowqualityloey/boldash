@@ -53,19 +53,20 @@
 
 ## 5. State and Active Ownership
 
-- **Execution State**: `in_progress`
-- **Mapped `pk:tasks` Status**: `In Progress`
-- **Active Task Pointer**: `MS-7 Generic adapter + init UX (this record) — claimed 2026-09-15 10:48 UTC`
+- **Execution State**: `completed`
+- **Mapped `pk:tasks` Status**: `Completed`
+- **Active Task Pointer**: `MS-7 Generic adapter + init UX (this record) — completed 2026-09-15 13:51 UTC on maintainer sign-off`
 - **Start Time**: `2026-09-15 10:48 UTC`
 - **Current Actor**: `DSH agent (executor) · Lead Engineer @lowqualityloey (approver)`
-- **Next Action**: `Maintainer sign-off of MS-7 (S1–S4 executed, no code open) → record completed → close #7 → MS-8 (#8) opens with its own plan`
+- **Next Action**: `None — MS-7 complete. MS-8 (#8) opens with its own plan; no code before it`
 
 ### Transition History
 
-| Previous State | New State     | Timestamp            | Actor                                              | Reason                                                                     | Supporting Evidence                                                         |
-| -------------- | ------------- | -------------------- | -------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| —              | `planned`     | 2026-09-15 00:40 UTC | DSH agent (pk:tasks)                               | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv)        | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`                           |
-| `planned`      | `in_progress` | 2026-09-15 10:48 UTC | DSH agent (GO-MS7 receiver checklist 5/5; #7 open) | Maintainer "go"; MS-6 completed; plan-001 written, slices pending approval | receiver checklist (plan-001 §0); `gh issue view 7`; tree clean @ `5264d1a` |
+| Previous State | New State     | Timestamp            | Actor                                                   | Reason                                                                                                        | Supporting Evidence                                                         |
+| -------------- | ------------- | -------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| —              | `planned`     | 2026-09-15 00:40 UTC | DSH agent (pk:tasks)                                    | RFC approved 2026-09-15 (TDD disabled; vitest/ajv/hand-rolled argv)                                           | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`                           |
+| `planned`      | `in_progress` | 2026-09-15 10:48 UTC | DSH agent (GO-MS7 receiver checklist 5/5; #7 open)      | Maintainer "go"; MS-6 completed; plan-001 written, slices pending approval                                    | receiver checklist (plan-001 §0); `gh issue view 7`; tree clean @ `5264d1a` |
+| `in_progress`  | `completed`   | 2026-09-15 13:51 UTC | DSH agent (maintainer sign-off word via visual callout) | Maintainer sign-off of MS-7 after gate re-run green + §3 AC evidence + boundary pushed CI-green; no code open | sign-off gate 364/364 exit 0; record §3/§6; `git log` @ `a1b862c`           |
 
 ## 6. Evidence and Completion Gate
 
@@ -90,12 +91,12 @@
 - **Commit Evidence**: `S1 c047e52 · S2 61f6afa · S3 bf99c7e + 29b2930 + 2507e69 · boundary 838c44f + 765d6d0 (all pushed, CI green). S4: 31d7c61 docs(surface) doc truth pass + f51ee60 boundary records — pushed 2026-09-15 12:50 UTC (per-instance GO naming exactly those two shas), CI 34971224918 green headSha-asserted @ f51ee60`
 - **Pull Request Evidence**: `N/A before PR`
 - **Release Evidence**: `N/A`
-- **Blocker and Resume Condition**: `None mechanical. GO-MS7 given 2026-09-15 10:48 UTC; per-slice GOs S1–S3; GO-S4 given 2026-09-15 12:29 UTC (docs truth pass incl. the two flagged honesty items — doctor + pre-tool hook enforcement). Resume gate: maintainer sign-off of MS-7 → record completed → #7 closed → MS-8 (#8) plan. S4 commits are pushed and CI-green; any further commit needs its own per-instance GO naming it.`
+- **Blocker and Resume Condition**: `None mechanical. GO-MS7 given 2026-09-15 10:48 UTC; per-slice GOs S1–S3; GO-S4 given 2026-09-15 12:29 UTC (docs truth pass incl. the two flagged honesty items — doctor + pre-tool hook enforcement). Maintainer signed off MS-7 2026-09-15 13:51 UTC — record completed, #7 closed below. S4 commits pushed and CI-green; MS-8 needs its own plan and GO.`
 
 ### Completion Gate
 
-- **Completion State**: `in_progress` (sign-off pending)
-- **Acceptance Results**: AC-1…AC-4 Satisfied — self-verified with evidence in §3; the maintainer's explicit sign-off is still outstanding
-- **Changed-File Summary**: S1–S3 code + S4 docs per §6 Changed Files; no new error codes (R7 catalog reuse verified); suite 364/364
+- **Completion State**: `completed`
+- **Acceptance Results**: AC-1…AC-4 all Satisfied (see §3)
+- **Changed-File Summary**: S1–S3 code + S4 docs + CI-evidence per §6 Changed Files; no new error codes (R7 catalog reuse verified); suite 364/364
 - **Completion Exception**: `None`
-- **Completion Decision and Timestamp**: Pending — tests are evidence, not proof; requires the maintainer's word (silence is not authorization)
+- **Completion Decision and Timestamp**: Maintainer sign-off 2026-09-15 13:51 UTC (explicit visual-callout choice) — record completed, #7 to be closed COMPLETED
