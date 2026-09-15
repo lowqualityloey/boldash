@@ -29,8 +29,8 @@
 - [x] `GO-MS2` — **GIVEN**; MS-2 executed & **maintainer-approved** → `completed`; #2 closed
 - [x] `GO-MS3` — **GIVEN**; MS-3 executed: TaskStore + transition matrix + optimistic locking + events; 42/42 tests; **schema minItems design correction** (structure permits, lifecycle enforces); CI 34854360256 green; **maintainer-approved 2026-09-14 14:31 UTC → `completed`; #3 closed**
 - [x] `GO-MS4` — GIVEN in slices; MS-4 executed and **maintainer-approved ("okay" batch 2026-09-14)** → `completed`; #4 closed on GitHub
-- [x] `GO-MS5` — GIVEN; MS-5 executed in 3 slices (grammar / redactor+store / runner+gate), 187/187, CI ×3 headSha-green → `awaiting_review` on #5
-- [ ] `GO-MS6`: unlocks on MS-5 review (#5); inherits the file-baseline capture obligation (NOTES §4)
+- [x] `GO-MS5` — GIVEN; MS-5 executed in 3 slices and **maintainer-approved** → `completed`; #5 closed. MS-5 checkpoint-001 + handoff-001 written
+- [ ] `GO-MS6`: **ready to issue** in the fresh session (all dependencies satisfied); inherits the file-baseline capture obligation (NOTES §4 + handoff checklist)
 
 ## 3. Active Working Set
 
@@ -66,8 +66,8 @@ P1–P10 + tie-breaker, verbatim in `docs/NOTES.md` §3. Pending additions on RF
 
 ## 7. Next Immediate Actions (single lane)
 
-1. **Maintainer**: review MS-5 on #5 (record `awaiting_review`; slices `539444c`→`5e5c3e6`, CI ×3 green).
-2. **Then**: on approval, complete MS-5 record, close #5, issue `GO-MS6` — CLI surface per cli-reference.md, **including the file-baseline capture at implementing-entry** (MS-6 obligation, NOTES §4).
+1. **Fresh session**: execute the receiver checklist in `docs/tasks/TASK-2026-09-15-v010-ms5-verification.handoff-001.md` BEFORE any edit.
+2. **Then**: maintainer issues `GO-MS6`; first slice = argv kernel + `init` + output envelope with golden tests on fixture repos (MS-5 checkpoint §"Exactly one prioritized next action").
 3. Open ruling: #14 (verify gate stage count). Deferred debt tracked in NOTES §4 (drift test, SECURITY email, adr/adrs naming, docs/state-model.md #13).
 
 ## 8. Session Continuity Log
@@ -79,3 +79,4 @@ P1–P10 + tie-breaker, verbatim in `docs/NOTES.md` §3. Pending additions on RF
 | 2026-09-15 | DSH agent (pk:plan, L2/Full) | v0.1.0 Foundation RFC; STATE.md re-populated from template                                                          | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`                                                                                                                                                                              |
 | 2026-09-14 | DSH agent (pk:checkpoint)    | Session boundary                                                                                                    | MS-1 ✅ · MS-2 ✅ · MS-3 awaiting_review; 42/42 green; checkpoint-001 + handoff-001 records written; timestamp-basis anomaly documented                                                                                        |
 | 2026-09-14 | DSH agent (receiver session) | Handoff checklist validation → MS-3 closure                                                                         | 5/5 checklist items evidenced (verify re-run 42/42 exit 0 @ `99c1dd3`, CI success @ same sha); 5 stale `Pending` rows stripped from MS-3 record; STATE.md RFC-approval drift corrected; environment hazard recorded; #3 closed |
+| 2026-09-15 | DSH agent (pk:checkpoint) | Session boundary after MS-5 | MS-1..5 all completed; 187/187 CI-green; checkpoint-001 + handoff-001 for MS-6; five tooling incidents disclosed in checkpoint §Anomalies |

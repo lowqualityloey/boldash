@@ -56,12 +56,12 @@
 
 ## 5. State and Active Ownership
 
-- **Execution State**: `awaiting_review`
-- **Mapped `pk:tasks` Status**: `In Review`
+- **Execution State**: `completed`
+- **Mapped `pk:tasks` Status**: `Done`
 - **Active Task Pointer**: `None` (review-parked)
 - **Start Time**: `N/A`
 - **Current Actor**: `DSH agent (executing under maintainer GO-MS5, 2026-09-14)`
-- **Next Action**: `Maintainer review (#5); MS-6 unlocks on approval. Hand-off obligation: file-baseline capture at implementing-entry (NOTES §4)`
+- **Next Action**: `None — completed; #5 closed`
 
 ### Transition History
 
@@ -71,6 +71,7 @@
 | `planned`      | `ready`       | 2026-09-14           | Lead Engineer        | MS-4 completed → dependency satisfied; GO-MS5 in "okay" batch       | #4 closed                                         |
 | `ready`        | `in_progress` | 2026-09-14           | DSH agent            | Pointer claimed (backticked, MS-3 lesson applied)                   | this record                                       |
 | `in_progress`  | `awaiting_review` | 2026-09-14 | DSH agent | AC-1…5 PASS; 187/187; CI ×3 headSha-green | verify log + runs cited |
+| `awaiting_review` | `completed` | 2026-09-14 | Lead Engineer | 'okay' checkpoint batch: approve #5 + pk:checkpoint | #5 closed |
 
 ## 6. Evidence and Completion Gate
 
@@ -87,7 +88,7 @@
 - **TDD Execution Evidence**: `N/A - TDD Enforcement Mode disabled`
 - **TDD Exception Verification**: `N/A - Code Work`
 - **CI Evidence**: runs cited in Verification Evidence (three green, one per slice)
-- **Review Evidence**: pending maintainer review (#5)
+- **Review Evidence**: maintainer 'okay' batch 2026-09-14 approved; #5 closed with evidence comment
 - **Commit Evidence**: `539444c` · `6f1e981` · `5e5c3e6`
 - **Pull Request Evidence**: `N/A before PR`
 - **Release Evidence**: `N/A`
@@ -95,8 +96,8 @@
 
 ### Completion Gate
 
-- **Completion State**: `awaiting_review`
+- **Completion State**: `completed`
 - **Acceptance Results**: `AC-1..AC-5 PASS`
 - **Changed-File Summary**: verification engine only; zero changes to state/router/CLI surfaces
 - **Completion Exception**: `None`
-- **Completion Decision and Timestamp**: `awaiting_review` by DSH agent 2026-09-14; each slice carried its own GO
+- **Completion Decision and Timestamp**: `completed` — Lead Engineer, 2026-09-14 (checkpoint batch)
