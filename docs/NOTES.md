@@ -58,8 +58,9 @@ Source: `ARCHITECTURE.md` §2 (P1–P10) + Appendix B.
 ## 4. Open Items
 
 - [ ] **MS-6 obligation (from MS-5)**: `file_not_modified` fails closed without a baseline; the CLI must capture `file-baseline` evidence (path + sha256) at `planned→implementing` for every must_not path in the bound contract — otherwise the check can only ever block. Not yet in cli-reference.md; joins MS-6 scope + docs-amendment list.
-- [ ] **Verify-gate stage count (#14)**: AGENTS says 3-stage, CONTRIBUTING includes format:check — ruling pending (recommendation on file).
+- [x] **Verify-gate stage count (#14) — RULED 2026-09-15 01:24 UTC (maintainer, GO-MS6): 4-stage.** `npm run verify` = lint → `format:check` → typecheck → test; `package.json`, `AGENTS.md`, `CONTRIBUTING.md` and RFC §1.2 amended in the same change (P9: state the change). **Premise-drift disclosure:** #14's body cited a CONTRIBUTING 4-stage table; at HEAD all four sources already read 3-stage and CI never ran `format:check` standalone — the ruling is independent of the stale premise. Consequence: the corpus must now be prettier-clean at every gate (four files had drifted on adoption; fixed in a style pass first).
 
+- [x] **MS-6 rulings (maintainer, GO-MS6 session 2026-09-15 01:24 UTC)**: (a) **#12 canonical pack set = the RFC's 4** (`feature/bugfix/docs/chore`) — closed on GitHub; `cli-reference.md:125`'s conflicting pack line joins MS-6's docs-sync list. (b) **`init` v0.1.0 scope = scaffold-only**: creates the `.boldash/` tree + 4 state JSON files + config; **no pack files written** — pack file format is deferred to MS-8 under its own ADR (ruling D-2, recorded in `src/core/router/registry.ts`), `manifest.yaml` would breach ajv-only, and no `packs/`/`workflows/`/`policies/` source tree has ever existed in git history to copy. This amends #6's objective line "copies reference packs" (comment on issue). (c) **Slice sequence S1–S5 approved** → `docs/tasks/TASK-2026-09-15-v010-ms6-cli.plan-001.md`.
 - [x] **Maintainer-identity ruling (2026-09-14, "okay" batch)**: the human driving this chat session _is_ the maintainer. Their explicit in-chat GO — including "okay" to a decision presented to them — is the per-milestone sign-off, and "commit"/"push" language in that GO is the per-instance push authorization the #11 ruling requires. **Silence, absence, tool defaults, and my own inference never constitute authorization.** Recorded here; `AGENTS.md`'s "Do not force-push to main. Ever." remains absolute.
 
 ### Governance rulings (adopted — canonical copy; the 9 Task Records link here)
@@ -71,11 +72,11 @@ Source: `ARCHITECTURE.md` §2 (P1–P10) + Appendix B.
 
 ### Still open
 
-- [ ] `SECURITY.md`: replace `security@example.com` placeholder with a real contact (or delete the fallback line; GitHub Security Advisories is the preferred channel).
+- [ ] `SECURITY.md`: replace `security@example.com` placeholder with a real contact (or delete the fallback line; GitHub Security Advisories is the preferred channel). **Tracked as #15 (2026-09-15) — maintainer-only fix, gates MS-9/ship.**
 - [ ] `PROJECT OVERVIEW.md`: filename contains a space — consider `PROJECT-OVERVIEW.md` for link/CLI ergonomics.
 - [ ] Resolve `ARCHITECTURE.md` §18 Open Questions that touch Phase 1 (during the v0.1.0 spec).
 - [ ] First ADRs in `docs/adrs/`: runtime/tooling choice, state format, adapter contract.
-- [x] **Built-in workflow pack set — #12 RESOLVED (maintainer 2026-09-14)**: RFC §5/MS-4 say 4 (`feature, bugfix, docs, chore`); `ARCHITECTURE.md` §10.3 says 8 (`+ refactor, migration, test, review, commit, release`, and no `docs`/`chore`); `ARCHITECTURE.md` §12 + `cli-reference.md:125` print 5 (`feature, bugfix, refactor, test, review`). Must settle before MS-6, whose golden tests assert that documented `init` output line. MS-4 implements the RFC's 4 and absorbs the discrepancy through D-1's injectable registry; `src/core/router/registry.ts`'s header records the compromise at the point of use.
+- [x] **Built-in workflow pack set — #12 RESOLVED (maintainer 2026-09-14)**: RFC §5/MS-4 say 4 (`feature, bugfix, docs, chore`); `ARCHITECTURE.md` §10.3 says 8 (`+ refactor, migration, test, review, commit, release`, and no `docs`/`chore`); `ARCHITECTURE.md` §12 + `cli-reference.md:125` print 5 (`feature, bugfix, refactor, test, review`). Must settle before MS-6, whose golden tests assert that documented `init` output line. MS-4 implements the RFC's 4 and absorbs the discrepancy through D-1's injectable registry; `src/core/router/registry.ts`'s header records the compromise at the point of use. **Closed 2026-09-15 (GO-MS6): RFC's 4 is canonical for `init`/`workflow list` golden tests.**
 
 ### Doc-review findings (spec corpus read 2026-09-15 — for maintainer decision, not yet fixed)
 

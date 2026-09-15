@@ -3,11 +3,11 @@
 ## 1. Executive Summary & Current Position
 
 - **Project Name**: Boldash — deterministic control plane for AI coding agents
-- **Current Milestone / Epic**: M2 — v0.1.0 Foundation · **RFC APPROVED · MS-1 ✅ MS-2 ✅ MS-3 ✅ · MS-4 awaiting GO**
+- **Current Milestone / Epic**: M2 — v0.1.0 Foundation · **RFC APPROVED · MS-1 ✅ MS-2 ✅ MS-3 ✅ MS-4 ✅ MS-5 ✅ · MS-6 IN PROGRESS (#6 claimed)** _(row was stale at "MS-4 awaiting GO"; corrected with MS-6 claim 2026-09-15)_
 - **Overall Status**: ACTIVE
 - **Target Release / Deadline**: v0.1.0 (no date committed)
 - **Current Working Branch**: `main`
-- **Last Updated**: 2026-09-14 14:31 UTC (MS-3 closure) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
+- **Last Updated**: 2026-09-15 01:24 UTC (MS-6 claim + #14/#12 gate & pack rulings) — all timestamps from here on are `date -u`. Earlier session records labelled host-local (UTC+12) times as UTC; ordering sound, basis corrected (checkpoint-001 §Anomalies 1)
 
 ## 2. Milestone & Task Progress
 
@@ -30,12 +30,12 @@
 - [x] `GO-MS3` — **GIVEN**; MS-3 executed: TaskStore + transition matrix + optimistic locking + events; 42/42 tests; **schema minItems design correction** (structure permits, lifecycle enforces); CI 34854360256 green; **maintainer-approved 2026-09-14 14:31 UTC → `completed`; #3 closed**
 - [x] `GO-MS4` — GIVEN in slices; MS-4 executed and **maintainer-approved ("okay" batch 2026-09-14)** → `completed`; #4 closed on GitHub
 - [x] `GO-MS5` — GIVEN; MS-5 executed in 3 slices and **maintainer-approved** → `completed`; #5 closed. MS-5 checkpoint-001 + handoff-001 written
-- [ ] `GO-MS6`: **ready to issue** in the fresh session (all dependencies satisfied); inherits the file-baseline capture obligation (NOTES §4 + handoff checklist)
+- [x] `GO-MS6` — **GIVEN 2026-09-15 01:24 UTC** with rulings (#12 four-pack canonical · #14 four-stage gate · `init` scaffold-only · slices S1–S5); #6 assigned; file-baseline obligation inherited and scheduled into S3 (NOTES §4, plan-001)
 
 ## 3. Active Working Set
 
 - **Active RFC / Spec**: `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`
-- **Active Task Pointer**: `None` (MS-5 review-parked)
+- **Active Task Pointer**: `MS-6 CLI surface (TASK-2026-09-15-v010-ms6-cli)` — `in_progress`, claimed DSH agent, GO per NOTES §4 maintainer-identity ruling; execution sequence = `…ms6-cli.plan-001.md` S1–S5
 - **Key Source Files in Flight**: the v0.1.0 surface corpus (`docs/cli-reference.md`, `docs/routing-contract.md`, `docs/verification-guide.md`, `docs/errors.md`, `docs/getting-started.md`, `docs/faq.md`, `AGENTS.md`, `CONTRIBUTING.md`) — authority map in `docs/NOTES.md` §2
 - **Verification Commands (Scoped)**: `npm run verify` = THE gate (live since MS-1, 2026-09-15). CI: `verify` workflow, node 20/22/24 on push+PR.
 
@@ -66,17 +66,18 @@ P1–P10 + tie-breaker, verbatim in `docs/NOTES.md` §3. Pending additions on RF
 
 ## 7. Next Immediate Actions (single lane)
 
-1. **Fresh session**: execute the receiver checklist in `docs/tasks/TASK-2026-09-15-v010-ms5-verification.handoff-001.md` BEFORE any edit.
-2. **Then**: maintainer issues `GO-MS6`; first slice = argv kernel + `init` + output envelope with golden tests on fixture repos (MS-5 checkpoint §"Exactly one prioritized next action").
-3. Open ruling: #14 (verify gate stage count). Deferred debt tracked in NOTES §4 (drift test, SECURITY email, adr/adrs naming, docs/state-model.md #13).
+1. **Now — S1 (GO-MS6 given)**: build argv kernel + output envelope + exit-code map + `init` with golden tests on temp fixture repos, per `docs/tasks/TASK-2026-09-15-v010-ms6-cli.plan-001.md`; thin slice → four-stage gate → checkpoint, then S2…S5.
+2. **File-baseline obligation lands in S3**: `route --create` captures path + sha256 `file-baseline` evidence for every bound `must_not` path at `planned→implementing` (NOTES §4; MS-5 handoff).
+3. Inherited open items: exit-code ambiguity for `VERIFY_COMMAND_TIMEOUT` (NOTES §4 doc-review), SECURITY email → #15 (maintainer), adr/adrs naming, `docs/state-model.md` + migration-from-v1 (#13).
 
 ## 8. Session Continuity Log
 
-| Date       | Engineer / Agent             | Focus                                                                                                               | Artifacts                                                                                                                                                                                                                      |
-| ---------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 2026-09-14 | Lead + DSH agent             | lineage intake, anomaly fixes, repo reset #1                                                                        | 10-file corpus, `docs/NOTES.md` salvage                                                                                                                                                                                        |
-| 2026-09-15 | Lead Engineer                | intentional v1 reinstall (`.promptkit` @ v1.5.1-26); authored 7-doc v0.1.0 surface-spec corpus + native `AGENTS.md` | `AGENTS.md`, `CONTRIBUTING.md`, `docs/{cli-reference,routing-contract,verification-guide,errors,getting-started,faq}.md`                                                                                                       |
-| 2026-09-15 | DSH agent (pk:plan, L2/Full) | v0.1.0 Foundation RFC; STATE.md re-populated from template                                                          | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`                                                                                                                                                                              |
-| 2026-09-14 | DSH agent (pk:checkpoint)    | Session boundary                                                                                                    | MS-1 ✅ · MS-2 ✅ · MS-3 awaiting_review; 42/42 green; checkpoint-001 + handoff-001 records written; timestamp-basis anomaly documented                                                                                        |
-| 2026-09-14 | DSH agent (receiver session) | Handoff checklist validation → MS-3 closure                                                                         | 5/5 checklist items evidenced (verify re-run 42/42 exit 0 @ `99c1dd3`, CI success @ same sha); 5 stale `Pending` rows stripped from MS-3 record; STATE.md RFC-approval drift corrected; environment hazard recorded; #3 closed |
-| 2026-09-15 | DSH agent (pk:checkpoint) | Session boundary after MS-5 | MS-1..5 all completed; 187/187 CI-green; checkpoint-001 + handoff-001 for MS-6; five tooling incidents disclosed in checkpoint §Anomalies |
+| Date       | Engineer / Agent                    | Focus                                                                                                               | Artifacts                                                                                                                                                                                                                      |
+| ---------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-09-14 | Lead + DSH agent                    | lineage intake, anomaly fixes, repo reset #1                                                                        | 10-file corpus, `docs/NOTES.md` salvage                                                                                                                                                                                        |
+| 2026-09-15 | Lead Engineer                       | intentional v1 reinstall (`.promptkit` @ v1.5.1-26); authored 7-doc v0.1.0 surface-spec corpus + native `AGENTS.md` | `AGENTS.md`, `CONTRIBUTING.md`, `docs/{cli-reference,routing-contract,verification-guide,errors,getting-started,faq}.md`                                                                                                       |
+| 2026-09-15 | DSH agent (pk:plan, L2/Full)        | v0.1.0 Foundation RFC; STATE.md re-populated from template                                                          | `docs/specs/2026-09-15-spec-v0.1.0-foundation.md`                                                                                                                                                                              |
+| 2026-09-14 | DSH agent (pk:checkpoint)           | Session boundary                                                                                                    | MS-1 ✅ · MS-2 ✅ · MS-3 awaiting_review; 42/42 green; checkpoint-001 + handoff-001 records written; timestamp-basis anomaly documented                                                                                        |
+| 2026-09-14 | DSH agent (receiver session)        | Handoff checklist validation → MS-3 closure                                                                         | 5/5 checklist items evidenced (verify re-run 42/42 exit 0 @ `99c1dd3`, CI success @ same sha); 5 stale `Pending` rows stripped from MS-3 record; STATE.md RFC-approval drift corrected; environment hazard recorded; #3 closed |
+| 2026-09-15 | DSH agent (pk:checkpoint)           | Session boundary after MS-5                                                                                         | MS-1..5 all completed; 187/187 CI-green; checkpoint-001 + handoff-001 for MS-6; five tooling incidents disclosed in checkpoint §Anomalies                                                                                      |
+| 2026-09-15 | DSH agent (GO-MS6 receiver session) | Receiver checklist 5/5; #12/#14 rulings adopted; 4-stage gate folded; MS-6 claimed; plan-001 written                | `…ms6-cli.plan-001.md`; NOTES §4; STATE §1/§2/§3/§7 refresh                                                                                                                                                                    |
