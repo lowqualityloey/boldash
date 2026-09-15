@@ -42,6 +42,9 @@ export const ERROR_CATALOG = {
   HOST_UNKNOWN: 0, // warning: falls back to generic adapter
   ADAPTER_INIT_FAILED: 3,
   HOOK_REGISTRATION_FAILED: 3,
+  // cli errors (added MS-6 S1 via docs/errors.md §Adding an Error Code)
+  CLI_USAGE: 2,
+  CLI_PRECONDITION_FAILED: 2,
   // internal errors
   INTERNAL_ERROR: 10,
   IO_ERROR: 11,

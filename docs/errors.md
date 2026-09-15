@@ -17,6 +17,7 @@
 - [Verification Errors](#verification-errors)
 - [Evidence Errors](#evidence-errors)
 - [Host Errors](#host-errors)
+- [CLI Errors](#cli-errors)
 - [Internal Errors](#internal-errors)
 - [Adding an Error Code](#adding-an-error-code)
 
@@ -615,6 +616,54 @@ A hook could not be registered.
 
 **Exit code:** 3.
 **Fix:** Continue with advisory mode, or upgrade the host.
+
+---
+
+## CLI Errors
+
+Added 2026-09-15 (MS-6 S1) under §Adding an Error Code — argv misuse had no
+catalog code; the exit class (2) was already defined as "Invalid input".
+
+### `CLI_USAGE`
+
+A command name, flag, or flag value was not recognized by the CLI.
+
+```json
+{
+  "ok": false,
+  "error": {
+    "code": "CLI_USAGE",
+    "message": "Unknown flag '--formmat'.",
+    "field": "--formmat",
+    "suggestion": "Run `boldash --help` for supported flags."
+  }
+}
+```
+
+**Exit code:** 2.
+**Fix:** Correct the command line. Unknown commands carry
+`context.supported_commands`.
+
+---
+
+### `CLI_PRECONDITION_FAILED`
+
+The command is well-formed but a precondition for running it is not met.
+
+```json
+{
+  "ok": false,
+  "error": {
+    "code": "CLI_PRECONDITION_FAILED",
+    "message": "This repository is already initialized (.boldash/ exists).",
+    "field": ".boldash",
+    "suggestion": "Re-run with --force to overwrite (destructive), or inspect the existing setup."
+  }
+}
+```
+
+**Exit code:** 2.
+**Fix:** Satisfy the precondition or pass the flagged override.
 
 ---
 
